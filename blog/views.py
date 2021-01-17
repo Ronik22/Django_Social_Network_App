@@ -1,3 +1,4 @@
+from django.core.checks import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
@@ -9,6 +10,7 @@ from django.http import HttpResponseRedirect
 from users.models import Profile
 from itertools import chain
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 def home(request):
@@ -160,3 +162,15 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 def about(request):
     return render(request, 'blog/about.html', {'title':'About'})
+
+def search(request):
+    query = request.GET['query']
+    if len(query) >= 150 or len(query) < 1:
+        allposts = Post.objects.none()
+    else:
+        allpostsTitle = Post.objects.filter(title__icontains=query)
+        allpostsAuthor = Post.objects.filter(author__username = query)
+        allposts = allpostsAuthor.union(allpostsTitle)
+    
+    params = {'allposts': allposts}
+    return render(request, 'blog/search_results.html', params)
