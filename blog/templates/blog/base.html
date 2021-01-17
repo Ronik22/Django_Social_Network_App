@@ -23,7 +23,12 @@
               </div>
               
               
-              <div id="searchbar" ><input type="text" placeholder="Search.."><button type="submit"><i class="fas fa-search"></i></button></div>
+              <div id="searchbar" >
+                <form method="GET" action="/search">
+                  <input name="query" id="search" type="text" placeholder="Search..">
+                  <button class="search-btn" type="submit"><i class="fas fa-search"></i></button>
+                </form>
+              </div>
               <!-- Navbar Right Side -->
               <div class="navbar-nav">
                 <a class="nav-item nav-link" href="{% url 'blog-home' %}">Home</a>
