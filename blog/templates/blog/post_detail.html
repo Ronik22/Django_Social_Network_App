@@ -9,18 +9,31 @@
     <div class="media">
         <img class="rounded-circle article-img" src="{{object.author.profile.image.url}}" alt="image">
         <div class="media-body">
-            <h4><a class="mr-2" href="{% url 'profile-detail-view' object.author.pk %}">{{ object.author }}</a></h4>
-            <small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
+            <h4 class="d-inline"><a class="mr-2" href="{% url 'profile-detail-view' object.author.pk %}">{{ object.author }}</a></h4>
+            <form class="d-inline float-right" action="{% url 'post-save' post.pk %}" method="POST">
+                {% csrf_token %}
+            
+                {% if user.is_authenticated %}
+                    {% if saved %}
+                        <button type="submit" name="post_sid" value="{{post.id}}" class="btn btnsave"><i class="fas fa-bookmark"></i></button>
+                    {% else %}
+                        <button type="submit" name="post_sid" value="{{post.id}}" class="btn btnsave"><i class="far fa-bookmark"></i></button>
+                    {% endif %}
+                {% endif %}
+            </form>
+            <p><small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small></p>
         </div>
     </div>
     <hr>
-    <h3><a class="article-title" href="{% url 'post-detail' object.id %}">{{ object.title }}</a></h3>
+    <h3 class="d-inline"><a class="article-title" href="{% url 'post-detail' object.id %}">{{ object.title }}</a></h3>
     {% if object.author == user %}
-        <div>
-            <a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>&nbsp;&nbsp;
-            <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+        <div class="d-inline float-right">
+            &nbsp;&nbsp;&nbsp;<a class="btn btnedit" href="{% url 'post-update' object.id %}"><i class="far fa-edit"></i></a>
+            &nbsp;&nbsp;&nbsp;<a class="btn btndel" href="{% url 'post-delete' object.id %}"><i class="far fa-trash-alt"></i></a>
         </div>
     {% endif %} 
+    
+
     <hr>
     <p class="article-content">{{ object.content|safe }}</p>
 </article>
@@ -39,6 +52,7 @@
     {% endif %}
     - {{total_likes}} Likes
 </form>
+
 
 <hr>
 
@@ -70,7 +84,7 @@
             <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15 rounded-circle article-img" src="{{comment.name.profile.image.url}}" alt="Profile-image">
             <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
               <div class="g-mb-15">
-                <h5 class="h5 g-color-gray-dark-v1 mb-0">{{comment.name}}</h5>
+                <h5 class="h5 g-color-gray-dark-v1 mb-0"><a class="mr-2" href="{% url 'profile-detail-view' comment.name.pk %}">{{comment.name}}</a></h5>
                 <small class="text-mute">{{comment.date_added}}</small>
               </div>
               

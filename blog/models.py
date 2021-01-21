@@ -11,9 +11,13 @@ class Post(models.Model):
     date_updated = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, related_name="blogpost")
+    saves = models.ManyToManyField(User, related_name="blogsave")
 
     def total_likes(self):
         return self.likes.count()
+
+    def total_saves(self):
+        return self.saves.count()
 
     def __str__(self):
         return self.title

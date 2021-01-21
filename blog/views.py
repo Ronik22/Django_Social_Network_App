@@ -49,6 +49,19 @@ def LikeView(request, pk):
     return HttpResponseRedirect(reverse('post-detail', args=[str(pk)]))
 
 @login_required
+def SaveView(request, pk):
+    post = get_object_or_404(Post, id=request.POST.get('post_sid'))
+    saved = False
+    if post.saves.filter(id=request.user.id).exists():
+        post.saves.remove(request.user)
+        saved = False
+    else:
+        post.saves.add(request.user)
+        saved = True
+    return HttpResponseRedirect(reverse('post-detail', args=[str(pk)]))
+
+
+@login_required
 def LikeCommentView(request, id1, id2):
     post = get_object_or_404(Comment, id=request.POST.get('comment_id'))
     cliked = False
@@ -87,6 +100,7 @@ class PostDetailView(DetailView):
         context = super(PostDetailView, self).get_context_data()
         stuff = get_object_or_404(Post, id=self.kwargs['pk'])
         total_likes = stuff.total_likes()
+        total_saves = stuff.total_saves()
         total_comments = stuff.comments.all()
 
         tcl={}
@@ -97,15 +111,22 @@ class PostDetailView(DetailView):
                 cliked = True
 
             tcl[cmt.id] = cliked
-
         context["clikes"]=tcl
+
 
         liked = False
         if stuff.likes.filter(id=self.request.user.id).exists():
             liked = True
-
         context["total_likes"]=total_likes
         context["liked"]=liked
+
+
+        saved = False
+        if stuff.saves.filter(id=self.request.user.id).exists():
+            saved = True
+        context["total_saves"]=total_saves
+        context["saved"]=saved
+
         return context
 
 
@@ -121,16 +142,14 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 @login_required
 def add_comment(request, pk):
     form = request.POST.get('body')
-    if request.method == "POST":
+    if request.method == "POST" and form:
         user = request.user
         post = get_object_or_404(Post, pk=pk)
         
         comment = Comment(name=user,post=post,body=form)
         comment.save() 
         return redirect('post-detail', post.id)
-    else:
-        form = CommentForm()
-    return render(request, 'blog/add_comment.html', {'form': form})
+    return redirect('post-detail', pk)
 
 
 
@@ -174,3 +193,22 @@ def search(request):
     
     params = {'allposts': allposts}
     return render(request, 'blog/search_results.html', params)
+
+
+@login_required
+def AllLikeView(request):
+    user = request.user
+    liked_posts = user.blogpost.all()
+    context = {
+        'liked_posts':liked_posts
+    }
+    return render(request, 'blog/liked_posts.html', context)
+
+@login_required
+def AllSaveView(request):
+    user = request.user
+    saved_posts = user.blogsave.all()
+    context = {
+        'saved_posts':saved_posts
+    }
+    return render(request, 'blog/saved_posts.html', context)

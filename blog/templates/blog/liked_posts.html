@@ -1,0 +1,54 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Liked Posts{% endblock %}
+
+{% block content %}
+
+<h3>Liked Posts :</h3>
+<br>
+{% if not liked_posts %}
+  <p>You have not liked any post...</p>
+{% endif %}
+
+    {% for post in liked_posts %}
+
+    <article class="content-section" style="overflow: auto;">
+      <div class="media">
+          <img class="rounded-circle article-img" src="{{post.author.profile.image.url}}" alt="image">
+          <div class="media-body">
+              <p>
+                <a class="mr-2 h4" href="{% url 'profile-detail-view' post.author.pk %}">{{ post.author }}</a>
+              </p>
+              <small class="text-muted">{{ post.date_posted|date:"F d, Y-h:i A" }}</small>
+          </div>
+      </div>
+      <hr>
+      <h3><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h3>
+      <hr>
+      <p class="article-content">{{ post.content|safe|linebreaks|truncatewords:"20" }} &nbsp;<a href="{% url 'post-detail' post.id %}">[Read full post]</a></p>
+    </article>
+
+    {% endfor %}
+
+    {% if is_paginated %}
+
+      {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.previous_page_number}}">Previous</a>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <a class="btn btn-info mb-4" href="?page={{num}}">{{num}}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a class="btn btn-outline-info mb-4" href="?page={{num}}">{{num}}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.next_page_number}}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.paginator.num_pages}}">Last</a>
+      {% endif %}
+
+    {% endif %}
+{% endblock %}

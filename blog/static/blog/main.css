@@ -195,6 +195,7 @@ body {
   color: rgb(255, 0, 0);
 }
 
+
 .btn{
   border-radius: 0px;
   padding: 8px 15px;
@@ -202,7 +203,7 @@ body {
 }
 
 .btn-warning{
-  background-color: rgb(255, 217, 0);
+  background-color: rgb(255, 187, 0);
   color: rgb(0, 0, 0);
 }
 
@@ -213,4 +214,37 @@ body {
 
 .btnhrt{
   padding: 0;
+}
+
+/* .btnsave i{
+  font-size: 16px;
+}
+
+.btnedit i{
+  font-size: 16px;
+}
+
+.btndel i{
+  font-size: 16px;
+} */
+
+.btnsave{
+  
+  font-size: 24px;
+  padding: 0;
+  color: rgb(255, 210, 60);
+}
+
+.btnedit{
+
+  font-size: 22px;
+  padding: 0;
+  color: rgb(118, 60, 255);
+}
+
+.btndel{
+
+  font-size: 22px;
+  padding: 0;
+  color: rgb(255, 68, 68);
 }

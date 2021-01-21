@@ -36,11 +36,13 @@
                 {% if user.is_authenticated %}
                 <div class="dropdown">
                   <a class="dropdown-toggle nav-link" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fab fa-hive"></i>&nbsp;Posts
+                    Posts
                   </a>                  
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <a class="dropdown-item" href="{% url 'blog-home' %}">All Posts</a>
                     <a class="dropdown-item" href="{% url 'post-create' %}">New Post +</a>
+                    <a class="dropdown-item" href="{% url 'all-like' %}">Liked Posts</a>
+                    <a class="dropdown-item" href="{% url 'all-save' %}">Saved Posts</a>
                     <a class="dropdown-item" href="{% url 'posts-follow-view' %}">Feeds</a>
                     <a class="dropdown-item" href="{% url 'user-posts' user %}">My Posts</a>
                   </div>
@@ -50,7 +52,8 @@
                 {% if user.is_authenticated %}
                   <div class="dropdown">
                     <a class="dropdown-toggle nav-link" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="fas fa-user-circle"></i>&nbsp;{{user}}
+                      <img class="rounded-circle" style="height: 20px; width: 20px;" src="{{user.profile.image.url}}" alt="">&nbsp;{{user}}
+                      
                     </a>                  
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                       <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
