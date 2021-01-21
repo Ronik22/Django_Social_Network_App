@@ -10,6 +10,7 @@ from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 
 
+
 @receiver(user_logged_in)
 def got_online(sender, user, request, **kwargs):    
     user.profile.is_online = True
@@ -108,3 +109,4 @@ class ProfileDetailView(LoginRequiredMixin,DetailView):
             follow = False
         context["follow"] = follow
         return context
+

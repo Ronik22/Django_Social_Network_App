@@ -3,3 +3,5 @@ crispy-forms
 django-cleanup
 pillow
 django-ckeditor
+
+django-notifications-hq

@@ -17,8 +17,8 @@
 
 <hr>
 <li>Work on UI/UX
-<li><strike>Add like to comments</strike>
-<li><strike>Bio for users</strike>
+<li>Add like to comments
+<li>Bio for users
 <li>Notifications
 <li>Public profile and private profile toggle option
 <li>Fix post create/edit toolbar
