@@ -29,9 +29,10 @@ class Post(models.Model):
 class Comment(models.Model):
     post = models.ForeignKey(Post, related_name="comments" , on_delete=models.CASCADE)
     name = models.ForeignKey(User, on_delete=models.CASCADE)
-    body = models.TextField()
+    body = models.TextField(max_length=200)
     date_added = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, related_name="blogcomment")
+    reply = models.ForeignKey('self', null=True, related_name="replies", on_delete=models.CASCADE)
 
     def total_clikes(self):
         return self.likes.count()

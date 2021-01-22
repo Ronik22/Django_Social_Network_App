@@ -142,11 +142,15 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 @login_required
 def add_comment(request, pk):
     form = request.POST.get('body')
+    reply_id = request.POST.get('comment_id')
+    comment_qs = None
+    if reply_id:
+        comment_qs = Comment.objects.get(id=reply_id)
     if request.method == "POST" and form:
         user = request.user
         post = get_object_or_404(Post, pk=pk)
         
-        comment = Comment(name=user,post=post,body=form)
+        comment = Comment(name=user,post=post,body=form, reply=comment_qs)
         comment.save() 
         return redirect('post-detail', post.id)
     return redirect('post-detail', pk)
