@@ -191,8 +191,13 @@ body {
 
 
 .btnhrt i{
-  font-size: 24px;
+  font-size: 22px;
   color: rgb(255, 0, 0);
+}
+
+.btncmt i{
+  font-size: 22px;
+  color: rgb(0, 84, 241);
 }
 
 
@@ -216,17 +221,10 @@ body {
   padding: 0;
 }
 
-/* .btnsave i{
-  font-size: 16px;
+.btncmt{
+  padding: 0;
 }
 
-.btnedit i{
-  font-size: 16px;
-}
-
-.btndel i{
-  font-size: 16px;
-} */
 
 .btnsave{
   
