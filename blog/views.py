@@ -64,8 +64,9 @@ def LikeView(request):
     # return HttpResponseRedirect(post.get_absolute_url())
 
 @login_required
-def SaveView(request, pk):
-    post = get_object_or_404(Post, id=request.POST.get('post_sid'))
+def SaveView(request):
+    # post = get_object_or_404(Post, id=request.POST.get('post_sid'))
+    post = get_object_or_404(Post, id=request.POST.get('id'))
     saved = False
     if post.saves.filter(id=request.user.id).exists():
         post.saves.remove(request.user)
@@ -73,7 +74,17 @@ def SaveView(request, pk):
     else:
         post.saves.add(request.user)
         saved = True
-    return HttpResponseRedirect(reverse('post-detail', args=[str(pk)]))
+    
+    context = {
+        'post':post,
+        'total_saves':post.total_saves(),
+        'saved':saved,
+    }
+
+    if request.is_ajax():
+        html = render_to_string('blog/save_section.html',context, request=request)
+        return JsonResponse({'form':html})
+    # return HttpResponseRedirect(reverse('post-detail', args=[str(pk)]))
 
 
 @login_required

@@ -1,0 +1,11 @@
+<form class="d-inline float-right" action="{% url 'post-save' %}" method="POST">
+    {% csrf_token %}
+
+    {% if user.is_authenticated %}
+        {% if saved %}
+            <button id="save" type="submit" name="post_sid" value="{{post.id}}" class="btn btnsave"><i class="fas fa-bookmark"></i></button>
+        {% else %}
+            <button id="save" type="submit" name="post_sid" value="{{post.id}}" class="btn btnsave"><i class="far fa-bookmark"></i></button>
+        {% endif %}
+    {% endif %}
+</form>

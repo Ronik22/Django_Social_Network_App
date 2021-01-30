@@ -232,6 +232,10 @@ body {
   padding: 0;
   color: rgb(255, 210, 60);
 }
+.btnsave:hover{
+  color: rgb(255, 210, 60);
+  cursor: pointer;
+}
 
 .btnedit{
 

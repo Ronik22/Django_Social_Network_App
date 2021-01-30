@@ -130,6 +130,25 @@
           });
 
 
+          $(document).on('click','#save',function(event){
+            event.preventDefault();
+            var pk = $(this).attr('value');
+            $.ajax({
+              type: 'POST',
+              url: '{% url "post-save" %}',
+              data: {'id':pk, 'csrfmiddlewaretoken':'{{ csrf_token }}'},
+              dataType: 'json',
+              success: function(response){
+                  $('#save-section').html(response['form']);
+                  console.log($('#save-section').html(response['form']));
+              },
+              error: function(rs, e){
+                  console.log(rs.responseText);
+              },
+            });
+          });
+
+
           $(document).on('submit','.comment-form', function(event){
             event.preventDefault();
             console.log($(this).serialize());

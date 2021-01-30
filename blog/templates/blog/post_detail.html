@@ -10,17 +10,9 @@
         <img class="rounded-circle article-img" src="{{post.author.profile.image.url}}" alt="image">
         <div class="media-body">
             <h4 class="d-inline"><a class="mr-2" href="{% url 'profile-detail-view' post.author.pk %}">{{ post.author }}</a></h4>
-            <form class="d-inline float-right" action="{% url 'post-save' post.pk %}" method="POST">
-                {% csrf_token %}
-            
-                {% if user.is_authenticated %}
-                    {% if saved %}
-                        <button type="submit" name="post_sid" value="{{post.id}}" class="btn btnsave"><i class="fas fa-bookmark"></i></button>
-                    {% else %}
-                        <button type="submit" name="post_sid" value="{{post.id}}" class="btn btnsave"><i class="far fa-bookmark"></i></button>
-                    {% endif %}
-                {% endif %}
-            </form>
+            <div id="save-section">
+                {% include 'blog/save_section.html' %}
+            </div>
             <p><small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small></p>
         </div>
     </div>
