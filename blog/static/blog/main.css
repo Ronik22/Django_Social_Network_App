@@ -246,3 +246,7 @@ body {
   padding: 0;
   color: rgb(255, 68, 68);
 }
+
+.custom-txt{
+  width: 100%;
+}
