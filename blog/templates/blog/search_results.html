@@ -4,9 +4,12 @@
 
 {% block content %}
 
-<h3>Search Results :</h3>
-<br>
+<div class="content-section">
+  <h3>Search Results ({{allposts|length}})</h3>
+</div>
+
     {% if allposts|length == 0 %}
+      <div class="content-section">
         <p>Your search did not match any posts ...</p>
 
         <p class="text-muted">Suggestions:</p>
@@ -14,8 +17,8 @@
             <li>Make sure that all words are spelled correctly.</li> 
             <li>Try different keywords.</li>
         </ul> 
-        <br><br>
-        
+      </div>
+      <br><br>
     {% endif %}
     {% for post in allposts %}
 
@@ -32,7 +35,7 @@
       <hr>
       <h3><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h3>
       <hr>
-      <p class="article-content">{{ post.content|safe|linebreaks|truncatewords:"20" }} &nbsp;<a href="{% url 'post-detail' post.id %}">[Read full post]</a></p>
+      <p class="article-content">{{ post.content|safe|linebreaks|truncatewords_html:"20" }} &nbsp;<a href="{% url 'post-detail' post.id %}">[Read full post]</a></p>
     </article>
 
     {% endfor %}

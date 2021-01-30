@@ -1,0 +1,134 @@
+<div id="tempocs">
+
+
+{% if user.is_authenticated %}
+    <form class="comment-form" method="post" action=".">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class=" mb-4">Add Comment</legend>
+            <textarea required style="width: 100%;" name="body" id="cmtbody" cols="40" rows="5"></textarea>
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-outline-info" id="acsubmit" type="submit">Add Comment</button>
+        </div>
+    </form>
+{% endif %}
+
+<br>
+
+<h3>Comments ({{ comments.count }}) :</h3>
+<hr>
+<br>
+{% if not comments %}
+    No Comments Yet...
+{% else %}
+    
+    {% for comment in comments %}
+
+    <div class="content-section">
+        <div class="media g-mb-30 media-comment">
+            <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15 rounded-circle article-img" src="{{comment.name.profile.image.url}}" alt="Profile-image">
+            <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
+                <div class="g-mb-15">
+                    <h5 class="h5 g-color-gray-dark-v1 mb-0"><a class="mr-2" href="{% url 'profile-detail-view' comment.name.pk %}">{{comment.name}}</a></h5>
+                    <small class="text-mute">{{comment.date_added}}</small>
+                </div>
+                
+                <p class="mt-3">{{comment.body}}</p>
+            
+                <ul class="list-inline d-sm-flex my-0">
+                    <li class="list-inline-item g-mr-20">
+                        <form action="{% url 'comment-like' id1=post.pk id2=comment.pk %}" method="POST">
+                            {% csrf_token %}
+                            
+                            {% if user.is_authenticated %}
+                                {% for key, value in clikes.items %}
+                                    {% if key == comment.id %}
+                                        {% if value == True %}
+                                            <button type="submit" name="comment_id" value="{{comment.id}}" class="btn btnhrt"><i class="fas fa-heart"></i></button>
+                                        {% else %}
+                                            <button type="submit" name="comment_id" value="{{comment.id}}" class="btn btnhrt"><i class="far fa-heart"></i></button>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <button class="btn btnhrt"><i class="far fa-heart"></i></button>
+                            {% endif %}
+
+                             {{comment.total_clikes}}
+                        </form>
+                    </li>
+                    <li class="list-inline-item">
+                        &nbsp;&nbsp;&nbsp;
+                        <a class="btn btncmt" data-toggle="collapse" href="#multiCollapse{{comment.id}}" role="button" aria-expanded="false" aria-controls="multiCollapse{{comment.id}}">
+                            <i class="far fa-comment"></i>
+                        </a>
+                         {{comment.replies.count}}
+                    </li>
+                </ul>
+
+                <br>
+
+                <div class="collapse multi-collapse" id="multiCollapse{{comment.id}}">
+                <hr>
+                    {% if user.is_authenticated %}
+                        <form class="reply-form" method="POST" action=".">
+                            {% csrf_token %}
+                            <input type="hidden" name="comment_id" value="{{comment.id}}">
+                            <fieldset class="form-group">
+                                <legend class="h5 mb-4">Replies :</legend>
+                                <textarea required style="width: 100%;" name="body" id="cmt-body" cols="40" rows="2"></textarea>
+                            </fieldset>
+                            <div class="form-group">
+                                <button class="btn btn-outline-info" type="submit">Reply</button>
+                            </div>
+                        </form>
+                    {% endif %}
+
+
+                    {% for reply in comment.replies.all %}
+                    <br>
+                        <div class="g-mb-15">
+                            <h5 class="h5 g-color-gray-dark-v1 mb-0"><a class="mr-2" href="{% url 'profile-detail-view' reply.name.pk %}">{{reply.name}}</a></h5>
+                            <small class="text-mute">{{reply.date_added}}</small>
+                        </div>
+                        
+                        <p class="mt-3">{{reply.body}}</p>
+                    
+                        <ul class="list-inline d-sm-flex my-0">
+                            <li class="list-inline-item g-mr-20">
+                                <form action="{% url 'comment-like' id1=post.pk id2=reply.pk %}" method="POST">
+                                    {% csrf_token %}
+
+                                    {% if user.is_authenticated %}
+                                        {% for key, value in clikes.items %}
+                                            {% if reply.id == key %}
+                                                {% if value == True %}
+                                                    <button type="submit" name="comment_id" value="{{reply.id}}" class="btn btnhrt"><i class="fas fa-heart"></i></button>
+                                                {% else %}
+                                                    <button type="submit" name="comment_id" value="{{reply.id}}" class="btn btnhrt"><i class="far fa-heart"></i></button>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        <button class="btn btnhrt"><i class="far fa-heart"></i></button>
+                                    {% endif %}
+
+                                     {{reply.total_clikes}}
+                                </form>
+                            </li>
+                        </ul>
+                        <hr>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <br>
+
+    {% endfor %}
+{% endif %}
+
+</div>
