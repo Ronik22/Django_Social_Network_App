@@ -25,7 +25,7 @@
               
               <div id="searchbar" >
                 <form method="GET" action="/search">
-                  <input name="query" id="search" type="text" placeholder="Search..">
+                  <input required name="query" id="search" type="text" placeholder="Search..">
                   <button class="search-btn" type="submit"><i class="fas fa-search"></i></button>
                 </form>
               </div>
@@ -56,9 +56,9 @@
                       
                     </a>                  
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink2">
-                      <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                      <a class="dropdown-item" href="{% url 'profile-detail-view' user.id %}">Profile</a>
                       <a class="dropdown-item" href="{% url 'public-profile' user %}">Public-Profile</a>
-                      <a class="dropdown-item" href="#">Settings</a>
+                      <a class="dropdown-item" href="{% url 'profile' %}">Settings</a>
                       <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                     </div>
                   </div>
@@ -122,6 +122,25 @@
               success: function(response){
                   $('#like-section').html(response['form']);
                   console.log($('#like-section').html(response['form']));
+              },
+              error: function(rs, e){
+                  console.log(rs.responseText);
+              },
+            });
+          });
+
+
+          $(document).on('click','.clike',function(event){
+            event.preventDefault();
+            var pk = $(this).attr('value');
+            $.ajax({
+              type: 'POST',
+              url: "{% url 'comment-like' %}",
+              data: {'id':pk, 'pid':'{{post.pk}}', 'csrfmiddlewaretoken':'{{ csrf_token }}'},
+              dataType: 'json',
+              success: function(response){
+                  $('.main-comment-section').html(response['form']);
+                  console.log($('.main-comment-section').html(response['form']));
               },
               error: function(rs, e){
                   console.log(rs.responseText);

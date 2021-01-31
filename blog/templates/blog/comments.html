@@ -38,16 +38,16 @@
             
                 <ul class="list-inline d-sm-flex my-0">
                     <li class="list-inline-item g-mr-20">
-                        <form action="{% url 'comment-like' id1=post.pk id2=comment.pk %}" method="POST">
+                        <form action="{% url 'comment-like' %}" method="POST">
                             {% csrf_token %}
                             
                             {% if user.is_authenticated %}
                                 {% for key, value in clikes.items %}
                                     {% if key == comment.id %}
                                         {% if value == True %}
-                                            <button type="submit" name="comment_id" value="{{comment.id}}" class="btn btnhrt"><i class="fas fa-heart"></i></button>
+                                            <button type="submit" name="comment_id" value="{{comment.id}}" class="btn btnhrt clike"><i class="fas fa-heart"></i></button>
                                         {% else %}
-                                            <button type="submit" name="comment_id" value="{{comment.id}}" class="btn btnhrt"><i class="far fa-heart"></i></button>
+                                            <button type="submit" name="comment_id" value="{{comment.id}}" class="btn btnhrt clike"><i class="far fa-heart"></i></button>
                                         {% endif %}
                                     {% endif %}
                                 {% endfor %}
@@ -85,7 +85,6 @@
                         </form>
                     {% endif %}
 
-
                     {% for reply in comment.replies.all %}
                     <br>
                         <div class="g-mb-15">
@@ -94,32 +93,34 @@
                         </div>
                         
                         <p class="mt-3">{{reply.body}}</p>
-                    
+
                         <ul class="list-inline d-sm-flex my-0">
                             <li class="list-inline-item g-mr-20">
-                                <form action="{% url 'comment-like' id1=post.pk id2=reply.pk %}" method="POST">
+                                
+                                <form action="{% url 'comment-like' %}" method="POST">
                                     {% csrf_token %}
-
+                                
                                     {% if user.is_authenticated %}
                                         {% for key, value in clikes.items %}
                                             {% if reply.id == key %}
                                                 {% if value == True %}
-                                                    <button type="submit" name="comment_id" value="{{reply.id}}" class="btn btnhrt"><i class="fas fa-heart"></i></button>
+                                                    <button type="submit" name="comment_id" value="{{reply.id}}" class="btn btnhrt clike"><i class="fas fa-heart"></i></button>
                                                 {% else %}
-                                                    <button type="submit" name="comment_id" value="{{reply.id}}" class="btn btnhrt"><i class="far fa-heart"></i></button>
+                                                    <button type="submit" name="comment_id" value="{{reply.id}}" class="btn btnhrt clike"><i class="far fa-heart"></i></button>
                                                 {% endif %}
                                             {% endif %}
                                         {% endfor %}
                                     {% else %}
                                         <button class="btn btnhrt"><i class="far fa-heart"></i></button>
                                     {% endif %}
-
-                                     {{reply.total_clikes}}
+                                
+                                        {{reply.total_clikes}}
                                 </form>
                             </li>
                         </ul>
                         <hr>
                     {% endfor %}
+                    
 
                 </div>
 

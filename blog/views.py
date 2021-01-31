@@ -11,7 +11,7 @@ from users.models import Profile
 from itertools import chain
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
 
 
@@ -36,8 +36,17 @@ def posts_of_following_profiles(request):
     posts.append(my_posts)
     if len(posts)>0:
         qs = sorted(chain(*posts), reverse=True, key=lambda obj:obj.date_posted)
+
+    paginator = Paginator(qs, 5)
+    page = request.GET.get('page')
+    try:
+        posts_list = paginator.page(page)
+    except PageNotAnInteger:
+        posts_list = paginator.page(1)
+    except EmptyPage:
+        posts_list = paginator.page(paginator.num_pages)
   
-    return render(request,'blog/feeds.html',{'profile':profile,'posts':qs})
+    return render(request,'blog/feeds.html',{'profile':profile,'posts':posts_list})
 
 
 @login_required
@@ -88,8 +97,8 @@ def SaveView(request):
 
 
 @login_required
-def LikeCommentView(request, id1, id2):
-    post = get_object_or_404(Comment, id=request.POST.get('comment_id'))
+def LikeCommentView(request): # , id1, id2              id1=post.pk id2=reply.pk
+    post = get_object_or_404(Comment, id=request.POST.get('id'))
     cliked = False
     if post.likes.filter(id=request.user.id).exists():
         post.likes.remove(request.user)
@@ -97,7 +106,33 @@ def LikeCommentView(request, id1, id2):
     else:
         post.likes.add(request.user)
         cliked = True
-    return HttpResponseRedirect(reverse('post-detail', args=[str(id1)]))
+
+    cpost = get_object_or_404(Post, id=request.POST.get('pid'))
+    total_comments2 = cpost.comments.all().order_by('-id')
+    total_comments = cpost.comments.all().filter(reply=None).order_by('-id')
+    tcl={}
+    for cmt in total_comments2:
+        total_clikes = cmt.total_clikes()
+        cliked = False
+        if cmt.likes.filter(id=request.user.id).exists():
+            cliked = True
+
+        tcl[cmt.id] = cliked
+
+
+    context = {
+        'comment_form':CommentForm(),
+        'post':cpost,
+        'comments':total_comments,
+        'total_clikes':post.total_clikes(),
+        'clikes':tcl
+    }
+
+    if request.is_ajax():
+        html = render_to_string('blog/comments.html',context, request=request)
+        return JsonResponse({'form':html})
+
+    # return HttpResponseRedirect(reverse('post-detail', args=[str(id1)]))
 
 
 class PostListView(ListView):
@@ -217,8 +252,6 @@ def PostDetailView(request,pk):
         saved = True
     context["total_saves"]=total_saves
     context["saved"]=saved
-    
-    
     
 
     context['comment_form'] = comment_form
