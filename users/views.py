@@ -8,6 +8,7 @@ from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.dispatch import receiver 
 from django.contrib.auth.signals import user_logged_in, user_logged_out
+from notification.models import Notification
 
 
 
@@ -31,8 +32,12 @@ def follow_unfollow_profile(request):
 
         if obj.user in my_profile.following.all():
             my_profile.following.remove(obj.user)
+            notify = Notification.objects.filter(sender=request.user, notification_type=2)
+            notify.delete()
         else:
             my_profile.following.add(obj.user)
+            notify = Notification(sender=request.user, user=obj.user, notification_type=2)
+            notify.save()
         return redirect(request.META.get('HTTP_REFERER'))
     return redirect('profile-list-view')
 

@@ -1,3 +1,4 @@
+from notification.models import Notification
 from django.core.checks import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -57,9 +58,13 @@ def LikeView(request):
     if post.likes.filter(id=request.user.id).exists():
         post.likes.remove(request.user)
         liked = False
+        notify = Notification.objects.filter(post=post, sender=request.user, notification_type=1)
+        notify.delete()
     else:
         post.likes.add(request.user)
         liked = True
+        notify = Notification(post=post, sender=request.user, user=post.author, notification_type=1)
+        notify.save()
 
     context = {
         'post':post,
@@ -222,7 +227,13 @@ def PostDetailView(request,pk):
                 comment_qs = Comment.objects.get(id=reply_id)
             
             comment = Comment.objects.create(name=request.user,post=stuff,body=form, reply=comment_qs)
-            comment.save() 
+            comment.save()
+            if reply_id:
+                notify = Notification(post=stuff, sender=request.user, user=stuff.author, text_preview=form, notification_type=4)
+                notify.save()
+            else:
+                notify = Notification(post=stuff, sender=request.user, user=stuff.author, text_preview=form, notification_type=3)
+                notify.save()
             total_comments = stuff.comments.all().filter(reply=None).order_by('-id')
             total_comments2 = stuff.comments.all().order_by('-id')
     else:
@@ -371,3 +382,4 @@ def AllSaveView(request):
         'saved_posts':saved_posts
     }
     return render(request, 'blog/saved_posts.html', context)
+
