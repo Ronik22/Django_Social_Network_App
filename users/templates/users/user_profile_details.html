@@ -37,6 +37,7 @@
                         <button type="submit" class="btn btn-primary mb-2">Follow</button>
                     </form>
                 {% endif %}
+                <a class="btn btn-warning mb-2" href="{% url 'chat' object.pk %}">Chat</a>
             {% endif %}
         </div>
         <hr>

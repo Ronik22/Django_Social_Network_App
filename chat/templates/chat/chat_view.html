@@ -1,0 +1,67 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+    
+
+<div class="container content-section px-0 py-0">
+    
+    <div class="bg-gray py-1 px-3">
+        <p class="h5 mb-0 py-2"><img src="{{other_user.profile.image.url}}" alt="user" width="40" height="40" class="rounded-circle">&nbsp;&nbsp;{{other_user.username}}</p>
+        <hr>
+    </div>
+    
+      <!-- Chat Box-->
+      <div class="px-0">
+        <div class=" py-5 px-4 chat-box bg-white">
+
+          {% for chat in chats %}
+
+            {% if chat.sender != request.user %}
+            <!-- Sender Message-->
+            <div class="media w-75 mb-3"><img src="{{other_user.profile.image.url}}" alt="user" width="40" height="40" class="rounded-circle">
+              <div class="media-body ml-3">
+                <div class="bg-light rounded py-2 px-3 mb-2">
+                  <p class="text-small mb-0 text-muted">{{chat.text}}</p>
+                </div>
+                <p class="small text-muted">{{chat.date}}</p>
+              </div>
+            </div>
+            
+            {% else %}
+
+            <!-- Reciever Message-->
+            <div class="media w-75 ml-auto mb-3">
+              <div class="media-body">
+                <div class="bg-primary rounded py-2 px-3 mb-2">
+                  <p class="text-small mb-0 text-white">{{chat.text}}</p>
+                </div>
+                <p class="small text-muted">{{chat.date}}</p>
+              </div>
+            </div>
+            
+            {% endif %}
+
+          {% endfor %}
+
+        </div>  
+        <!-- Typing area -->
+        <form action="." method="POST" class="bg-light">
+          <div class="input-group">
+            {% csrf_token %}
+            <input name="body" type="text" placeholder="Type a message" aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light">
+            <div class="input-group-append">
+              <button id="button-addon2" type="submit" class="btn btn-link"> <i class="fa fa-paper-plane"></i></button>
+            </div>
+          </div>
+        </form>
+  
+      </div>
+</div>
+ 
+
+
+
+
+{% endblock %}

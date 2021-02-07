@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+env_path = Path('.') / '.env'
+load_dotenv(dotenv_path=env_path)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,10 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '^5j#@n*!c6*g^phi@($0-shjyno9+nag6k&8%lgx8rze*c_&t4'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG")
 
 ALLOWED_HOSTS = [] 
 # ALLOWED_HOSTS = ['192.168.0.104'] 
@@ -46,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'ckeditor',
     'notification',
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -146,7 +151,9 @@ CKEDITOR_CONFIGS = {
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
+# EMAIL_PORT = os.getenv("EMAIL_PORT")
 # EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = os.envireon.get('EMAIL_USER')     # environment variable containing username
-# EMAIL_HOST_PASSWORD = os.envireon.get('EMAIL_PASS')  # environment variable containing password
+# EMAIL_HOST_USER = os.getenv('EMAIL_USER')     # environment variable containing username
+# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASS')  # environment variable containing password
+
+GOOGLE_RECAPTCHA_SECRET_KEY = os.getenv("GOOGLE_RECAPTCHA_SECRET_KEY")

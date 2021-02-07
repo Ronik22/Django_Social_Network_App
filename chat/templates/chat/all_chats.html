@@ -1,0 +1,36 @@
+{% extends "blog/base.html" %}
+
+{% block title %}All Chats{% endblock %}
+
+{% block content %}
+    
+<!-- Users box-->
+<div class="px-0">
+    <div class="bg-white">
+
+      <div class="">
+        <div class="list-group rounded-0">
+
+        {% for user in users %}
+
+          <a href="{% url 'chat' user.id %}" class="list-group-item list-group-item-action list-group-item-light rounded-0">
+            <div class="media"><img src="{{user.profile.image.url}}" alt="user" width="50" height="50" class="rounded-circle">
+              <div class="media-body ml-4">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                  <h6 class="mb-0">{{user.username}}</h6><small class="small font-weight-bold">21 Aug</small>
+                </div>
+                <p class="font-italic text-muted mb-0 text-small">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
+              </div>
+            </div>
+          </a>
+
+        {% endfor %}
+
+        </div>
+      </div>
+    </div>
+</div>
+
+<br>
+
+{% endblock %}

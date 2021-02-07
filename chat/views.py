@@ -1,0 +1,60 @@
+from typing import ContextManager
+from django.contrib.auth.models import User
+import json
+from django.shortcuts import get_object_or_404, render
+from .models import Chat
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+
+# Create your views here.
+
+@login_required
+def ChatView(request,id):
+    receiver = get_object_or_404(User, id=id)
+    sender = request.user
+    chats = Chat.objects.filter(
+        Q(sender=sender,receiver=receiver) | Q(sender=receiver,receiver=sender)
+    ).order_by('date')
+    # if request.method == 'POST':
+    #     text = request.POST.get('chat-text')
+    
+    if request.method == "POST":
+        form = request.POST.get('body')
+        newchat = Chat.objects.create(sender=sender, receiver=receiver, text=form)
+        newchat.save()
+
+    # if request.is_ajax():
+    #     html = render_to_string('blog/save_section.html',context, request=request)
+    #     return JsonResponse({'form':html})
+
+    context = {
+        'chats':chats,
+        'other_user':receiver,
+    }
+    return render(request, 'chat/chat_view.html', context)
+
+
+# @login_required
+# def ajax_load_messages(request,pk):
+#     receiver = get_object_or_404(User, id=id)
+#     sender = request.user
+#     chats = Chat.objects.filter(
+#         Q(sender=sender,receiver=receiver) | Q(sender=receiver,receiver=sender)
+#     ).order_by('date')
+#     # chats.update(has_seen=True)
+#     chat_list = [{
+#         "sender": chat.sender.username,
+#         "chat": chat.text,
+#         "sent": chat.sender == sender
+#     } for chat in chats ]
+#     if request.method == "POST":
+#         chat = json.load(request.body)
+
+
+@login_required
+def AllChat(request):
+    users = User.objects.all()
+    context = {
+        'users':users
+    }
+    return render(request, 'chat/all_chats.html', context)
