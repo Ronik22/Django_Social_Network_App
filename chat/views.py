@@ -1,10 +1,12 @@
 from typing import ContextManager
 from django.contrib.auth.models import User
 import json
+from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from .models import Chat
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.template.loader import render_to_string
 
 # Create your views here.
 
@@ -15,22 +17,21 @@ def ChatView(request,id):
     chats = Chat.objects.filter(
         Q(sender=sender,receiver=receiver) | Q(sender=receiver,receiver=sender)
     ).order_by('date')
-    # if request.method == 'POST':
-    #     text = request.POST.get('chat-text')
     
     if request.method == "POST":
         form = request.POST.get('body')
         newchat = Chat.objects.create(sender=sender, receiver=receiver, text=form)
         newchat.save()
 
-    # if request.is_ajax():
-    #     html = render_to_string('blog/save_section.html',context, request=request)
-    #     return JsonResponse({'form':html})
-
     context = {
         'chats':chats,
         'other_user':receiver,
     }
+
+    if request.is_ajax():
+        html = render_to_string('chat/chat_section.html',context, request=request)
+        return JsonResponse({'form':html})
+
     return render(request, 'chat/chat_view.html', context)
 
 
@@ -48,7 +49,14 @@ def ChatView(request,id):
 #         "sent": chat.sender == sender
 #     } for chat in chats ]
 #     if request.method == "POST":
-#         chat = json.load(request.body)
+#         chat = json.loads(request.body)
+#         m = Chat.objects.create(sender=sender, receiver=receiver, text=chat)
+#         chat_list.append({
+#             "sender": request.user.username,
+#             "chat": m.text,
+#             "sent": True
+#         })
+#     return JsonResponse(chat_list, safe=False)
 
 
 @login_required

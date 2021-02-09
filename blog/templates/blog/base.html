@@ -114,6 +114,10 @@
       <script type="text/javascript">
 
         $(document).ready(function(event){
+          
+          $(".chat-box").scrollTop($(".chat-box")[0].scrollHeight);
+
+          // LIKE POSTS
 
           $(document).on('click','#like',function(event){
             event.preventDefault();
@@ -133,6 +137,7 @@
             });
           });
 
+          // COMMENT LIKE
 
           $(document).on('click','.clike',function(event){
             event.preventDefault();
@@ -152,6 +157,7 @@
             });
           });
 
+          // SAVE POSTS
 
           $(document).on('click','#save',function(event){
             event.preventDefault();
@@ -171,6 +177,7 @@
             });
           });
 
+          // COMMENT FORM
 
           $(document).on('submit','.comment-form', function(event){
             event.preventDefault();
@@ -191,6 +198,7 @@
             });
           });
 
+          // REPLY FORM
 
           $(document).on('submit','.reply-form', function(event){
             event.preventDefault();
@@ -210,6 +218,46 @@
               },
             });
           });
+
+          // CHATS
+
+          $(document).on('submit','.chat-form', function(event){
+            event.preventDefault();
+            console.log($(this).serialize());
+            $.ajax({
+              type: 'POST',
+              url: $(this).attr('action'),
+              data: $(this).serialize(),
+              dataType: 'json',
+              success: function(response){
+                $('#chat-section').html(response['form']);
+                // console.log(response['form'])
+                $('#chatfinp').val('');
+                $(".chat-box").scrollTop($(".chat-box")[0].scrollHeight);
+              },
+              error: function(rs, e){
+                console.log(rs.responseText);
+              },
+            });
+          });          
+
+          // GET CHATS
+
+          setInterval(function(){
+            var nht = $(".chat-box").scrollTop()
+            $.ajax({
+              type: 'GET',
+              url: ".",
+              success: function(response){
+                $('#chat-section').html(response['form']);
+                $(".chat-box").scrollTop(nht);
+              },
+              error: function(rs, e){
+                console.log(rs.responseText);
+              },
+            });
+          },500);
+
 
         });
 
