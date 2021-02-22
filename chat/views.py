@@ -1,68 +1,63 @@
-from typing import ContextManager
-from django.contrib.auth.models import User
-import json
-from django.http.response import JsonResponse
-from django.shortcuts import get_object_or_404, render
-from .models import Chat
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import Room, Chat
 from django.db.models import Q
-from django.template.loader import render_to_string
-
-# Create your views here.
+from friend.models import FriendList
+from django.contrib.auth.models import User
 
 @login_required
-def ChatView(request,id):
-    receiver = get_object_or_404(User, id=id)
-    sender = request.user
+def room_enroll(request):
+    friends = FriendList.objects.filter(user=request.user)[0].friends.all()
+    all_rooms = Room.objects.filter(
+        Q(author=request.user) | Q(friend=request.user)
+    ).order_by('-created')
+
+
+    context = {
+        'all_rooms':all_rooms,
+        'all_friends':friends,
+    }
+    return render(request, 'chat/join_room.html', context)
+
+
+@login_required
+def room_choice(request, friend_id):
+    friend = User.objects.filter(pk=friend_id)
+    if not friend:
+        messages.error(request, 'Invalid User ID')
+        return redirect('room-enroll') 
+    if not FriendList.objects.filter(user=request.user, friends=friend[0]):
+        messages.error(request, 'You need to be friends to chat')
+        return redirect('room-enroll') 
+
+    room = Room.objects.filter(
+        Q(author=request.user, friend=friend[0]) | Q(author=friend[0], friend=request.user)
+    )
+    if not room:
+        create_room = Room(author=request.user, friend=friend[0])
+        create_room.save()
+        room = create_room.room_id
+        return redirect('room', room, friend_id)
+
+    return redirect('room', room[0].room_id, friend_id)
+
+
+@login_required
+def room(request, room_name, friend_id):
+    all_rooms = Room.objects.filter(room_id=room_name)
+    if not all_rooms:  # str(request.user)
+        messages.error(request, 'Invalid Room ID')
+        return redirect('room-enroll')
+
     chats = Chat.objects.filter(
-        Q(sender=sender,receiver=receiver) | Q(sender=receiver,receiver=sender)
+        room_id=room_name
     ).order_by('date')
-    
-    if request.method == "POST":
-        form = request.POST.get('body')
-        newchat = Chat.objects.create(sender=sender, receiver=receiver, text=form)
-        newchat.save()
 
     context = {
-        'chats':chats,
-        'other_user':receiver,
+        'old_chats':chats,
+        'my_name':request.user,
+        'friend_name':User.objects.get(pk=friend_id),
+        'room_name': room_name
     }
-
-    if request.is_ajax():
-        html = render_to_string('chat/chat_section.html',context, request=request)
-        return JsonResponse({'form':html})
-
-    return render(request, 'chat/chat_view.html', context)
-
-
-# @login_required
-# def ajax_load_messages(request,pk):
-#     receiver = get_object_or_404(User, id=id)
-#     sender = request.user
-#     chats = Chat.objects.filter(
-#         Q(sender=sender,receiver=receiver) | Q(sender=receiver,receiver=sender)
-#     ).order_by('date')
-#     # chats.update(has_seen=True)
-#     chat_list = [{
-#         "sender": chat.sender.username,
-#         "chat": chat.text,
-#         "sent": chat.sender == sender
-#     } for chat in chats ]
-#     if request.method == "POST":
-#         chat = json.loads(request.body)
-#         m = Chat.objects.create(sender=sender, receiver=receiver, text=chat)
-#         chat_list.append({
-#             "sender": request.user.username,
-#             "chat": m.text,
-#             "sent": True
-#         })
-#     return JsonResponse(chat_list, safe=False)
-
-
-@login_required
-def AllChat(request):
-    users = User.objects.all()
-    context = {
-        'users':users
-    }
-    return render(request, 'chat/all_chats.html', context)
+    return render(request, 'chat/chatroom.html', context)

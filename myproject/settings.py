@@ -13,7 +13,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from django.contrib.messages import constants as messages
 
+# Loading ENV
 env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path)
 
@@ -30,7 +32,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG")
 
-ALLOWED_HOSTS = [] 
+ALLOWED_HOSTS = ['*'] 
 # ALLOWED_HOSTS = ['192.168.0.104'] 
 
 
@@ -51,6 +53,8 @@ INSTALLED_APPS = [
     'ckeditor',
     'notification',
     'chat',
+    'channels',
+    'friend',
 ]
 
 MIDDLEWARE = [
@@ -120,7 +124,6 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Kolkata'
-# TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -144,7 +147,6 @@ LOGIN_URL = 'login'
 
 CKEDITOR_CONFIGS = {
     'default': {
-        
         'width':'auto',
     },
 }
@@ -157,3 +159,19 @@ CKEDITOR_CONFIGS = {
 # EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASS')  # environment variable containing password
 
 GOOGLE_RECAPTCHA_SECRET_KEY = os.getenv("GOOGLE_RECAPTCHA_SECRET_KEY")
+
+MESSAGE_TAGS = {
+        messages.DEBUG: 'alert-secondary',
+        messages.INFO: 'alert-info',
+        messages.SUCCESS: 'alert-success',
+        messages.WARNING: 'alert-warning',
+        messages.ERROR: 'alert-danger',
+}
+
+ASGI_APPLICATION = "myproject.routing.application"
+
+CHANNEL_LAYERS = {
+    "default":{
+        "BACKEND":"channels.layers.InMemoryChannelLayer"
+    },
+}

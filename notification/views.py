@@ -5,6 +5,7 @@ from notification.models import Notification
 
 # Create your views here.
 
+""" All notifications """
 @login_required
 def ShowNotifications(request):
     user = request.user

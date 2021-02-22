@@ -4,8 +4,12 @@
 
 {% block content %}
 
-<h3>Saved Posts :</h3>
-<br>
+<div class="col-md-8">
+
+<div class="content-section">
+  <h3>Saved Posts ({{saved_posts|length}})</h3>
+</div>
+
 {% if not saved_posts %}
     <p>You have not saved any post...</p>
 {% endif %}
@@ -25,7 +29,7 @@
       <hr>
       <h3><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h3>
       <hr>
-      <p class="article-content">{{ post.content|safe|linebreaks|truncatewords_html:"20" }} &nbsp;<a href="{% url 'post-detail' post.id %}">[Read full post]</a></p>
+      <p class="article-content">{{ post.content|safe|linebreaks|truncatewords_html:"20" }}<a href="{% url 'post-detail' post.id %}">[Read full post]</a></p>
     </article>
 
     {% endfor %}
@@ -51,4 +55,22 @@
       {% endif %}
 
     {% endif %}
+
+</div>
+
+<!-- SIDEBAR -->
+<div class="col-md-4">
+  <div class="content-section">
+      <h3>Our Sidebar</h3>
+      <p class="text-muted">You can put any information here you'd like.
+          <ul class="list-group">
+              <li class="list-group-item list-group-item-light">Latest Posts</li>
+              <li class="list-group-item list-group-item-light">Announcements</li>
+              <li class="list-group-item list-group-item-light">Calendars</li>
+              <li class="list-group-item list-group-item-light">etc</li>
+          </ul>
+      </p>
+  </div>
+</div>  
+
 {% endblock %}

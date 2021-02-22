@@ -4,6 +4,7 @@
 {% block title %}Post{% endblock %}
 
 {% block content %}
+<div class="m-auto w-100 container">
 <div class="content-section">
     <form action="" method="POST">
         {% csrf_token %}
@@ -16,5 +17,6 @@
             <button class="btn btn-outline-info" type="submit">Post</button>
         </div>
     </form>
+</div>
 </div>
 {% endblock %}

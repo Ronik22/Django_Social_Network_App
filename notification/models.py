@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+""" Notification model """
 class Notification(models.Model):
     NOTIFICATION_TYPES = ((1,'Like'),(2,'Follow'),(3,'Comment'),(4,'Reply'),(5,'Like-Comment'),(6,'Like-Reply'))
 

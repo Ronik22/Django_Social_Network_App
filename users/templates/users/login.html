@@ -4,6 +4,7 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
+<div class="m-auto col-md-8">
 <div class="content-section">
     <form action="" method="POST">
         {% csrf_token %}
@@ -23,5 +24,6 @@
             Need an Account? <a class="ml-2" href="{% url 'register' %}">Sign Up Now</a>
         </small>
     </div>
+</div>
 </div>
 {% endblock %}

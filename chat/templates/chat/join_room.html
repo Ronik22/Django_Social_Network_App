@@ -1,0 +1,69 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block content %}
+
+<div class="col-md-8">
+
+    <!-- {% for friend in all_friends %}
+        {{friend}}
+    {% endfor %}
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        <legend for="room_id">Enter room ID:</legend>
+        <input name="room_id" type="text">
+        <br><br>
+        <input class="btn btn-primary" type="submit" value="Join room">
+    </form>
+
+    <br><br> -->
+
+    <!-- ALL CHATROOMS-->
+    <div class="px-0">
+        <div class="bg-white">
+
+        <div class="">
+            <div class="list-group rounded-0">
+
+            {% for friend in all_friends %}
+
+            <a href="{% url 'room-choice' friend.pk %}" class="list-group-item list-group-item-action list-group-item-light rounded-0">
+                <div class="media"><img src="{{friend.profile.image.url}}" alt="room" width="50" height="50" class="rounded-circle">
+                <div class="media-body ml-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h6 class="mb-0">{{friend}}</h6><small class="small font-weight-bold">time</small>
+                    </div>
+                    <p class="font-italic text-muted mb-0 text-small">Here, you can chat with {{friend}}.</p>
+                </div>
+                </div>
+            </a>
+
+            {% endfor %}
+
+            </div>
+        </div>
+        </div>
+    </div>
+
+</div>
+
+<br>
+
+<!-- SIDEBAR -->
+<div class="col-md-4">
+    <div class="content-section">
+        <h3>Our Sidebar</h3>
+        <p class="text-muted">You can put any information here you'd like.
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-light">Latest Posts</li>
+                <li class="list-group-item list-group-item-light">Announcements</li>
+                <li class="list-group-item list-group-item-light">Calendars</li>
+                <li class="list-group-item list-group-item-light">etc</li>
+            </ul>
+        </p>
+    </div>
+</div>  
+
+{% endblock %}

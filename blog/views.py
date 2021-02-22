@@ -16,12 +16,14 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
 
 
-def home(request):
+""" Home page with all posts """
+def first(request):
     context = {
         'posts':Post.objects.all()
     }
-    return render(request, 'blog/home.html', context)
+    return render(request, 'blog/first.html', context)
 
+""" Posts of following user profiles """
 @login_required
 def posts_of_following_profiles(request):
 
@@ -50,9 +52,10 @@ def posts_of_following_profiles(request):
     return render(request,'blog/feeds.html',{'profile':profile,'posts':posts_list})
 
 
+""" Post Like """
 @login_required
 def LikeView(request):
-    # post = get_object_or_404(Post, id=request.POST.get('post_id'))
+
     post = get_object_or_404(Post, id=request.POST.get('id'))
     liked = False
     if post.likes.filter(id=request.user.id).exists():
@@ -75,11 +78,12 @@ def LikeView(request):
     if request.is_ajax():
         html = render_to_string('blog/like_section.html',context, request=request)
         return JsonResponse({'form':html})
-    # return HttpResponseRedirect(post.get_absolute_url())
 
+
+""" Post save """
 @login_required
 def SaveView(request):
-    # post = get_object_or_404(Post, id=request.POST.get('post_sid'))
+
     post = get_object_or_404(Post, id=request.POST.get('id'))
     saved = False
     if post.saves.filter(id=request.user.id).exists():
@@ -98,9 +102,9 @@ def SaveView(request):
     if request.is_ajax():
         html = render_to_string('blog/save_section.html',context, request=request)
         return JsonResponse({'form':html})
-    # return HttpResponseRedirect(reverse('post-detail', args=[str(pk)]))
 
 
+""" Like post comments """
 @login_required
 def LikeCommentView(request): # , id1, id2              id1=post.pk id2=reply.pk
     post = get_object_or_404(Comment, id=request.POST.get('id'))
@@ -137,20 +141,20 @@ def LikeCommentView(request): # , id1, id2              id1=post.pk id2=reply.pk
         html = render_to_string('blog/comments.html',context, request=request)
         return JsonResponse({'form':html})
 
-    # return HttpResponseRedirect(reverse('post-detail', args=[str(id1)]))
 
-
+""" Home page with all posts """
 class PostListView(ListView):
     model = Post
-    template_name = 'blog/home.html' # <app>/<model>_<viewtype>.html
+    template_name = 'blog/home.html' 
     context_object_name = 'posts'
     ordering = ['-date_posted']
     paginate_by = 5
 
 
+""" All the posts of the user """
 class UserPostListView(ListView):
     model = Post
-    template_name = 'blog/user_posts.html' # <app>/<model>_<viewtype>.html
+    template_name = 'blog/user_posts.html' 
     context_object_name = 'posts'
     paginate_by = 5
 
@@ -205,17 +209,16 @@ class UserPostListView(ListView):
 #             return super(PostDetailView,self).render_to_response(context, **response_kwargs)
 
 
+""" Post detail view """
 def PostDetailView(request,pk):
 
     stuff = get_object_or_404(Post, id=pk)
     total_likes = stuff.total_likes()
     total_saves = stuff.total_saves()
-    # total_comments = Comment.objects.filter(post=stuff, reply=None).order_by('-id')
     total_comments = stuff.comments.all().filter(reply=None).order_by('-id')
     total_comments2 = stuff.comments.all().order_by('-id')
 
     context = {}
-
 
     if request.method == "POST":
         comment_qs = None
@@ -277,25 +280,7 @@ def PostDetailView(request,pk):
     return render(request, 'blog/post_detail.html', context)
 
 
-# <fieldset class="form-group">
-#     <legend class=" mb-4">Add Comment</legend>
-#     <textarea style="width: 100%;" name="body" id="cmtbody" cols="40" rows="5"></textarea>
-# </fieldset>
-# <div class="form-group">
-#     <button class="btn btn-outline-info" type="submit">Add Comment</button>
-# </div>
-
-
-# {% csrf_token %}
-# <input type="hidden" name="comment_id" value="{{comment.id}}">
-# <fieldset class="form-group">
-#     <legend class="h5 mb-4">Replies :</legend>
-#     <textarea style="width: 100%;" name="body" id="cmt-body" cols="40" rows="2"></textarea>
-# </fieldset>
-# <div class="form-group">
-#     <button class="btn btn-outline-info" type="submit">Reply</button>
-# </div>
-
+""" Create post """
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     fields =['title', 'content']
@@ -322,9 +307,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     # return redirect('post-detail', pk)
 
 
-
-
-
+""" Update post """
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     fields =['title', 'content']
@@ -339,6 +322,8 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             return True
         return False
 
+
+""" Delete post """
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     success_url = '/'
@@ -349,9 +334,13 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False
 
+
+""" About page """
 def about(request):
     return render(request, 'blog/about.html', {'title':'About'})
 
+
+""" Search by post title or username """
 def search(request):
     query = request.GET['query']
     if len(query) >= 150 or len(query) < 1:
@@ -365,6 +354,7 @@ def search(request):
     return render(request, 'blog/search_results.html', params)
 
 
+""" Liked posts """
 @login_required
 def AllLikeView(request):
     user = request.user
@@ -374,6 +364,8 @@ def AllLikeView(request):
     }
     return render(request, 'blog/liked_posts.html', context)
 
+
+""" Saved posts """
 @login_required
 def AllSaveView(request):
     user = request.user

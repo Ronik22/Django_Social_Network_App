@@ -1,0 +1,214 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="col-md-8">
+
+<!-- <style type="text/css">
+	.profile-image{
+		max-height: 100px;
+		max-width: 100px;
+	}
+	.profile-image{
+		border-radius: 12px;
+	}
+	.card{
+		border-radius: 12px;
+	}
+	.friends-text{
+		color: #000;
+		font-weight: 500;
+	}
+	.friends-text-container{
+		border: 1px solid #cccccc;
+		border-radius: 12px;
+	}
+	.friends-btn:hover {
+		background-color: #bfbfbf;
+		border-color: #bfbfbf;
+	}
+	.dropdown-toggle::after { 
+		content: none; 
+	}
+	.profile-link{
+		color: #000;
+	}
+	.checkmark-icon{
+		color: green;
+	}
+	.cancel-icon{
+		color: red;
+	}
+	
+</style>
+
+<div class="container">
+	<div class="card p-2">
+
+		{% if friends %}
+			<div class="d-flex flex-row flex-wrap">
+			{% for friend in friends %}
+				<div class="card flex-row flex-grow-1 p-2 mx-2 my-2 align-items-center">
+					<a class="profile-link" href="{% url 'profile-detail-view' pk=friend.0.pk %}">
+						<div class="card-image m-2">
+							<img class="img-fluid profile-image" src="{{friend.0.user.profile.image.url}}" alt="">
+						</div>
+					</a>
+					
+					<div class="card-center px-2">
+						<a class="profile-link" href="{% url 'profile-detail-view' pk=friend.0.pk %}">
+							<h4 class="card-title">{{friend.0.username|truncatechars:50}}</h4>
+						</a>
+						{% if friend.1 %}
+						<a href="#" onclick="createOrReturnPrivateChat('{{friend.0.id}}')">Send a Message</a>
+						{% endif %}
+						
+					</div>
+					
+					<div class="d-flex flex-row card-right flex-grow-1 justify-content-end mx-2">
+						{% if friend.1 %}
+							<div class="d-flex flex-row friends-text-container p-3">
+								<p class="friends-text m-auto">
+									Friends 
+								</p>
+								<span class="material-icons checkmark-icon m-auto pl-2">
+								check_circle_outline
+								</span>
+							</div>
+						{% else %}
+							{% if friend.0 !=  request.user %}
+								<div class="d-flex flex-row friends-text-container p-3">
+									<p class="friends-text m-auto">
+										Not Friends 
+									</p>
+									<span class="material-icons cancel-icon m-auto pl-2">cancel</span>
+								</div>
+							{% endif %}
+						{% endif %}
+						{% if friend.0 == request.user %}
+							<div class="d-flex flex-row friends-text-container p-3">
+								<p class="friends-text m-auto">
+									This is you 
+								</p>
+								<span class="material-icons m-auto pl-2">
+								person_pin
+								</span>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+				{% if forloop.counter|divisibleby:2 %}
+					<div class="d-flex flex-row flex-wrap"></div>
+				{% endif %}
+		
+			{% endfor %}
+		
+		{% else %} 
+			<div class="d-flex flex-row flex-grow-1 justify-content-center align-items-center p-4">
+				<p>No friends :(</p>
+			</div>
+		{% endif %}
+		</div>
+	</div>
+	
+</div> -->
+
+<!-- {#%  include 'chat/snippets/create_or_return_private_chat.html' %} -->
+
+
+
+<!-- NEW STUFF -->
+
+{% if friends %}
+	<div class="content-section">
+		{% for friend in friends %}
+			<div class="media mb-3">
+				<img class="rounded-circle article-img" src="{{friend.0.profile.image.url}}" alt="image">
+				<div class="media-body">
+					<div class="inline float-left">
+						<p>
+							<a class="mr-2 h4" href="{% url 'profile-detail-view' pk=friend.0.pk %}">{{friend.0.username|truncatechars:50}}</a>
+						</p>
+						{% if friend.1 %}
+							<a href="{% url 'room-choice' friend.0.id %}">Send a Message</a>
+						{% endif %}
+					</div>
+					<!-- <button class="btn btn-primary inline float-right">Add Friend</button> -->
+					{% if friend.1 %}
+						<span class="inline float-right" style="color: rgb(0, 196, 0);">
+							<i class="fas fa-check-circle"></i>&nbsp;&nbsp;Friends
+						</span>
+					{% else %}
+						{% if friend.0 !=  request.user %}
+							<span class="inline float-right" style="color: rgb(216, 0, 0);">
+								<i class="fas fa-times-circle"></i>&nbsp;&nbsp;Not Friends
+							</span>
+						{% endif %}
+					{% endif %}
+					{% if friend.0 == request.user %}
+						<span class="inline float-right" style="color: rgb(0, 65, 245);">
+							<i class="fas fa-user-circle"></i>&nbsp;&nbsp;This is you
+						</span>
+					{% endif %}
+				
+				</div>
+			</div>
+			<hr>
+		{% endfor %}
+	</div>
+{% else %} <!-- If no friends -->
+	<div class="d-flex flex-row flex-grow-1 justify-content-center align-items-center p-4">
+		<p>You are not friends with anyone.</p>
+	</div>
+{% endif %}
+<!-- NEW STUFF -->
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="content-section">
+	<div class="media mb-3">
+		<img class="rounded-circle article-img" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="image">
+		<div class="media-body">
+			<div class="inline float-left">
+				<p>
+					<a class="mr-2 h4" href="#">Ronik</a>
+				</p>
+				<small class="text-muted">25/2/2021</small>
+			</div>
+			<button class="btn btn-primary inline float-right">Add Friend</button>
+		</div>
+	</div>
+	<hr>
+	
+</div> -->
+
+
+
+</div>
+
+<!-- SIDEBAR -->
+<div class="col-md-4">
+    <div class="content-section">
+        <h3>Our Sidebar</h3>
+        <p class="text-muted">You can put any information here you'd like.
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-light">Latest Posts</li>
+                <li class="list-group-item list-group-item-light">Announcements</li>
+                <li class="list-group-item list-group-item-light">Calendars</li>
+                <li class="list-group-item list-group-item-light">etc</li>
+            </ul>
+        </p>
+    </div>
+</div>  
+
+{% endblock content %}

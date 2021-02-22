@@ -4,6 +4,9 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
+
+<div class="col-md-8">
+
 <div class="content-section">
     
       <div class="account-img-container">
@@ -35,7 +38,7 @@
           </div>
       </div>
     
-    <form action="" method="POST" enctype="multipart/form-data">
+    <form id="formUpload" action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset class="form-group">
             <legend class="border-bottom mb-4">Profile Info</legend>
@@ -47,4 +50,55 @@
         </div>
     </form>
 </div>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalCrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Crop the photo</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button> 
+        </div>
+        <div class="modal-body" style="max-width: 100%; overflow:auto">
+            <img style="max-height:100%; max-width: 100%" src="" id="image">
+        </div>
+        <div class="modal-footer">
+            <div class="float-left">
+                <button type="button" class="btn btn-primary js-zoom-in">
+                    <i class="fas fa-search-plus"></i>
+                </button>
+                <button type="button" class="btn btn-primary js-zoom-out">
+                    <i class="fas fa-search-minus"></i>
+                </button>
+            </div>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary js-crop-and-upload">Crop and upload</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+</div>
+
+<!-- SIDEBAR -->
+<div class="col-md-4">
+    <div class="content-section">
+        <h3>Our Sidebar</h3>
+        <p class="text-muted">You can put any information here you'd like.
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-light">Latest Posts</li>
+                <li class="list-group-item list-group-item-light">Announcements</li>
+                <li class="list-group-item list-group-item-light">Calendars</li>
+                <li class="list-group-item list-group-item-light">etc</li>
+            </ul>
+        </p>
+    </div>
+</div>  
+
 {% endblock %}

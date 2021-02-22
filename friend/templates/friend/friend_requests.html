@@ -1,0 +1,159 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<style type="text/css">
+	.profile-image{
+		max-height: 100px;
+		max-width: 100px;
+	}
+	.profile-image{
+		border-radius: 12px;
+	}
+	.card{
+		border-radius: 12px;
+	}
+	
+	.profile-link{
+		color: #000;
+	}
+	.material-icons{
+		font-size: 30px;
+	}
+	.material-icons:hover{
+		cursor: pointer;
+	}
+	.confirm-friend-request{
+		color: green;
+	}
+	.confirm-friend-request:hover {
+		opacity: 0.3;
+	}
+	.decline-friend-request:hover {
+		opacity: 0.3;
+	}
+	.decline-friend-request{
+		color: red;
+	}
+</style>
+
+<!--
+<div class="container">
+	<div class="card p-2">
+
+		{% if friend_requests %}
+			<div class="d-flex flex-row flex-wrap">
+			{% for request in friend_requests %}
+				<div class="card flex-row flex-grow-1 p-2 mx-2 my-2 align-items-center">
+					<a class="profile-link" href="{% url 'profile-detail-view' pk=request.sender.id %}">
+						<div class="card-image m-2">
+							<img class="img-fluid profile-image" src="{{request.sender.user.profile.image.url}}" alt="">
+						</div>
+					</a>
+					<a class="profile-link" href="{% url 'profile-detail-view' pk=request.sender.id %}">
+						<div class="card-center px-2">
+							<h4 class="card-title">{{request.sender.username}}</h4>
+						</div>
+					</a>
+					<div class="d-flex flex-row card-right flex-grow-1 justify-content-end mx-2">
+						<span id="id_cancel_{{request.sender.id}}" class="decline-friend-request material-icons p-1" onclick='triggerDeclineFriendRequest("{{request.id}}")'>cancel</span>
+						<span id="id_confirm_{{request.sender.id}}" class="confirm-friend-request material-icons p-1" onclick='triggerAcceptFriendRequest("{{request.id}}")'>check</span>
+					</div>
+				</div>
+				{% if forloop.counter|divisibleby:2 %}
+					</div><div class="d-flex flex-row flex-wrap">
+				{% endif %}
+			
+			{% endfor %}
+			
+		{% else %} 
+		<div class="d-flex flex-row flex-grow-1 justify-content-center align-items-center p-4">
+			<p>No results</p>
+		</div>
+		{% endif %}
+		</div>
+	</div>
+	
+</div> -->
+
+
+<!-- NEW STUFF -->
+
+<div class="col-md-8">
+
+<div class="content-section">
+	{% if friend_requests %}
+		{% for request in friend_requests %}
+			<div class="media mb-3">
+				<img class="rounded-circle article-img" src="{{request.sender.profile.image.url}}" alt="image">
+				<div class="media-body">
+					<div class="inline float-left">
+						<p>
+							<a class="mr-2 h4" href="{% url 'profile-detail-view' pk=request.sender.id %}">{{request.sender.username}}</a>
+						</p>
+						<small class="text-muted">{{request.timestamp}}</small>
+					</div>
+					<div class="inline float-right">
+						<span id="id_cancel_{{request.sender.id}}" class="decline-friend-request material-icons p-2" onclick='triggerDeclineFriendRequest("{{request.id}}")'><i class="fas fa-times-circle"></i></span>
+						<span id="id_confirm_{{request.sender.id}}" class="confirm-friend-request material-icons p-2" onclick='triggerAcceptFriendRequest("{{request.id}}")'><i class="fas fa-check-circle"></i></span>
+					</div>
+				</div>
+			</div>
+			<hr>
+		{% endfor %}
+	{% else %} <!-- If no friends -->
+	<div class="justify-content-center align-items-center p-4">
+		<p>No results</p>
+	</div>
+	{% endif %}
+	
+</div>
+
+</div>
+
+<!-- SIDEBAR -->
+<div class="col-md-4">
+    <div class="content-section">
+        <h3>Our Sidebar</h3>
+        <p class="text-muted">You can put any information here you'd like.
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-light">Latest Posts</li>
+                <li class="list-group-item list-group-item-light">Announcements</li>
+                <li class="list-group-item list-group-item-light">Calendars</li>
+                <li class="list-group-item list-group-item-light">etc</li>
+            </ul>
+        </p>
+    </div>
+</div>  
+
+<!-- NEW STUFF -->
+
+
+
+
+<script type="text/javascript">
+
+	function onFriendRequestAccepted(){
+		location.reload();
+	}
+
+	function onFriendRequestDeclined(){
+		location.reload();
+	}
+
+	function triggerAcceptFriendRequest(friend_request_id){
+		acceptFriendRequest(friend_request_id, onFriendRequestAccepted)
+	}
+
+	function triggerDeclineFriendRequest(friend_request_id){
+		declineFriendRequest(friend_request_id, onFriendRequestDeclined)
+	}
+</script>
+
+{% include 'friend/snippets/accept_friend_request.html' %}
+{% include 'friend/snippets/decline_friend_request.html' %}
+
+
+{% endblock content %}
