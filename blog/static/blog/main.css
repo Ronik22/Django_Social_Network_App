@@ -21,9 +21,9 @@ body {
     /* background: -webkit-linear-gradient(to right, #FF0080, #FF8C00);
     background: linear-gradient(to right, #FF0080, #FF8C00); */
 
-    background: #0264FB;
+    background: #6633FF;
     /* box-shadow: 0 0 6px rgba(0,0,0,0.3); */
-    /* background-color: #1466ff; */
+    /* background-color: #F4431A */
   }
   
   .site-header .navbar-nav .nav-link {
@@ -33,6 +33,7 @@ body {
     font-weight: 100;
     margin: 0px 6px;
     font-size: 15px;
+    letter-spacing: 1px;
   }
 
   .site-header .navbar-nav .nav-link:visited {
@@ -122,23 +123,23 @@ body {
   } */
 
   .online-circle {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     background-color:#07dd00;
     border: 3px solid white;
     bottom: 0;
-    right: 0;
+    right: 10px;
     position: absolute;
   }
   .offline-circle {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     background-color:#6e6e6e;
     border: 3px solid white;
     bottom: 0;
-    right: 0;
+    right: 10px;
     position: absolute;
   }
 
@@ -183,7 +184,7 @@ body {
   font-size: 14px;
 }
 
-@media only screen and (max-width: 768px){
+@media only screen and (max-width: 991px){
   #searchbar form{
     border-radius: 0;
     margin: 12px 10px 10px 0px;
@@ -300,4 +301,24 @@ body {
   background-color: rgb(212, 212, 212);
   /* outline: 1px solid slategrey; */
   /* border-radius: 1rem; */
+}
+
+
+#id_image{
+  /* border: 2px solid green; */
+}
+
+.notify-badge{
+  position: absolute;
+  right:-10px;
+  bottom:3px;
+  background: white;
+  box-shadow: 0px 0px 5px 0.3px;
+  text-align: center;
+  border-radius: 100%;
+  width: 42px;
+  height: 42px;
+  color:rgb(128, 128, 128);
+  padding:5px 10px;
+  font-size:20px;
 }

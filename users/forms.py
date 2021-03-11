@@ -26,10 +26,13 @@ class ProfileUpdateForm(forms.ModelForm):
     width = forms.FloatField(widget=forms.HiddenInput())
     height = forms.FloatField(widget=forms.HiddenInput())
 
+    image = forms.ImageField(label=('Image'), error_messages = {'invalid':("Image files only")}, widget=forms.FileInput)
     class Meta:
         model = Profile
         fields = ['bio','date_of_birth','image',]
 
+
+    """Saving Cropped Image"""
     def save(self,*args,**kwargs):
         img = super(ProfileUpdateForm, self).save(*args, **kwargs)
 
@@ -44,11 +47,3 @@ class ProfileUpdateForm(forms.ModelForm):
         resized_image.save(img.image.path)
 
         return img
-
-    # def __init__(self, *args, **kwargs):
-    #     super(ProfileUpdateForm, self).__init__(*args, **kwargs)
-    #     self.fields['image'].widget = TextInput(attrs={
-    #         'id': 'myCustomId',
-    #         'class': 'myCustomClass',
-    #         'name': 'myCustomName',
-    #         'placeholder': 'myCustomPlaceholder'})

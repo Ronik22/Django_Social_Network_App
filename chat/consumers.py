@@ -3,7 +3,7 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth.models import User
 from asgiref.sync import sync_to_async, async_to_sync
-# from chat.consumers import create_new_message
+
 
 """MESSAGE DB ENTRY"""
 @sync_to_async
@@ -17,7 +17,6 @@ def create_new_message(me,friend,message,room_id):
         room_id=get_room,
         text=message)
         
-
 
 class ChatRoomConsumer(AsyncWebsocketConsumer):
 

@@ -23,7 +23,7 @@
       <div class="row">
 
           <!-- MESSAGES -->
-          <div class="col-md-8">
+          <div class="col-md-8 m-auto">
             {% if messages %}
               {% for message in messages %}
                 <div class="alert {{ message.tags }}">
@@ -36,22 +36,6 @@
           
           {% block content %}{% endblock %}
           
-
-          
-          <!-- SIDEBAR -->
-          <!-- <div class="col-md-4">
-              <div class="content-section">
-                <h3>Our Sidebar</h3>
-                <p class="text-muted">You can put any information here you'd like.
-                  <ul class="list-group">
-                    <li class="list-group-item list-group-item-light">Latest Posts</li>
-                    <li class="list-group-item list-group-item-light">Announcements</li>
-                    <li class="list-group-item list-group-item-light">Calendars</li>
-                    <li class="list-group-item list-group-item-light">etc</li>
-                  </ul>
-                </p>
-              </div>
-            </div>   -->
 
       </div>
     </main>
@@ -230,51 +214,12 @@
             });
           });
 
-          // CHATS
-
-          // $(document).on('submit','.chat-form', function(event){
-          //   event.preventDefault();
-          //   console.log($(this).serialize());
-          //   $.ajax({
-          //     type: 'POST',
-          //     url: $(this).attr('action'),
-          //     data: $(this).serialize(),
-          //     dataType: 'json',
-          //     success: function(response){
-          //       $('#chat-section').html(response['form']);
-          //       // console.log(response['form'])
-          //       $('#chatfinp').val('');
-          //       $(".chat-box").scrollTop($(".chat-box")[0].scrollHeight);
-          //     },
-          //     error: function(rs, e){
-          //       console.log(rs.responseText);
-          //     },
-          //   });
-          // });          
-
-          // // GET CHATS
-
-          // setInterval(function(){
-          //   var nht = $(".chat-box").scrollTop()
-          //   $.ajax({
-          //     type: 'GET',
-          //     url: ".",
-          //     success: function(response){
-          //       $('#chat-section').html(response['form']);
-          //       $(".chat-box").scrollTop(nht);
-          //     },
-          //     error: function(rs, e){
-          //       console.log(rs.responseText);
-          //     },
-          //   });
-          // },500);
-
-
         });
-
-        
 
 
       </script>
+
+      {% block script %}{% endblock %}
+
 </body>
 </html>

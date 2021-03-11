@@ -4,14 +4,14 @@
 
 {% block content %}
 
-<div class="col-md-8">
+<div class="col-md-8 m-auto">
 
 <div class="content-section">
   <h3>Liked Posts ({{liked_posts|length}})</h3>
 </div>
 
 {% if not liked_posts %}
-  <p>You have not liked any post...</p>
+  <p class="content-section">You have not liked any post</p>
 {% endif %}
 
     {% for post in liked_posts %}
@@ -58,7 +58,7 @@
 
 </div>
 
-<!-- SIDEBAR -->
+<!-- SIDEBAR
 <div class="col-md-4">
   <div class="content-section">
       <h3>Our Sidebar</h3>
@@ -71,6 +71,6 @@
           </ul>
       </p>
   </div>
-</div>  
+</div>   -->
 
 {% endblock %}

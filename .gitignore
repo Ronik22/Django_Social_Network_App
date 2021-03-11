@@ -1,6 +1,5 @@
 # Additional files
 .vscode
-extra_elements.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

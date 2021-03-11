@@ -3,6 +3,8 @@ from django.db.models.fields.related import ForeignKey
 from django.utils import timezone
 from django.contrib.auth.models import User
 
+
+""" FriendList model """
 class FriendList(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user')
     friends = models.ManyToManyField(User, blank=True, related_name='friends')
@@ -33,6 +35,7 @@ class FriendList(models.Model):
         return False
 
 
+""" Friend Request model """
 class FriendRequest(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender')
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver')

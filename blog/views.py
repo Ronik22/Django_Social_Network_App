@@ -14,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
+import random
 
 
 """ Home page with all posts """
@@ -150,6 +151,17 @@ class PostListView(ListView):
     ordering = ['-date_posted']
     paginate_by = 5
 
+    def get_context_data(self, *args,**kwargs):
+        context = super(PostListView, self).get_context_data()
+        users = list(User.objects.exclude(pk=self.request.user.pk))
+        if len(users) > 3:
+            cnt = 3
+        else:
+            cnt = len(users)
+        random_users = random.sample(users, cnt)
+        context['random_users'] = random_users
+        return context
+
 
 """ All the posts of the user """
 class UserPostListView(ListView):
@@ -162,51 +174,6 @@ class UserPostListView(ListView):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         return Post.objects.filter(author=user).order_by('-date_posted')
 
-
-# class PostDetailView(DetailView):
-#     model = Post
-
-#     def get_context_data(self, *args,**kwargs):
-#         context = super(PostDetailView, self).get_context_data()
-#         stuff = get_object_or_404(Post, id=self.kwargs['pk'])
-#         total_likes = stuff.total_likes()
-#         total_saves = stuff.total_saves()
-#         total_comments = stuff.comments.all()
-
-#         tcl={}
-#         for cmt in total_comments:
-#             total_clikes = cmt.total_clikes()
-#             cliked = False
-#             if cmt.likes.filter(id=self.request.user.id).exists():
-#                 cliked = True
-
-#             tcl[cmt.id] = cliked
-#         context["clikes"]=tcl
-
-
-#         liked = False
-#         if stuff.likes.filter(id=self.request.user.id).exists():
-#             liked = True
-#         context["total_likes"]=total_likes
-#         context["liked"]=liked
-
-
-#         saved = False
-#         if stuff.saves.filter(id=self.request.user.id).exists():
-#             saved = True
-#         context["total_saves"]=total_saves
-#         context["saved"]=saved
-
-#         return context
-    
-
-#     def render_to_response(self, context, **response_kwargs):
-#         if self.request.is_ajax():
-#             html = render_to_string('blog/like_section.html',context, request=self.request)
-#             return JsonResponse({'form':html})
-#             # return JsonResponse('Success',safe=False, **response_kwargs)
-#         else:
-#             return super(PostDetailView,self).render_to_response(context, **response_kwargs)
 
 
 """ Post detail view """
@@ -290,22 +257,6 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-# @login_required
-# def add_comment(request, pk):
-#     form = request.POST.get('body')
-#     reply_id = request.POST.get('comment_id')
-#     comment_qs = None
-#     if reply_id:
-#         comment_qs = Comment.objects.get(id=reply_id)
-#     if request.method == "POST" and form:
-#         user = request.user
-#         post = get_object_or_404(Post, pk=pk)
-        
-#         comment = Comment(name=user,post=post,body=form, reply=comment_qs)
-#         comment.save() 
-        # return redirect('post-detail', post.id)
-    # return redirect('post-detail', pk)
-
 
 """ Update post """
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -344,6 +295,8 @@ def about(request):
 def search(request):
     query = request.GET['query']
     if len(query) >= 150 or len(query) < 1:
+        allposts = Post.objects.none()
+    elif len(query.strip()) == 0:
         allposts = Post.objects.none()
     else:
         allpostsTitle = Post.objects.filter(title__icontains=query)

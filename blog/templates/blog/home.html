@@ -8,9 +8,9 @@
 
     {% for post in posts %}
 
-    <article class="content-section" style="overflow: auto;">
+    <article class="content-section" style="overflow: auto; ">
       <div class="media">
-          <img class="rounded-circle article-img" src="{{post.author.profile.image.url}}" alt="image">
+          <img class="rounded-circle article-img " src="{{post.author.profile.image.url}}" alt="image">
           <div class="media-body">
               <p class="mb-0">
                 <a class="mr-2 h4" href="{% url 'profile-detail-view' post.author.pk %}">{{ post.author }}</a>
@@ -52,17 +52,55 @@
 
 <!-- SIDEBAR -->
 <div class="col-md-4">
-  <div class="content-section">
-      <h3>Our Sidebar</h3>
-      <p class="text-muted">You can put any information here you'd like.
+  <div class="content-section" style="border-top: 4px solid red;">
+      <h4>Recent Posts</h4>
+      <br>
+      <!-- <p class="text-muted">You can put any information here you'd like. -->
           <ul class="list-group">
-              <li class="list-group-item list-group-item-light">Latest Posts</li>
-              <li class="list-group-item list-group-item-light">Announcements</li>
-              <li class="list-group-item list-group-item-light">Calendars</li>
-              <li class="list-group-item list-group-item-light">etc</li>
+              {% if posts.0 %}
+                <a href="{% url 'post-detail' posts.0.pk %}"><li class="list-group-item list-group-item-light">{{ posts.0.title }}</li></a>
+              {% endif %}
+              {% if posts.1 %}
+                <a href="{% url 'post-detail' posts.1.pk %}"><li class="list-group-item list-group-item-light">{{ posts.1.title }}</li></a>
+              {% endif %}
+              {% if posts.2 %}
+                <a href="{% url 'post-detail' posts.2.pk %}"><li class="list-group-item list-group-item-light">{{ posts.2.title }}</li></a>
+              {% endif %}
+              {% if posts.3 %}
+                <a href="{% url 'post-detail' posts.3.pk %}"><li class="list-group-item list-group-item-light">{{ posts.3.title }}</li></a>
+              {% endif %}
+              {% if posts.4 %}
+                <a href="{% url 'post-detail' posts.4.pk %}"><li class="list-group-item list-group-item-light">{{ posts.4.title }}</li></a>
+              {% endif %}
           </ul>
-      </p>
+          <br>
   </div>
+
+  <!-- PEOPLE YOU CAN FOLLOW -->
+
+  <div class="content-section " style="border-top: 4px solid blue;">
+    <h4>You can follow</h4>
+    <br>
+        <ul class="list-group">
+          {% for user in random_users %}
+            <a href="{% url 'profile-detail-view' user.pk %}"><li class="list-group-item list-group-item-light">{{ user.username }}</li></a>
+          {% endfor %}
+  
+        </ul>
+        <br>
+  </div>
+
 </div>  
 
 {% endblock %}
+{% block script %}
+<script>
+
+  var colors = ['#FB9797', '#FB84BD', '#EA84FB', '#FF6D3F', '#4270E7', 'green', 'blue'];
+    $('.add-border').each(function() {
+        $(this).css('border-top', "3px solid " + colors[Math.floor(Math.random() * colors.length)]);
+    });
+
+</script>
+{% endblock %}
+

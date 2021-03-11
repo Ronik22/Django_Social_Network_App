@@ -4,13 +4,12 @@
 
 {% block content %}
 
-<div class="col-md-8">
+<div class="col-md-8 m-auto">
 
 <div class="container content-section px-0 py-0">
     
     <div class="bg-gray py-1 px-3">
         <p class="h5 mb-0 py-2"><img src="{{friend_name.profile.image.url}}" alt="user" width="40" height="40" class="rounded-circle">&nbsp;&nbsp;{{friend_name}}</p>
-        <!-- <p class="h5 mb-0 py-2">{{friend_name}}</p> -->
         <hr>
     </div>
 
@@ -64,18 +63,6 @@
         </form>
     </div>
 
-
-    <!-- <div>
-        <form>
-            <div class="form-group">
-                <textarea class="form-control" id="chat-text" rows="10"></textarea><br>
-            </div>
-            <div class="form-group">
-                <input class="form-control" id="input" type="text" placeholder="Type your message here"><br>
-            </div>
-            <input class="btn btn-secondary btn-lg btn-block" id="submit" type="button" value="Send">
-        </form>
-    </div> -->
 </div>
 
 </div>
@@ -83,7 +70,7 @@
 <br>
 
 <!-- SIDEBAR -->
-<div class="col-md-4">
+<!-- <div class="col-md-4">
     <div class="content-section">
         <h3>Our Sidebar</h3>
         <p class="text-muted">You can put any information here you'd like.
@@ -95,7 +82,7 @@
             </ul>
         </p>
     </div>
-</div>  
+</div>   -->
 
 
     {{ request.user.username|json_script:"user_username" }}
@@ -140,7 +127,6 @@
         chatSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
             console.log(data)
-            // document.querySelector('#chat-text').value += (data.username + ': ' + data.message + '\n')
             
             if (data.username != my_name)
                 add_sender_chat(data)

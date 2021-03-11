@@ -33,7 +33,6 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG")
 
 ALLOWED_HOSTS = ['*'] 
-# ALLOWED_HOSTS = ['192.168.0.104'] 
 
 
 # Application definition

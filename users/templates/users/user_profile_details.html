@@ -6,7 +6,7 @@
 
 <div class="col-md-8">
 
-<div class="card" style="width: 100%">
+<div class="content-section" style="width: 100%">
     <div class="account-img-container">
         <div class="img-cont">
             <img class="rounded-circle account-img" src="{{object.user.profile.image.url}}" alt="image">
@@ -24,10 +24,10 @@
         <p class="card-text text-center text-muted">{{object.user.profile.bio}}</p>
 
 		<ul class="social-links list-inline text-center m-4">
-			<li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-			<li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Twitter"><i class="fab fa-twitter"></i></a></li>
-			<li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Skype"><i class="fab fa-skype"></i></a></li>
-			<li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
+			<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-primary" href="" data-original-title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+			<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-info" href="" data-original-title="Twitter"><i class="fab fa-twitter"></i></a></li>
+			<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-danger" href="" data-original-title="Skype"><i class="fab fa-instagram"></i></a></li>
+			<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-primary" href="" data-original-title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
 		</ul>
 
         <div class="text-center">
@@ -45,7 +45,6 @@
                         <button type="submit" class="btn btn-primary mb-2 w-50">Follow</button>
                     </form>
                 {% endif %}
-                <!-- <a class="btn btn-warning mb-2" href="{% url 'room-enroll' %}">Chat</a> -->
             {% endif %}
 
 			<!-- THEM to YOU -->
@@ -106,40 +105,6 @@
         </div>
         <hr>
 
-        <!-- stuffs -->
-
-        <!-- <div class="text-center">
-            <a href="#">Friends ({{friends|length}})</a>
-        </div>
-        <div>
-            {% if friend_requests %}
-                <a href="#">Friend Requests ({{friend_requests|length}})</a>
-            {% endif %}
-        </div>
-        <div>
-
-            {% if request_sent == 0 %}
-            <div>
-                <p>Accept Friend request</p>
-                <p>
-                    <a href="#">Cancel</a>&nbsp;&nbsp;
-                    <a href="#">Check</a>
-                </p>
-            </div>
-            {% endif %}
-
-
-            {% if is_friend == False and is_self == False %}
-                {% if request_sent == 1 %}
-                    <a class="btn btn-danger" href="#">Cancel Friend Request</a>
-                {% endif %}
-                {% if request_sent == -1 %}
-                    <a class="btn btn-primary" href="#">Send Friend Request</a>
-                {% endif %}
-            {% endif %}
-        </div> -->
-        <!-- stuffs -->
-
 
         <div class="m-t-10 p-15 text-center">
             <div class="row">
@@ -170,26 +135,22 @@
 
 
 
-<!-- BIG STUFFS -->
 
 <style type="text/css">
 
 .social-links li a {
     border-radius: 50%;
-    color: rgba(121, 121, 121, .8);
+    color: rgba(255, 255, 255);
     display: inline-block;
     height: 40px;
     line-height: 35px;
-    border: 2px solid rgba(121, 121, 121, .5);
+    border: 2px solid transparent;
     text-align: center;
     width: 40px;
-	font-size: 18px;
+	font-size: 14px;
 }
 
-.social-links li a:hover {
-    color: #797979;
-    border: 2px solid #797979
-}
+
 
 	.profile-image{
 		max-height: 100px;
@@ -227,133 +188,43 @@
 
 <div>
 
-<!--
-    {% if request.user.is_authenticated %}
-		<div class="d-flex flex-column mb-4">
-
-			 THEM to YOU 
-			{% if request_sent == 0 %}
-			<div class="card m-2 p-4">
-				<div class="flex text-center align-items-center">
-					<span class="align-items-center mr-2 h4 text-muted">Accept Friend Request</span>
-					<span id="id_cancel_{{object.user.id}}" class="decline-friend-request material-icons p-1 m-1" onclick='triggerDeclineFriendRequest("{{pending_friend_request_id}}")'><i class="fas fa-times-circle"></i></span>
-  					<span id="id_confirm_{{object.user.id}}" class="confirm-friend-request material-icons p-1 m-1" onclick='triggerAcceptFriendRequest("{{pending_friend_request_id}}")'><i class="fas fa-check-circle"></i></span>
-				</div>
-			</div>
-			{% endif %}
-
-			<div class="card m-2 px-4 pb-4">
-				 Cancel Friend Request / Send Friend Request / Remove Friend 
-				{% if is_friend == False and is_self == False %}
-						 You sent them a request 
-						{% if request_sent == 1 %}
-						<div class="d-flex flex-column align-items-center pt-4">
-							<button class="btn btn-danger" id="id_cancel_friend_request_btn">
-								Cancel Friend Request
-							</button>
-						</div>
-						{% endif %}
-						 No requests have been sent 
-						{% if request_sent == -1 %}
-						<div class="d-flex flex-column align-items-center pt-4">
-							<button class="btn btn-primary" id="id_send_friend_request_btn">
-								Send Friend Request
-							</button>
-						</div>
-						{% endif %}
-				{% endif %}
-					
-					
-				{% if is_friend %}
-					<div class="dropdown pt-4 m-auto">
-						<button class="btn btn-success dropdown-toggle friends-btn" type="button" id="id_friends_toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Friends
-						</button>
-						<div class="dropdown-menu" aria-labelledby="id_friends_toggle">
-							<a class="dropdown-item" href="#" onclick="removeFriend('{{object.user.id}}', onFriendRemoved)">Unfriend</a>
-						</div>
-					</div>
-				{% endif %}
-				
-				 Friend list link 
-		  		<div class="d-flex flex-column pt-4">
-					<a href="{% url 'friend:list' object.user.id %}">
-						<div class="d-flex flex-row align-items-center justify-content-center icon-container">
-							<i class="fas fa-users"></i>&nbsp;&nbsp;<span class="friend-text">Friends ({{friends|length}})</span>
-						</div>
-					</a>
-				</div>
-
-			</div>
-
-			{% if friend_requests %}
-			<div class="card m-2 px-4 pb-4">
-				 Friend requests 
-		  		<div class="d-flex flex-column pt-4">
-					<a href="{% url 'friend:friend-requests' user_id=object.user.id %}">
-						<div class="d-flex flex-row align-items-center justify-content-center icon-container">
-							<span class="material-icons mr-2 person-add-icon">person_add</span><span class="friend-text">Friend Requests ({{friend_requests|length}})</span>
-						</div>
-					</a>
-				</div>
-			</div>
-			{% endif %}
-
-			{% if is_friend %}
-				<div class="align-items-center btn btn-primary" onclick="createOrReturnPrivateChat('{{id}}')">
-					<i class="fas fa-comments"></i>&nbsp;&nbsp;Message
-				</div>
-			{% endif %}
-
-		</div>
-	{% endif %} -->
 	{% if is_friend %}
 		<a class="align-items-center btn btn-primary d-flex flex-column" href="{% url 'room-choice' object.user.id %}">
 			<i class="fas fa-comments"></i>&nbsp;&nbsp;Message
 		</a>
 	{% endif %}
 
-
 </div>
-
-<!-- BIG STUFFS -->
 
 
 
 <br>
-
-<div class="content-section">
-    <h3>Posts by {{object.user}} ...</h3>
-    {% for post in object.profile_posts %}
-        <hr>
-        <div>
-            <a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a>
-        </div>
-    {% endfor %}
-</div>
 
 </div>
 
 <!-- SIDEBAR -->
 <div class="col-md-4">
     <div class="content-section">
-        <h3>Our Sidebar</h3>
-        <p class="text-muted">You can put any information here you'd like.
-            <ul class="list-group">
-                <li class="list-group-item list-group-item-light">Latest Posts</li>
-                <li class="list-group-item list-group-item-light">Announcements</li>
-                <li class="list-group-item list-group-item-light">Calendars</li>
-                <li class="list-group-item list-group-item-light">etc</li>
-            </ul>
-        </p>
-    </div>
+		<h4>Posts by {{object.user}} ({{object.profile_posts.count}}) : </h4>
+
+		{% if object.profile_posts.count == 0 %}
+			<br>
+			<span class="text-muted">{{object.user.username}} has not posted anything yet</span>
+			<br>
+		{% endif %}
+
+		{% for post in object.profile_posts %}
+			<hr>
+			<div>
+				<a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a>
+			</div>
+		{% endfor %}
+		<br>
+	</div>
 </div>  
 
 
 <script type="text/javascript">
-
-	// called from base_js.html
-	//preloadImage("{{profile_image|safe}}", 'id_profile_image')
 
 	function onFriendRequestSent(){
 		location.reload();
@@ -412,8 +283,6 @@
 {% include 'friend/snippets/decline_friend_request.html' %}
 {% include 'friend/snippets/cancel_friend_request.html' %}
 {% include 'friend/snippets/remove_friend.html' %}
-<!-- {#% include 'chat/snippets/create_or_return_private_chat.html' %} -->
-
 
 
 {% endblock %}

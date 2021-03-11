@@ -4,21 +4,11 @@
 
 {% block content %}
 
-<div class="col-md-8">
+{% if not all_friends %}
+    <span class="container">You need to be friends wih someone to chat</span>
+{% endif %}
 
-    <!-- {% for friend in all_friends %}
-        {{friend}}
-    {% endfor %}
-
-    <form action="" method="POST">
-        {% csrf_token %}
-        <legend for="room_id">Enter room ID:</legend>
-        <input name="room_id" type="text">
-        <br><br>
-        <input class="btn btn-primary" type="submit" value="Join room">
-    </form>
-
-    <br><br> -->
+<div class="col-md-8 m-auto">
 
     <!-- ALL CHATROOMS-->
     <div class="px-0">
@@ -33,7 +23,7 @@
                 <div class="media"><img src="{{friend.profile.image.url}}" alt="room" width="50" height="50" class="rounded-circle">
                 <div class="media-body ml-4">
                     <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h6 class="mb-0">{{friend}}</h6><small class="small font-weight-bold">time</small>
+                    <h6 class="mb-0">{{friend}}</h6><small class="small font-weight-bold"></small>
                     </div>
                     <p class="font-italic text-muted mb-0 text-small">Here, you can chat with {{friend}}.</p>
                 </div>
@@ -52,7 +42,7 @@
 <br>
 
 <!-- SIDEBAR -->
-<div class="col-md-4">
+<!-- <div class="col-md-4">
     <div class="content-section">
         <h3>Our Sidebar</h3>
         <p class="text-muted">You can put any information here you'd like.
@@ -64,6 +54,6 @@
             </ul>
         </p>
     </div>
-</div>  
+</div>   -->
 
 {% endblock %}

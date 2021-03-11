@@ -1,7 +1,6 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 import json
-
 from django.contrib.auth.models import User
 from friend.models import FriendList, FriendRequest
 
@@ -27,7 +26,7 @@ def friends_list_view(request, *args, **kwargs):
                 if not user in friend_list.friends.all():
                     return HttpResponse("You must be friends to view their friends list.")
             friends = [] # [(friend1, True), (friend2, False), ...]
-            # get the authenticated users friend list
+            # get the authenticated user's friend list
             auth_user_friend_list = FriendList.objects.get(user=user)
             for friend in friend_list.friends.all():
                 friends.append((friend, auth_user_friend_list.is_mutual_friend(friend)))
@@ -97,7 +96,7 @@ def accept_friend_request(request, *args, **kwargs):
             # confirm that is the correct request
             if friend_request.receiver == user:
                 if friend_request: 
-                    # found the request. Now accept it
+                    # Accepting the founded request
                     friend_request.accept()
                     payload['response'] = "Friend request accepted."
 
@@ -108,7 +107,6 @@ def accept_friend_request(request, *args, **kwargs):
         else:
             payload['response'] = "Unable to accept that friend request."
     else:
-        # should never happen
         payload['response'] = "You must be authenticated to accept a friend request."
     return HttpResponse(json.dumps(payload), content_type="application/json")
 
@@ -129,7 +127,6 @@ def remove_friend(request, *args, **kwargs):
         else:
             payload['response'] = "There was an error. Unable to remove that friend."
     else:
-        # should never happen
         payload['response'] = "You must be authenticated to remove a friend."
     return HttpResponse(json.dumps(payload), content_type="application/json")
 
@@ -144,7 +141,7 @@ def decline_friend_request(request, *args, **kwargs):
             # confirm that is the correct request
             if friend_request.receiver == user:
                 if friend_request: 
-                    # found the request. Now decline it
+                    # Declining the founded request
                     friend_request.decline()
                     payload['response'] = "Friend request declined."
                 else:
@@ -154,7 +151,6 @@ def decline_friend_request(request, *args, **kwargs):
         else:
             payload['response'] = "Unable to decline that friend request."
     else:
-        # should never happen
         payload['response'] = "You must be authenticated to decline a friend request."
     return HttpResponse(json.dumps(payload), content_type="application/json")
 
@@ -173,18 +169,17 @@ def cancel_friend_request(request, *args, **kwargs):
 			except FriendRequest.DoesNotExist:
 				payload['response'] = "Nothing to cancel. Friend request does not exist."
 
-			# There should only ever be ONE active friend request at any given time. Cancel them all just in case.
+			# There should only ever be one active friend request at any given time. Cancel them all just in case.
 			if len(friend_requests) > 1:
 				for request in friend_requests:
 					request.cancel()
 				payload['response'] = "Friend request cancelled."
 			else:
-				# found the request. Now cancel it
+				# Cancelling the founded request
 				friend_requests.first().cancel()
 				payload['response'] = "Friend request cancelled."
 		else:
 			payload['response'] = "Unable to cancel that friend request."
 	else:
-		# should never happen
 		payload['response'] = "You must be authenticated to cancel a friend request."
 	return HttpResponse(json.dumps(payload), content_type="application/json")

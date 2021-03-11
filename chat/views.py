@@ -6,6 +6,7 @@ from django.db.models import Q
 from friend.models import FriendList
 from django.contrib.auth.models import User
 
+
 @login_required
 def room_enroll(request):
     friends = FriendList.objects.filter(user=request.user)[0].friends.all()
@@ -13,12 +14,12 @@ def room_enroll(request):
         Q(author=request.user) | Q(friend=request.user)
     ).order_by('-created')
 
-
     context = {
         'all_rooms':all_rooms,
         'all_friends':friends,
     }
     return render(request, 'chat/join_room.html', context)
+
 
 
 @login_required
@@ -43,10 +44,11 @@ def room_choice(request, friend_id):
     return redirect('room', room[0].room_id, friend_id)
 
 
+""" Chatroom between users """
 @login_required
 def room(request, room_name, friend_id):
     all_rooms = Room.objects.filter(room_id=room_name)
-    if not all_rooms:  # str(request.user)
+    if not all_rooms:  
         messages.error(request, 'Invalid Room ID')
         return redirect('room-enroll')
 
