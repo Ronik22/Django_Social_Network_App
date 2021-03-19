@@ -1,5 +1,6 @@
 # Additional files
 .vscode
+chat/templates/chat_prev/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
