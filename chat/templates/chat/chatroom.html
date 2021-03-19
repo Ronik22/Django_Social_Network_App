@@ -85,6 +85,10 @@
 </div>   -->
 
 
+{% endblock %}
+
+{% block script %}
+
     {{ request.user.username|json_script:"user_username" }}
     {{ room_name|json_script:"room-name" }}
     {{ request.user.profile.image.url|json_script:"user_image"}}
