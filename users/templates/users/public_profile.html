@@ -6,39 +6,51 @@
 
 <div class="col-md-8 m-auto">
     
-<div class="card" style="width: 100%">
-  <div class="account-img-container">
-      <div class="img-cont">
-          <img class="rounded-circle account-img" src="{{cuser.profile.image.url}}" alt="image">
-      </div>
-  </div>
-  <div class="card-body">
-      <hr>
-      <h4 class="card-title text-center">{{cuser.first_name}} {{cuser.last_name}} [{{cuser.username}}]</h4>
-      <p class="card-text text-center text-muted">{{cuser.email}}</p>
-      <p class="card-text text-center text-muted">{{cuser.profile.bio}}</p>
+    <div class="card" style="width: 100%">
+        {% if cuser.username == request.user.username %}
+            <a onclick="copytoclip()" class="btn btn-primary float-right" >Copy Public URL</a>
+        {% endif %}
+        <div class="account-img-container">
+            <div class="img-cont">
+                <img class="rounded-circle account-img" src="{{cuser.profile.image.url}}" alt="image">
+            </div>
+        </div>
+        <div class="card-body">
+            <hr>
+            <h4 class="card-title text-center">{{cuser.first_name}} {{cuser.last_name}} [{{cuser.username}}]</h4>
+            <p class="card-text text-center text-muted">{{cuser.email}}</p>
+            <p class="card-text text-center text-muted">{{cuser.profile.bio}}</p>
 
-      <hr>
-      <div class="m-t-10 p-20 text-center">
-          <div class="row">
-              <div class="col-4">
-                  <span class="h6">Posts</span>
-                  <p><a class="mr-2" href="{% url 'user-posts' cuser %}">{{cuser.profile.profile_posts.count}}</a></p>
-              </div>
-              <div class="col-4">
-                  <span class="h6">Followers</span>
-                  <p>{{cuser.following.count}}</p>
-              </div>
-              <div class="col-4">
-                  <span class="h6">Following</span>
-                  <p>{{cuser.profile.following.count}}</p>
-              </div>
-          </div>
-      </div>
-  </div>
+            <hr>
+            <div class="m-t-10 p-20 text-center">
+                <div class="row">
+                    <div class="col-4">
+                        <span class="h6">Posts</span>
+                        <p><a class="mr-2" href="{% url 'user-posts' cuser %}">{{cuser.profile.profile_posts.count}}</a></p>
+                    </div>
+                    <div class="col-4">
+                        <span class="h6">Followers</span>
+                        <p>{{cuser.following.count}}</p>
+                    </div>
+                    <div class="col-4">
+                        <span class="h6">Following</span>
+                        <p>{{cuser.profile.following.count}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-</div>
 
+{% endblock %}
 
+{% block script %}
+    <script>
+        function copytoclip(){
+            navigator.clipboard.writeText("{{request.build_absolute_uri}}");
+            alert("URL copied to clipboard")
+        }
+    </script>
 {% endblock %}
