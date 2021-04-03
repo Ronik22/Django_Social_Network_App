@@ -9,7 +9,17 @@
 <div class="container content-section px-0 py-0">
     
     <div class="bg-gray py-1 px-3">
-        <p class="h5 mb-0 py-2"><img src="{{friend_name.profile.image.url}}" alt="user" width="40" height="40" class="rounded-circle">&nbsp;&nbsp;{{friend_name}}</p>
+        <p class="h5 mb-0 py-2">  
+            <span class="img-cont2">              
+                <img src="{{friend_name.profile.image.url}}" alt="user" width="50" height="50" class="rounded-circle">
+                {% if friend_name.profile.is_online %}
+                    <span class="online-circle3"></span>  
+                {% else %}
+                    <span class="offline-circle3"></span>
+                {% endif %}
+            </span>
+            &nbsp;&nbsp;{{friend_name}}
+        </p>
         <hr>
     </div>
 

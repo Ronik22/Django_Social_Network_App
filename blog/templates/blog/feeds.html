@@ -15,15 +15,17 @@
 
     <article class="content-section" style="overflow: auto;">
       <div class="media">
-        <img class="rounded-circle article-img" src="{{post.author.profile.image.url}}" alt="image">
+        <div class="img-cont3">
+          <img class="rounded-circle article-img" src="{{post.author.profile.image.url}}" alt="image">
+          {% if post.author.profile.is_online %}
+              <span class="online-circle4"></span>
+          {% else %}
+              <span class="offline-circle4"></span>
+          {% endif %}
+        </div>
         <div class="media-body">
           <p>
             <a class="mr-2 h4" href="{% url 'profile-detail-view' post.author.pk %}">{{ post.author }}</a>
-            {% if post.author.profile.is_online %}
-                <span class="text-muted">(Online)</span>
-            {% else %}
-                <span class="text-muted">(Offline)</span>
-            {% endif %}
           </p>
           <small class="text-muted">{{ post.date_posted|date:"F d, Y-h:i A" }}</small>        
         </div>

@@ -2,13 +2,15 @@
 {% load crispy_forms_tags %}
 {% load humanize %}
 
+{% block title %}Chats{% endblock %}
+
 {% block content %}
 
-{% if not all_friends %}
+{% if not all_rooms %}
     <span class="container">You need to be friends wih someone to chat</span>
 {% endif %}
 
-<div class="col-md-8 m-auto">
+<div class="col-md-8">
 
     <!-- ALL CHATROOMS-->
     <div class="px-0">
@@ -17,18 +19,73 @@
         <div class="">
             <div class="list-group rounded-0">
 
-            {% for friend in all_friends %}
-
-            <a href="{% url 'room-choice' friend.pk %}" class="list-group-item list-group-item-action list-group-item-light rounded-0">
-                <div class="media"><img src="{{friend.profile.image.url}}" alt="room" width="50" height="50" class="rounded-circle">
-                <div class="media-body ml-4">
-                    <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h6 class="mb-0">{{friend}}</h6><small class="small font-weight-bold"></small>
+            {% for friend in all_rooms %}
+            
+            {% if friend.friend == request.user %}   
+                <a href="{% url 'room-choice' friend.author.pk %}" class="list-group-item list-group-item-action list-group-item-light rounded-0">
+                    <div class="media">
+                        <div class="img-cont2">
+                            <img src="{{friend.author.profile.image.url}}" alt="room" width="50" height="50" class="rounded-circle">
+                            {% if friend.friend.profile.is_online %}
+                                <span class="online-circle2"></span>  
+                            {% else %}
+                                <span class="offline-circle2"></span>
+                            {% endif %}
+                        </div>
+                        <div class="media-body ml-4">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <h6 class="mb-0">
+                                    {{friend.author}}
+                                </h6>
+                                <small class="small font-weight-bold">{{friend.chats.all.last.date}}</small>
+                            </div>
+                            <p class="font-italic text-muted mb-0 text-small">
+                                {% if friend.chats.all.last.text %}
+                                    
+                                    {% if friend.chats.all.last.author == request.user %}
+                                        You : {{friend.chats.all.last.text|truncatechars_html:"30"}}
+                                    {% else %}
+                                        {{friend.chats.all.last.author}} : {{friend.chats.all.last.text|truncatechars_html:"30"}}
+                                    {% endif %}
+        
+                                {% endif %}
+                            </p>
+                        </div>
                     </div>
-                    <p class="font-italic text-muted mb-0 text-small">Here, you can chat with {{friend}}.</p>
-                </div>
-                </div>
-            </a>
+                </a>
+            {% else %}
+                <a href="{% url 'room-choice' friend.friend.pk %}" class="list-group-item list-group-item-action list-group-item-light rounded-0">
+                    <div class="media">
+                        <div class="img-cont2">
+                            <img src="{{friend.friend.profile.image.url}}" alt="room" width="50" height="50" class="rounded-circle">
+                            {% if friend.friend.profile.is_online %}
+                                <span class="online-circle2"></span>  
+                            {% else %}
+                                <span class="offline-circle2"></span>
+                            {% endif %}
+                        </div>
+                        <div class="media-body ml-4">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <h6 class="mb-0">
+                                    {{friend.friend}}
+                                </h6>
+                                <small class="small font-weight-bold">{{friend.chats.all.last.date}}</small>
+                            </div>
+                            <p class="font-italic text-muted mb-0 text-small">
+                                {% if friend.chats.all.last.text %}
+                                    
+                                    {% if friend.chats.all.last.author == request.user %}
+                                        You : {{friend.chats.all.last.text|truncatechars_html:"30"}}
+                                    {% else %}
+                                        {{friend.chats.all.last.author}} : {{friend.chats.all.last.text|truncatechars_html:"30"}}
+                                    {% endif %}
+
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            {% endif %}
 
             {% endfor %}
 
@@ -36,24 +93,23 @@
         </div>
         </div>
     </div>
-
+<br>
 </div>
 
 <br>
 
 <!-- SIDEBAR -->
-<!-- <div class="col-md-4">
+<div class="col-md-4">
     <div class="content-section">
-        <h3>Our Sidebar</h3>
-        <p class="text-muted">You can put any information here you'd like.
+        <h3>Friends ({{all_friends.count}})</h3>
+        <br>
             <ul class="list-group">
-                <li class="list-group-item list-group-item-light">Latest Posts</li>
-                <li class="list-group-item list-group-item-light">Announcements</li>
-                <li class="list-group-item list-group-item-light">Calendars</li>
-                <li class="list-group-item list-group-item-light">etc</li>
+                {% for frnd in all_friends %}
+                    <li class="list-group-item list-group-item-light">{{frnd}}</li>
+                {% endfor %}
             </ul>
         </p>
     </div>
-</div>   -->
+</div>  
 
 {% endblock %}
