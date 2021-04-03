@@ -126,6 +126,84 @@ body {
     position: relative;
   }
 
+  .img-cont2{
+    height: 55px;
+    width:  55px;
+    position: relative;
+  }
+
+  .img-cont3{
+    height: 78px;
+    width:  78px;
+    position: relative;
+  }
+
+  .online-circle3 {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color:#07dd00;
+    border: 3px solid white;
+    bottom: -16px;
+    right: 2px;
+    position: absolute;
+  }
+
+  .offline-circle3 {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color:#6e6e6e;
+    border: 3px solid white;
+    bottom: -16px;
+    right: 2px;
+    position: absolute;
+  }
+
+  .online-circle2 {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color:#07dd00;
+    border: 3px solid white;
+    bottom: 0;
+    right: 6px;
+    position: absolute;
+  }
+
+  .offline-circle2 {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color:#6e6e6e;
+    border: 3px solid white;
+    bottom: 0;
+    right: 6px;
+    position: absolute;
+  }
+
+  .online-circle4 {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color:#07dd00;
+    border: 3px solid white;
+    bottom: 10px;
+    right: 10px;
+    position: absolute;
+  }
+
+  .offline-circle4 {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color:#6e6e6e;
+    border: 3px solid white;
+    bottom: 10px;
+    right: 10px;
+    position: absolute;
+  }
+
   .account-img-container{
     display: flex;
     align-items: center;
