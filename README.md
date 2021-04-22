@@ -1,4 +1,7 @@
 # Django Social Network
+
+A social media web-application with Django.
+
 </br>
 
 ## Features :
