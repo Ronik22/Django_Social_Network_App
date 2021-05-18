@@ -19,6 +19,8 @@ A social media web-application with Django.
 
 ## Demo
 
-<image src="./demo/demo1.gif" alt="Demo" />
 
-<a href="./demo/demo1.mkv">Video Link</a>
+https://user-images.githubusercontent.com/64803043/118666705-02735600-b811-11eb-80f9-445bbe6e55c9.mp4
+
+
+<a href="./demo/demo1.mp4">Video Link</a>
