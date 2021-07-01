@@ -120,11 +120,11 @@
                 </div>
                 <div class="col">
                     <span class="h6">Followers</span>
-                    <p title="{{object.user.following.all}}">{{object.user.following.count}}</p>
+                    <p style="cursor:pointer;" data-toggle="modal" data-target="#exampleModal" data-contents="{{object.user.following.all}}" data-title="Followers" title="Followers">{{object.user.following.count}}</p>
                 </div>
                 <div class="col">
                     <span class="h6">Following</span>
-                    <p title="{{object.user.profile.following.all}}">{{object.user.profile.following.count}}</p>
+					<p style="cursor:pointer;" data-toggle="modal" data-target="#exampleModal" data-contents="{{object.user.profile.following.all}}" data-title="Following" title="Following">{{object.user.profile.following.count}}</p>
                 </div>
             </div>
         </div>
@@ -196,11 +196,31 @@
 
 </div>
 
-
-
 <br>
 
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+		  ...
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		</div>
+	  </div>
+	</div>
+</div>
+
 
 <!-- SIDEBAR -->
 <div class="col-md-4">
@@ -285,4 +305,46 @@
 {% include 'friend/snippets/remove_friend.html' %}
 
 
+{% endblock %}
+
+{% block script %}
+
+<script>
+	$('#exampleModal').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget) 
+		var mcontents = button.data('contents') 
+		var mtitle = button.data('title') 
+		
+		var modal = $(this)
+		var mlist = ""
+		var mbody = ""
+
+		if (mtitle === "Followers") {
+			mtitle = mtitle + ' ({{object.user.following.count}})'
+			{% for fs in object.user.following.all %}
+				mlist += `<li class="m-1">
+							<a href="{% url 'profile-detail-view' pk=fs.pk %}">
+								{{fs.user}}
+							</a>
+						</li>`
+			{% endfor %}
+			mbody = `<ul>${mlist}</ul>`
+		}
+		if (mtitle === "Following") {
+			mtitle = mtitle + ' ({{object.user.profile.following.count}})'
+			{% for fs in object.user.profile.following.all %}
+				mlist += `<li class="m-1">
+							<a href="{% url 'profile-detail-view' pk=fs.pk %}">
+								{{fs.user}}
+							</a>
+						</li>`
+			{% endfor %}
+			mbody = `<ul>${mlist}</ul>`
+		}
+		modal.find('.modal-title').text(mtitle)
+		modal.find('.modal-body').html(mbody)
+	});
+</script>
+
+	
 {% endblock %}
