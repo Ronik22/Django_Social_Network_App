@@ -4,12 +4,42 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
+
+<style>
+.btn-google {
+    color: #545454;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px 1px #ddd
+}
+
+.or-container {
+    align-items: center;
+    color: #ccc;
+    display: flex;
+    margin: 25px 0
+}
+
+.line-separator {
+    background-color: #ccc;
+    flex-grow: 5;
+    height: 1px
+}
+
+.or-label {
+    flex-grow: 1;
+    margin: 0 15px;
+    text-align: center
+}
+</style>
+
 <div class="m-auto col-md-8">
 <div class="content-section">
+    <h3 class="border-bottom pb-3 mb-4">Join Today</h3>
+
     <form action="" method="POST">
         {% csrf_token %}
         <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Join Today</legend>
+            
             {{form|crispy}}
             <script src="https://www.google.com/recaptcha/api.js"></script>
             <div class="g-recaptcha" data-sitekey="6Lc6oUkaAAAAANkQnN5HaqEaDix1IvP7vkJSA1Zv"></div>
@@ -20,7 +50,7 @@
     </form>
     <div class="border-top pt-3">
         <small class="text-muted">
-            Already Have an Account? <a class="ml-2" href="{% url 'login' %}">Sign In</a>
+            Already Have an Account? <a class="ml-2" href="{% url 'account_login' %}">Sign In</a>
         </small>
     </div>
 </div>

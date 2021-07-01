@@ -4,3 +4,4 @@ django-cleanup
 pillow
 django-ckeditor
 channels
+django-allauth

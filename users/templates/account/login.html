@@ -1,5 +1,6 @@
 {% extends "blog/base.html" %}
 {% load crispy_forms_tags %}
+{% load socialaccount %}
 
 {% block title %}Login{% endblock %}
 
@@ -53,10 +54,18 @@
         <div class="line-separator"></div>
     </div>
     <div class="row">
-        <div class="col-md-12"> <a class="btn btn-lg btn-google btn-block btn-outline" href="#"><img src="https://img.icons8.com/color/18/000000/google-logo.png"> Sign In with <b>Google</b></a> </div>
+        <div class="col-md-12"> 
+            <a class="btn btn-lg btn-google btn-block btn-outline" href="{% provider_login_url 'google' %}">
+                <img src="https://img.icons8.com/color/22/000000/google-logo.png"> Sign In with <b>Google</b>
+            </a> 
+        </div>
     </div> <br>
     <div class="row">
-        <div class="col-md-12"> <a class="btn btn-lg btn-google btn-block btn-outline" href="#"><img src="https://img.icons8.com/material-sharp/18/000000/github.png"/> Sign In with <b>Github</b></a> </div>
+        <div class="col-md-12"> 
+            <a class="btn btn-lg btn-google btn-block btn-outline" href="{% provider_login_url 'github' %}">
+                <img src="https://img.icons8.com/material-sharp/24/000000/github.png"/> Sign In with <b>Github</b>
+            </a> 
+        </div>
     </div> <br>
     <div class="border-top pt-3">
         <small class="text-muted">
