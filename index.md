@@ -15,12 +15,9 @@ A social media web-application with Django.
 
 ## Demo
 
-<video width="480" height="360" controls>
+<video width="640" height="480" controls>
   <source src="https://user-images.githubusercontent.com/64803043/118666705-02735600-b811-11eb-80f9-445bbe6e55c9.mp4" type="video/mp4">
   Your browser does not support HTML video.
 </video>
-
-https://user-images.githubusercontent.com/64803043/118666705-02735600-b811-11eb-80f9-445bbe6e55c9.mp4
-
 
 <a href="./demo/demo1.mp4">Video Link</a>
