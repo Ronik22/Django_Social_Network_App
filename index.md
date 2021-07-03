@@ -1,37 +1,22 @@
-## Welcome to GitHub Pages
+# Django Social Network
 
-You can use the [editor on GitHub](https://github.com/Ronik22/Django_Social_Network_App/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+A social media web-application with Django.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Features :
 
-### Markdown
+<li>Sign Up, Login, OAuth 2.0(Google, Github), Logout, Forgot Password</li>
+<li>Public Profile view</li>
+<li>Create, Edit, Delete Posts with customized text, pictures and links</li>
+<li>Like, Comment / Reply, Save and Search posts</li>
+<li>Follow and Unfollow users to view their posts</li>
+<li>Friend Request</li>
+<li>Notifications</li>
+<li>Chats using websockets</li>
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Demo
 
-```markdown
-Syntax highlighted code block
 
-# Header 1
-## Header 2
-### Header 3
+https://user-images.githubusercontent.com/64803043/118666705-02735600-b811-11eb-80f9-445bbe6e55c9.mp4
 
-- Bulleted
-- List
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Ronik22/Django_Social_Network_App/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+<a href="./demo/demo1.mp4">Video Link</a>
