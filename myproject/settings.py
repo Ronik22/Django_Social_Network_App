@@ -40,6 +40,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'crispy_forms',
     'django_cleanup',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sites',
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+
     'ckeditor',
     'allauth',
     'allauth.account',
@@ -60,6 +62,7 @@ INSTALLED_APPS = [
     'chat',
     'channels',
     'friend',
+    'videocall',
 ]
 
 MIDDLEWARE = [
@@ -107,6 +110,17 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'socialNet',
+#         'USER': 'postgres',
+#         'PASSWORD': os.getenv("PGDB_PWD"),
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation

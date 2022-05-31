@@ -1,0 +1,65 @@
+{% extends 'videocall/main.html' %}
+{% load static %}
+{% block content %}
+
+<main>
+
+    <section id="form-container">
+
+        <img id="logo" src="{% static 'blog/images/chat-icon.png' %}"/>
+
+        <div id="welcome-message">
+            <h1>Welcome to ConvNow</h1>
+            <p>Developed by Ronik Bhattacharjee</p>
+        </div>
+
+        <form id="form">
+            <div class="field-wrapper">
+
+                <div class="form-field">
+                    <label>Room:</label>
+                    <input required name="room" placeholder="Enter a room name..."  style="text-transform:uppercase"/>
+                </div>
+
+                <div class="form-field">
+                    <label>Name:</label>
+                    <input required name="name" placeholder="Enter your name..."  style="text-transform:uppercase"/>
+                </div>
+
+                <div class="form-field">
+                    <input type="submit" value="Join Stream" />
+                </div>
+            </div>
+        </form>
+    </section>
+</main>
+
+<script>
+    let form = document.getElementById('form')
+
+    let handleSubmit = async (e) => {
+        e.preventDefault()
+        let room = e.target.room.value.toUpperCase()
+        let name = e.target.name.value
+
+        let response = await fetch(`get_token/?channel=${room}`)
+        let data = await response.json()
+
+        let UID = data.uid
+        let token = data.token
+
+        sessionStorage.setItem('UID', UID)
+        sessionStorage.setItem('token', token)
+        sessionStorage.setItem('room', room)
+        sessionStorage.setItem('name', name)
+
+        window.open('/vc/room/', '_self')
+    }
+
+
+
+    form.addEventListener('submit', handleSubmit)
+</script>
+
+{% endblock content %}
+

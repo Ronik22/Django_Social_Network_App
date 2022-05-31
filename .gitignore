@@ -1,7 +1,7 @@
 # Additional files
 .vscode
 testfolder/*
-chat/templates/chat_prev/*
+datadump.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
