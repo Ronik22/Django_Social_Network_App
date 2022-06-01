@@ -4,6 +4,8 @@ from django.http import JsonResponse
 import random
 import time
 from agora_token_builder import RtcTokenBuilder
+
+from friend.models import FriendList
 from .models import RoomMember
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -12,7 +14,11 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 def lobby(request):
-    return render(request, 'videocall/lobby.html')
+    friends = FriendList.objects.filter(user=request.user)[0].friends.all()
+    context = {
+        'friends':friends
+    }
+    return render(request, 'videocall/lobby.html', context)
 
 def room(request):
     return render(request, 'videocall/room.html')

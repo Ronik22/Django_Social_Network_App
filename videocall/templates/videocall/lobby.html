@@ -1,46 +1,73 @@
-{% extends 'videocall/main.html' %}
+{% extends "blog/base.html" %}
 {% load static %}
+
+{% block title %}VC Lobby{% endblock %}
+
 {% block content %}
 
-<main>
+<!-- <link rel='stylesheet' type='text/css' media='screen' href="{% static 'blog/vc.css' %}"> -->
 
-    <section id="form-container">
+<style>
+    .media {
+        align-items: center;
+    }
+</style>
+{% if not friends %}
+    <span class="container">You need to be friends wih someone to call</span>
+{% endif %}
 
-        <img id="logo" src="{% static 'blog/images/chat-icon.png' %}"/>
+<div class="col-md-8 m-auto">
+  
+    <!-- ALL CALLROOMS-->
+    <div class="px-0">
+        <div class="bg-white">
 
-        <div id="welcome-message">
-            <h1>Welcome to ConvNow</h1>
-            <p>Developed by Ronik Bhattacharjee</p>
-        </div>
+        <div class="">
+            <div class="list-group rounded-0">
 
-        <form id="form">
-            <div class="field-wrapper">
-
-                <div class="form-field">
-                    <label>Room:</label>
-                    <input required name="room" placeholder="Enter a room name..."  style="text-transform:uppercase"/>
+            {% for friend in friends %}
+              
+                <div class="list-group-item list-group-item-action list-group-item-light rounded-0">
+                    <div class="media">
+                        <div class="img-cont2">
+                            <img src="{{friend.profile.image.url}}" alt="room" width="50" height="50" class="rounded-circle">
+                            {% if friend.profile.is_online %}
+                                <span class="online-circle2"></span>  
+                            {% else %}
+                                <span class="offline-circle2"></span>
+                            {% endif %}
+                        </div>
+                        <div class="media-body ml-4">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h6 class="mb-1">
+                                    {{friend.username}}
+                                </h6>
+                                <div>
+                                    <a class="p-2 h5" href="{% url 'room-choice' friend.pk %}"><i class="fas fa-comment-alt"></i></a>
+                                    
+                                    <a style="cursor:pointer;" class="p-2 h4" onclick="handleVCRedirect('{{friend.pk}}','{{request.user.pk}}','{{request.user.username}}')"><i class="fas fa-video"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-field">
-                    <label>Name:</label>
-                    <input required name="name" placeholder="Enter your name..."  style="text-transform:uppercase"/>
-                </div>
+            {% endfor %}
 
-                <div class="form-field">
-                    <input type="submit" value="Join Stream" />
-                </div>
             </div>
-        </form>
-    </section>
-</main>
+        </div>
+        </div>
+    </div>
+    
+</div>
 
+{% endblock %}
+
+{% block script %}
 <script>
-    let form = document.getElementById('form')
-
-    let handleSubmit = async (e) => {
-        e.preventDefault()
-        let room = e.target.room.value.toUpperCase()
-        let name = e.target.name.value
+    async function handleVCRedirect(id1,id2,name) {
+        let room = (parseInt(id1) > parseInt(id2)) ? "vcroom" + id1 + id2 : "vcroom" + id2 + id1;
+        room = room.toUpperCase()
 
         let response = await fetch(`get_token/?channel=${room}`)
         let data = await response.json()
@@ -53,13 +80,30 @@
         sessionStorage.setItem('room', room)
         sessionStorage.setItem('name', name)
 
-        window.open('/vc/room/', '_self')
+        window.open('/vc/room/', '_blank')
     }
-
-
-
-    form.addEventListener('submit', handleSubmit)
+    
 </script>
+{% endblock script %}
 
-{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="col-md-8">
+
+    
+<br>
+</div>
+
 
