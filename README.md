@@ -12,6 +12,7 @@ A social media web-application with Django.
 <li>Friend Request</li>
 <li>Notifications</li>
 <li>Chats using websockets</li>
+<li>Video Calls</li>
 
 ## Demo
 
