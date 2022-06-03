@@ -21,7 +21,7 @@ let joinAndDisplayLocalStream = async () => {
         UID = await client.join(APP_ID, CHANNEL, TOKEN, UID)
     }catch(error){
         console.error(error)
-        window.open('/vc/', '_self')
+        window.open('/chats/', '_self')
     }
     
     localTracks = await AgoraRTC.createMicrophoneAndCameraTracks()
@@ -76,7 +76,7 @@ let leaveAndRemoveLocalStream = async () => {
     }
 
     await client.leave()
-    window.open('/vc/', '_self')
+    window.open('/chats/', '_self')
 }
 
 let toggleCamera = async (e) => {

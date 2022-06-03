@@ -106,6 +106,13 @@
         // $(document).ready(function(event){
         //     $("#chat-box").scrollTop($("#chat-box").scrollHeight);
         // });
+        document.querySelector('#input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.querySelector('#submit').click();
+            }
+        });
+
         let my_name = '{{ my_name }}';
         const user_username = JSON.parse(document.getElementById('user_username').textContent);
         const user_image = JSON.parse(document.getElementById('user_image').textContent);
