@@ -22,7 +22,7 @@
             {% for friend in all_rooms %}
             
             {% if friend.friend == request.user %}   
-                <a href="{% url 'room-choice' friend.author.pk %}" class="list-group-item list-group-item-action list-group-item-light rounded-0">
+                <div class="list-group-item list-group-item-action list-group-item-light rounded-0">
                     <div class="media">
                         <div class="img-cont2">
                             <img src="{{friend.author.profile.image.url}}" alt="room" width="50" height="50" class="rounded-circle">
@@ -39,7 +39,7 @@
                                 </h6>
                                 <small class="small font-weight-bold">{{friend.chats.all.last.date}}</small>
                             </div>
-                            <p class="font-italic text-muted mb-0 text-small">
+                            <p class="font-italic text-muted mb-0 text-small d-inline">
                                 {% if friend.chats.all.last.text %}
                                     
                                     {% if friend.chats.all.last.author == request.user %}
@@ -50,11 +50,15 @@
         
                                 {% endif %}
                             </p>
+                            <div class="float-right d-inline">
+                                <a class="p-2 h5" href="{% url 'room-choice' friend.author.pk %}"><i class="fas fa-comment-alt"></i></a>
+                                <a style="cursor:pointer;" class="p-2 h4" onclick="handleVCRedirect('{{friend.author.pk}}','{{request.user.username}}')"><i class="fas fa-video"></i></a>
+                            </div>
                         </div>
                     </div>
-                </a>
+                </div>
             {% else %}
-                <a href="{% url 'room-choice' friend.friend.pk %}" class="list-group-item list-group-item-action list-group-item-light rounded-0">
+                <div class="list-group-item list-group-item-action list-group-item-light rounded-0">
                     <div class="media">
                         <div class="img-cont2">
                             <img src="{{friend.friend.profile.image.url}}" alt="room" width="50" height="50" class="rounded-circle">
@@ -71,7 +75,7 @@
                                 </h6>
                                 <small class="small font-weight-bold">{{friend.chats.all.last.date}}</small>
                             </div>
-                            <p class="font-italic text-muted mb-0 text-small">
+                            <p class="font-italic text-muted mb-0 text-small d-inline">
                                 {% if friend.chats.all.last.text %}
                                     
                                     {% if friend.chats.all.last.author == request.user %}
@@ -82,9 +86,13 @@
 
                                 {% endif %}
                             </p>
+                            <div class="float-right d-inline">
+                                <a class="p-2 h5" href="{% url 'room-choice' friend.friend.pk %}"><i class="fas fa-comment-alt"></i></a>
+                                <a style="cursor:pointer;" class="p-2 h4" onclick="handleVCRedirect('{{friend.friend.pk}}','{{request.user.username}}')"><i class="fas fa-video"></i></a>
+                            </div>
                         </div>
                     </div>
-                </a>
+                </div>
             {% endif %}
 
             {% endfor %}
@@ -108,8 +116,38 @@
                     <li class="list-group-item list-group-item-light">{{frnd}}</li>
                 {% endfor %}
             </ul>
-        </p>
+        <br>
     </div>
 </div>  
 
 {% endblock %}
+
+
+{% block script %}
+<script>
+    async function handleVCRedirect(id1,name) {
+        // let room = (parseInt(id1) > parseInt(id2)) ? "vcroom_" + id1 + "_" + {{request.user.id}} : "vcroom_" + {{request.user.id}} + "_" + id1;
+        // room = room.toUpperCase()
+        room = id1
+
+        let response = await fetch(`/vc/get_token/?channel=${room}`)
+        
+        if(response.status == 200) {
+            let data = await response.json()
+            console.log(response);
+
+            let UID = data.uid
+            let token = data.token
+            let room_name = data.room_name
+
+            sessionStorage.setItem('UID', UID)
+            sessionStorage.setItem('token', token)
+            sessionStorage.setItem('room', room_name)
+            sessionStorage.setItem('name', name)
+
+            window.open('/vc/room/', '_blank')
+        }
+    }
+    
+</script>
+{% endblock script %}

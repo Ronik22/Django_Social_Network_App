@@ -45,7 +45,7 @@
                                 <div>
                                     <a class="p-2 h5" href="{% url 'room-choice' friend.pk %}"><i class="fas fa-comment-alt"></i></a>
                                     
-                                    <a style="cursor:pointer;" class="p-2 h4" onclick="handleVCRedirect('{{friend.pk}}','{{request.user.pk}}','{{request.user.username}}')"><i class="fas fa-video"></i></a>
+                                    <a style="cursor:pointer;" class="p-2 h4" onclick="handleVCRedirect('{{friend.pk}}','{{request.user.username}}')"><i class="fas fa-video"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -65,22 +65,28 @@
 
 {% block script %}
 <script>
-    async function handleVCRedirect(id1,id2,name) {
-        let room = (parseInt(id1) > parseInt(id2)) ? "vcroom" + id1 + id2 : "vcroom" + id2 + id1;
-        room = room.toUpperCase()
+    async function handleVCRedirect(id1,name) {
+        // let room = (parseInt(id1) > parseInt(id2)) ? "vcroom_" + id1 + "_" + {{request.user.id}} : "vcroom_" + {{request.user.id}} + "_" + id1;
+        // room = room.toUpperCase()
+        room = id1
 
         let response = await fetch(`get_token/?channel=${room}`)
-        let data = await response.json()
+        
+        if(response.status == 200) {
+            let data = await response.json()
+            console.log(response);
 
-        let UID = data.uid
-        let token = data.token
+            let UID = data.uid
+            let token = data.token
+            let room_name = data.room_name
 
-        sessionStorage.setItem('UID', UID)
-        sessionStorage.setItem('token', token)
-        sessionStorage.setItem('room', room)
-        sessionStorage.setItem('name', name)
+            sessionStorage.setItem('UID', UID)
+            sessionStorage.setItem('token', token)
+            sessionStorage.setItem('room', room_name)
+            sessionStorage.setItem('name', name)
 
-        window.open('/vc/room/', '_blank')
+            window.open('/vc/room/', '_blank')
+        }
     }
     
 </script>
