@@ -24,7 +24,11 @@ https://user-images.githubusercontent.com/64803043/118666705-02735600-b811-11eb-
 
 ## Adding env variables
 
-Add env variables to ".test.env" and rename it to ".env"
+- Add env variables to ".test.env" and rename it to ".env"
+
+- Add GOOGLE_RECAPTCHA_SECRET_KEY to both .env and the file mentioned below https://github.com/Ronik22/Django_Social_Network_App/blob/main/users/templates/users/register.html#L45
+
+- Add agora app_id to .env and to https://github.com/Ronik22/Django_Social_Network_App/blob/main/blog/static/blog/js/streams.js#L2
 
 ## Installation
 
