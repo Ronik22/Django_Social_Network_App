@@ -11,7 +11,7 @@ constantly==15.1.0
 cryptography==3.4.7
 daphne==3.0.2
 defusedxml==0.7.1
-Django==3.2.6
+Django==4.0.5
 django-allauth==0.45.0
 django-ckeditor==6.1.0
 django-cleanup==5.2.0
@@ -40,5 +40,6 @@ Twisted==21.7.0
 twisted-iocpsupport==1.0.1
 txaio==21.2.1
 typing-extensions==3.10.0.0
+tzdata==2022.1
 urllib3==1.26.6
 zope.interface==5.4.0
