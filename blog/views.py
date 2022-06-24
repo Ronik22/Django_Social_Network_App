@@ -15,6 +15,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
 import random
+from blog.utils import is_ajax
 
 
 """ Home page with all posts """
@@ -76,7 +77,7 @@ def LikeView(request):
         'liked':liked,
     }
 
-    if request.is_ajax():
+    if is_ajax(request=request):
         html = render_to_string('blog/like_section.html',context, request=request)
         return JsonResponse({'form':html})
 
@@ -100,7 +101,7 @@ def SaveView(request):
         'saved':saved,
     }
 
-    if request.is_ajax():
+    if is_ajax(request=request):
         html = render_to_string('blog/save_section.html',context, request=request)
         return JsonResponse({'form':html})
 
@@ -138,7 +139,7 @@ def LikeCommentView(request): # , id1, id2              id1=post.pk id2=reply.pk
         'clikes':tcl
     }
 
-    if request.is_ajax():
+    if is_ajax(request=request):
         html = render_to_string('blog/comments.html',context, request=request)
         return JsonResponse({'form':html})
 
@@ -240,7 +241,7 @@ def PostDetailView(request,pk):
     context['post']=stuff
     context['comments']=total_comments
 
-    if request.is_ajax():
+    if is_ajax(request=request):
         html = render_to_string('blog/comments.html',context, request=request)
         return JsonResponse({'form':html})
 
