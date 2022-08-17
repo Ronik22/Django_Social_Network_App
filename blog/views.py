@@ -313,8 +313,19 @@ def search(request):
 def AllLikeView(request):
     user = request.user
     liked_posts = user.blogpost.all()
+
+    paginator = Paginator(liked_posts, 5)
+    page = request.GET.get('page')
+    try:
+        posts_list = paginator.page(page)
+    except PageNotAnInteger:
+        posts_list = paginator.page(1)
+    except EmptyPage:
+        posts_list = paginator.page(paginator.num_pages)
+
     context = {
-        'liked_posts':liked_posts
+        'liked_posts':posts_list,
+        'liked_posts_count':liked_posts.count(),
     }
     return render(request, 'blog/liked_posts.html', context)
 
@@ -324,8 +335,19 @@ def AllLikeView(request):
 def AllSaveView(request):
     user = request.user
     saved_posts = user.blogsave.all()
+
+    paginator = Paginator(saved_posts, 5)
+    page = request.GET.get('page')
+    try:
+        posts_list = paginator.page(page)
+    except PageNotAnInteger:
+        posts_list = paginator.page(1)
+    except EmptyPage:
+        posts_list = paginator.page(paginator.num_pages)
+
     context = {
-        'saved_posts':saved_posts
+        'saved_posts':posts_list,
+        'saved_posts_count':saved_posts.count(),
     }
     return render(request, 'blog/saved_posts.html', context)
 

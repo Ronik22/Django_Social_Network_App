@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="col-md-8">
+<div class="col-md-8 allpl">
     
     {% if posts|length == 0 %}
       <span class="text-muted">You must follow someone to view posts on your feeds</span>
@@ -13,7 +13,7 @@
 
     {% for post in posts %}
 
-    <article class="content-section" style="overflow: auto;">
+    <article class="content-section allp" style="overflow: auto;">
       <div class="media">
         <div class="img-cont3">
           <img class="rounded-circle article-img" src="{{post.author.profile.image.url}}" alt="image">
@@ -38,7 +38,14 @@
     {% endfor %}
 
 
-    
+    <!-- for infinite scroll -->
+    {% if posts.has_next %}
+      <p class="pagination">
+        <a class="next-page" href="?page={{ posts.next_page_number }}">More...</a>
+      </p>
+    {% endif %}
+
+    <!-- {% comment %}
 
     {% if posts.has_other_pages %}
 
@@ -61,6 +68,9 @@
       {% endif %}
 
     {% endif %}
+
+    {% endcomment %} -->
+
 </div>
 
 
@@ -112,3 +122,22 @@
 </div>  
 
 {% endblock %}
+
+{% block script %}
+<!-- for infinite scroll -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>
+<script>
+  jQuery(function ($) {
+      var $list = $('.allpl');
+      $list.jscroll({
+          loadingHtml: '<div class="text-center">' +
+              '<img src="" alt="Loading" />' +
+              '</div>',
+          padding: 100,
+          pagingSelector: '.pagination',
+          nextSelector: 'a.next-page:last',
+          contentSelector: '.allp,.pagination'
+      });
+  });
+</script>
+{% endblock script %}

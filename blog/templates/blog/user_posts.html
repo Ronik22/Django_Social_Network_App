@@ -4,14 +4,14 @@
 
 {% block content %}
 
-<div class="col-md-8 m-auto">
+<div class="col-md-8 m-auto allpl">
 
 <div class="content-section">
   <h2 class="mb-3">Posts by {{view.kwargs.username}} ({{page_obj.paginator.count}})</h2>
 </div>
 
     {% for post in posts %}
-    <article class="content-section" style="overflow: auto;">
+    <article class="content-section allp" style="overflow: auto;">
       <div class="media">
           <img class="rounded-circle article-img" src="{{post.author.profile.image.url}}" alt="image">
           <div class="media-body">
@@ -24,32 +24,43 @@
 
       <hr>
       
-      <p class="article-content">{{ post.content|safe }}</p>
+      <p class="article-content">{{ post.content|safe|linebreaks|truncatewords_html:"20" }}<a href="{% url 'post-detail' post.id %}">[Read full post]</a></p>
     </article>
     
     {% endfor %}
     
-    {% if is_paginated %}
-
-      {% if page_obj.has_previous %}
-        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
-        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.previous_page_number}}">Previous</a>
-      {% endif %}
-
-      {% for num in page_obj.paginator.page_range %}
-        {% if page_obj.number == num %}
-          <a class="btn btn-info mb-4" href="?page={{num}}">{{num}}</a>
-        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-        <a class="btn btn-outline-info mb-4" href="?page={{num}}">{{num}}</a>
-        {% endif %}
-      {% endfor %}
-
-      {% if page_obj.has_next %}
-        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.next_page_number}}">Next</a>
-        <a class="btn btn-outline-info mb-4" href="?page={{page_obj.paginator.num_pages}}">Last</a>
-      {% endif %}
-
+    <!-- for infinite scroll -->
+    {% if page_obj.has_next %}
+      <p class="pagination">
+        <a class="next-page" href="?page={{ page_obj.next_page_number }}">More...</a>
+      </p>
     {% endif %}
+
+    <!-- {% comment %}
+
+      {% if is_paginated %}
+
+        {% if page_obj.has_previous %}
+          <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+          <a class="btn btn-outline-info mb-4" href="?page={{page_obj.previous_page_number}}">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <a class="btn btn-info mb-4" href="?page={{num}}">{{num}}</a>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a class="btn btn-outline-info mb-4" href="?page={{num}}">{{num}}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+          <a class="btn btn-outline-info mb-4" href="?page={{page_obj.next_page_number}}">Next</a>
+          <a class="btn btn-outline-info mb-4" href="?page={{page_obj.paginator.num_pages}}">Last</a>
+        {% endif %}
+      
+      {% endif %}
+
+    {% endcomment %} -->
 
 </div>
 
@@ -67,5 +78,26 @@
       </p>
   </div>
 </div>   -->
+
+{% endblock %}
+
+{% block script %}
+
+<!-- for infinite scroll -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>
+<script>
+  jQuery(function ($) {
+      var $list = $('.allpl');
+      $list.jscroll({
+          loadingHtml: '<div class="text-center">' +
+              '<img src="" alt="Loading" />' +
+              '</div>',
+          padding: 100,
+          pagingSelector: '.pagination',
+          nextSelector: 'a.next-page:last',
+          contentSelector: '.allp,.pagination'
+      });
+  });
+</script>
 
 {% endblock %}
