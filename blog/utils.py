@@ -1,4 +1,4 @@
-def is_ajax(request):
+def is_ajax(request) -> bool:
     """
     To fix request.is_ajax() error which is deprecated in django > v3.1
 
@@ -8,4 +8,4 @@ def is_ajax(request):
     Returns:
         _type_: boolean
     """
-    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+    return request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest"

@@ -10,104 +10,104 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-from pathlib import Path
 import os
-from dotenv import load_dotenv
+from pathlib import Path
+from typing import Union
+
 from django.contrib.messages import constants as messages
+from dotenv import load_dotenv
 
 # Loading ENV
-env_path = Path('.') / '.env'
+env_path: Path = Path(".") / ".env"
 load_dotenv(dotenv_path=env_path)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR: Path = Path(__file__).resolve().parent.parent
 # BASE_DIR = Path("/web/dsn/").resolve()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY: Union[str, None] = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG")
+DEBUG: Union[str, None] = os.getenv("DEBUG")
 
-ALLOWED_HOSTS = ['*'] 
+ALLOWED_HOSTS: list[str] = ["*"]
 
 
 # Application definition
 
-INSTALLED_APPS = [
-    'crispy_forms',
-    'django_cleanup',
-
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.sites',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.humanize',
-
-    'ckeditor',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.github',
-    'blog.apps.BlogConfig',
-    'users.apps.UsersConfig',
-    'notification',
-    'chat',
-    'channels',
-    'friend',
-    'videocall',
+INSTALLED_APPS: list[str] = [
+    "crispy_forms",
+    "django_cleanup",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.sites",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.humanize",
+    "ckeditor",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.github",
+    "blog.apps.BlogConfig",
+    "users.apps.UsersConfig",
+    "notification",
+    "chat",
+    "channels",
+    "friend",
+    "videocall",
 ]
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+MIDDLEWARE: list[str] = [
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'myproject.urls'
+ROOT_URLCONF: str = "myproject.urls"
 
-TEMPLATES = [
+TEMPLATES: list[dict[str, Union[bool, str, dict[str, list[str]]]]] = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'users/templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(BASE_DIR, "users/templates")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+AUTHENTICATION_BACKENDS: list[str] = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-WSGI_APPLICATION = 'myproject.wsgi.application'
+WSGI_APPLICATION: str = "myproject.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASES: dict[str, dict[str, str]] = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
@@ -126,18 +126,18 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
+AUTH_PASSWORD_VALIDATORS: list[dict[str, str]] = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -145,86 +145,84 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE: str = "en-us"
 
-TIME_ZONE = 'America/New_York'
+TIME_ZONE: str = "America/New_York"
 
-USE_I18N = True
+USE_I18N: bool = True
 
-USE_L10N = True
+USE_L10N: bool = True
 
-USE_TZ = True
+USE_TZ: bool = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+STATICFILES_FINDERS: tuple[str] = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 )
 
-STATICFILES_DIRS = [
-    '/web/dsn/blog/static',
+STATICFILES_DIRS: list[str] = [
+    "/web/dsn/blog/static",
 ]
 
-STATIC_URL = 'static/'
+STATIC_URL: str = "static/"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_ROOT: str = os.path.join(BASE_DIR, "media")
+MEDIA_URL: str = "/media/"
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_TEMPLATE_PACK: str = "bootstrap4"
 
-LOGIN_REDIRECT_URL = 'blog-home'
-LOGIN_URL = 'account_login'
+LOGIN_REDIRECT_URL: str = "blog-home"
+LOGIN_URL: str = "account_login"
 
-CKEDITOR_CONFIGS = {
-    'default': {
-        'width':'auto',
+CKEDITOR_CONFIGS: dict[str, dict[str, str]] = {
+    "default": {
+        "width": "auto",
     },
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = os.getenv("EMAIL_PORT")
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_USER')     # environment variable containing username
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASS')  # environment variable containing password
+EMAIL_BACKEND: str = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST: str = "smtp.gmail.com"
+EMAIL_PORT: str = os.getenv("EMAIL_TLS_PORT")
+EMAIL_USE_TLS: str = True
+EMAIL_HOST_USER: str = os.getenv("EMAIL_USER")  # environment variable containing username
+EMAIL_HOST_PASSWORD: str = os.getenv("EMAIL_PASS")  # environment variable containing password
 
-GOOGLE_RECAPTCHA_SECRET_KEY = os.getenv("GOOGLE_RECAPTCHA_SECRET_KEY")
+GOOGLE_RECAPTCHA_SECRET_KEY: str = os.getenv("GOOGLE_RECAPTCHA_SECRET_KEY")
 
-MESSAGE_TAGS = {
-        messages.DEBUG: 'alert-secondary',
-        messages.INFO: 'alert-info',
-        messages.SUCCESS: 'alert-success',
-        messages.WARNING: 'alert-warning',
-        messages.ERROR: 'alert-danger',
+MESSAGE_TAGS: dict[int, str] = {
+    messages.DEBUG: "alert-secondary",
+    messages.INFO: "alert-info",
+    messages.SUCCESS: "alert-success",
+    messages.WARNING: "alert-warning",
+    messages.ERROR: "alert-danger",
 }
 
-ASGI_APPLICATION = "myproject.routing.application"
+ASGI_APPLICATION: str = "myproject.routing.application"
 
-CHANNEL_LAYERS = {
-    "default":{
-        "BACKEND":"channels.layers.InMemoryChannelLayer"
-    },
+CHANNEL_LAYERS: dict[str, dict[str, str]] = {
+    "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"},
 }
 
-SITE_ID = 2     # considering 2nd site in 'Sites' to be 127.0.0.1 (for dev)
+SITE_ID: int = 2  # considering 2nd site in 'Sites' to be 127.0.0.1 (for dev)
 
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
+SOCIALACCOUNT_PROVIDERS: dict[str, dict[str, list[str]]] = {
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
         ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
     },
-    'github': {
-        'SCOPE': [
-            'user',
-            'repo',
-            'read:org',
+    "github": {
+        "SCOPE": [
+            "user",
+            "repo",
+            "read:org",
         ],
-    }
+    },
 }

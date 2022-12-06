@@ -1,1 +1,1 @@
-from .wsgi import application
+from .wsgi import application  # noqa: F401
