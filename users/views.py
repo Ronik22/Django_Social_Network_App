@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.signals import user_logged_in, user_logged_out
+
+# from django.core.mail import send_mail
 from django.dispatch import receiver
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView
@@ -11,6 +13,8 @@ from django.views.generic import DetailView, ListView
 from friend.friend_request_status import FriendRequestStatus
 from friend.models import FriendList, FriendRequest
 from friend.utils import get_friend_request_or_false
+from myproject import utils
+from myproject.email import EmailHTML
 from notification.models import Notification
 
 from .forms import ProfileUpdateForm, UserRegisterForm, UserUpdateForm
@@ -56,7 +60,7 @@ def follow_unfollow_profile(request):
 
 def register(request):
     if request.method == "POST":
-        form = UserRegisterForm(request.POST)
+        form: UserRegisterForm = UserRegisterForm(request.POST)
         if form.is_valid():
             """
             # reCAPTCHA V2
@@ -76,6 +80,26 @@ def register(request):
                 messages.success(
                     request, f"Your account has been created! You can login now {username}"
                 )
+                message: str = f"New account creation for {username} has succeeded"
+                email_message: EmailHTML = utils.build_email_message(
+                    subject="New Account Registration Completed",
+                    message=message,
+                    recipient_list=[
+                        form.cleaned_data.get("email"),
+                    ],
+                )
+
+                utils.send_email_message(email_message)
+
+                # send_mail(
+                #     subject="New Account Registration Completed",
+                #     message=message,
+                #     from_email=None,
+                #     recipient_list=[
+                #         form.cleaned_data.get("email"),
+                #     ],
+                #     html_message=message,
+                # )
                 return redirect("login")
             else:
                 messages.error(request, "Invalid reCAPTCHA. Please try again.")

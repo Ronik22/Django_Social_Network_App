@@ -169,6 +169,8 @@ STATICFILES_DIRS: list[str] = [
 
 STATIC_URL: str = "static/"
 
+EMAIL_TEMPLATE_ROOT: str = os.path.join(BASE_DIR, "email_templates")
+
 MEDIA_ROOT: str = os.path.join(BASE_DIR, "media")
 MEDIA_URL: str = "/media/"
 
@@ -187,6 +189,7 @@ EMAIL_BACKEND: str = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST: str = "smtp.gmail.com"
 EMAIL_PORT: str = os.getenv("EMAIL_TLS_PORT")
 EMAIL_USE_TLS: str = True
+DEFAULT_FROM_EMAIL: str = "bubbaandy89@gmail.com"
 EMAIL_HOST_USER: str = os.getenv("EMAIL_USER")  # environment variable containing username
 EMAIL_HOST_PASSWORD: str = os.getenv("EMAIL_PASS")  # environment variable containing password
 
