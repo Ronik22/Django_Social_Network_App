@@ -53,7 +53,7 @@ def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-
+            """
             # reCAPTCHA V2
             recaptcha_response = request.POST.get('g-recaptcha-response')
             data = {
@@ -62,8 +62,10 @@ def register(request):
             }
             r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
             result = r.json()
-
+            
             if result['success']:
+            """
+            if True:  # Shim this in to turn off captcha for now
                 form.save()
                 username = form.cleaned_data.get('username')
                 messages.success(request, f"Your account has been created! You can login now")
