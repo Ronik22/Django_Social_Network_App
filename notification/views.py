@@ -13,10 +13,8 @@ from notification.models import Notification
 @login_required
 def ShowNotifications(request) -> HttpResponse:
     user: str = request.user
-    notifications: BaseManager[Notification] = Notification.objects.filter(user=user).order_by(
-        "-date"
-    )
-    context: dict[str, BaseManager[Notification]] = {
+    notifications: BaseManager = Notification.objects.filter(user=user).order_by("-date")
+    context: dict[str, BaseManager] = {
         "notifications": notifications,
     }
     return render(request, "blog/notifications.html", context)

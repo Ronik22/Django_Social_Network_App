@@ -1,6 +1,3 @@
-from datetime import datetime
-from typing import Any, Optional
-
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -8,20 +5,18 @@ from django.db import models
 
 
 class Profile(models.Model):
-    user: models.OneToOneField[User] = models.OneToOneField(User, on_delete=models.CASCADE)
-    is_online: models.BooleanField[bool] = models.BooleanField(default=False)
-    following: models.ManyToManyField[User, Any] = models.ManyToManyField(
+    user: models.OneToOneField = models.OneToOneField(User, on_delete=models.CASCADE)
+    is_online: models.BooleanField = models.BooleanField(default=False)
+    following: models.ManyToManyField = models.ManyToManyField(
         User, related_name="following", blank=True
     )
-    friends: models.ManyToManyField[User, Any] = models.ManyToManyField(
+    friends: models.ManyToManyField = models.ManyToManyField(
         User, related_name="my_friends", blank=True
     )
-    bio: models.CharField[Optional[str]] = models.CharField(
-        default="", blank=True, null=True, max_length=350
-    )
-    date_of_birth: models.CharField[str] = models.CharField(blank=True, max_length=150)
-    updated: models.DateTimeField[datetime] = models.DateTimeField(auto_now=True)
-    created: models.DateTimeField[datetime] = models.DateTimeField(auto_now_add=True)
+    bio: models.CharField = models.CharField(default="", blank=True, null=True, max_length=350)
+    date_of_birth: models.CharField = models.CharField(blank=True, max_length=150)
+    updated: models.DateTimeField = models.DateTimeField(auto_now=True)
+    created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     image: models.ImageField = models.ImageField(
         default="default.jpg", upload_to="profile_pics", blank=True, null=True
     )
@@ -29,7 +24,7 @@ class Profile(models.Model):
     def profile_posts(self):
         return self.user.post_set.all()
 
-    def get_friends(self) -> models.ManyToManyRelatedManager[User, Any]:
+    def get_friends(self):
         return self.friends.all()
 
     def get_friends_no(self) -> int:

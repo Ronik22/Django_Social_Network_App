@@ -11,15 +11,15 @@ from django.utils import timezone
 
 
 class Post(models.Model):
-    title: models.CharField[str] = models.CharField(max_length=150)
+    title: models.CharField = models.CharField(max_length=150)
     content: RichTextField = RichTextField(blank=True, null=True)
-    date_posted: models.DateTimeField[datetime] = models.DateTimeField(default=timezone.now)
-    date_updated: models.DateTimeField[datetime] = models.DateTimeField(auto_now=True)
-    author: models.ForeignKey[User] = models.ForeignKey(User, on_delete=models.CASCADE)
-    likes: models.ManyToManyField[User, Any] = models.ManyToManyField(
+    date_posted: models.DateTimeField = models.DateTimeField(default=timezone.now)
+    date_updated: models.DateTimeField = models.DateTimeField(auto_now=True)
+    author: models.ForeignKey = models.ForeignKey(User, on_delete=models.CASCADE)
+    likes: models.ManyToManyField = models.ManyToManyField(
         User, related_name="blogpost", blank=True
     )
-    saves: models.ManyToManyField[User, Any] = models.ManyToManyField(
+    saves: models.ManyToManyField = models.ManyToManyField(
         User, related_name="blogsave", blank=True
     )
 
@@ -40,16 +40,16 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    post: models.ForeignKey[Post] = models.ForeignKey(
+    post: models.ForeignKey = models.ForeignKey(
         Post, related_name="comments", on_delete=models.CASCADE
     )
-    name: models.ForeignKey[User] = models.ForeignKey(User, on_delete=models.CASCADE)
-    body: models.TextField[str] = models.TextField(max_length=200)
-    date_added: models.DateTimeField[datetime] = models.DateTimeField(auto_now_add=True)
-    likes: models.ManyToManyField[User, Any] = models.ManyToManyField(
+    name: models.ForeignKey = models.ForeignKey(User, on_delete=models.CASCADE)
+    body: models.TextField = models.TextField(max_length=200)
+    date_added: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+    likes: models.ManyToManyField = models.ManyToManyField(
         User, related_name="blogcomment", blank=True
     )
-    reply: models.ForeignKey[None] = models.ForeignKey(
+    reply: models.ForeignKey = models.ForeignKey(
         "self", null=True, related_name="replies", on_delete=models.CASCADE
     )
 

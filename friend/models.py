@@ -9,10 +9,10 @@ from django.utils import timezone  # noqa: F401
 
 
 class FriendList(models.Model):
-    user: models.OneToOneField[User] = models.OneToOneField(
+    user: models.OneToOneField = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="user"
     )
-    friends: models.ManyToManyField[User, Any] = models.ManyToManyField(
+    friends: models.ManyToManyField = models.ManyToManyField(
         User, blank=True, related_name="friends"
     )
 

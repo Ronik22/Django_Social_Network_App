@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.db.models.manager import BaseManager, ManyToManyRelatedManager, UserManager
+from django.db.models.manager import BaseManager
 from django.http import (
     HttpResponse,
     HttpResponsePermanentRedirect,
@@ -19,10 +19,8 @@ from .models import Chat, Room
 
 @login_required
 def room_enroll(request) -> HttpResponse:
-    friends: ManyToManyRelatedManager[User, Any] = FriendList.objects.filter(user=request.user)[
-        0
-    ].friends.all()
-    all_rooms: BaseManager[Room] = Room.objects.filter(
+    friends = FriendList.objects.filter(user=request.user)[0].friends.all()
+    all_rooms: BaseManager = Room.objects.filter(
         Q(author=request.user) | Q(friend=request.user)
     ).order_by("-created")
 
@@ -35,7 +33,7 @@ def room_enroll(request) -> HttpResponse:
 
 @login_required
 def room_choice(request, friend_id) -> Union[HttpResponseRedirect, HttpResponsePermanentRedirect]:
-    friend: UserManager[User] = User.objects.filter(pk=friend_id)
+    friend = User.objects.filter(pk=friend_id)
     if not friend:
         messages.error(request, "Invalid User ID")
         return redirect("room-enroll")
@@ -43,7 +41,7 @@ def room_choice(request, friend_id) -> Union[HttpResponseRedirect, HttpResponseP
         messages.error(request, "You need to be friends to chat")
         return redirect("room-enroll")
 
-    room: BaseManager[Room] = Room.objects.filter(
+    room: BaseManager = Room.objects.filter(
         Q(author=request.user, friend=friend[0]) | Q(author=friend[0], friend=request.user)
     )
     if not room:
@@ -62,12 +60,12 @@ def room_choice(request, friend_id) -> Union[HttpResponseRedirect, HttpResponseP
 def room(
     request, room_name, friend_id
 ) -> Union[HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponse]:
-    all_rooms: BaseManager[Room] = Room.objects.filter(room_id=room_name)
+    all_rooms: BaseManager = Room.objects.filter(room_id=room_name)
     if not all_rooms:
         messages.error(request, "Invalid Room ID")
         return redirect("room-enroll")
 
-    chats: BaseManager[Chat] = Chat.objects.filter(room_id=room_name).order_by("date")
+    chats: BaseManager = Chat.objects.filter(room_id=room_name).order_by("date")
 
     context: dict[str, Any] = {
         "old_chats": chats,
