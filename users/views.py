@@ -1,20 +1,27 @@
+import logging
+
 from django.conf import settings  # noqa: F401
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.signals import user_logged_in, user_logged_out
-
-# from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import BadHeaderError, send_mail
+from django.db.models.query_utils import Q
 from django.dispatch import receiver
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from django.views.generic import DetailView, ListView
 
 from friend.friend_request_status import FriendRequestStatus
 from friend.models import FriendList, FriendRequest
 from friend.utils import get_friend_request_or_false
 from myproject import utils
-from myproject.email import EmailHTML
 from notification.models import Notification
 
 from .forms import ProfileUpdateForm, UserRegisterForm, UserUpdateForm
@@ -76,30 +83,20 @@ def register(request):
             """
             if True:  # Shim this in to turn off captcha for now
                 form.save()
-                username = form.cleaned_data.get("username")
+                username: str = form.cleaned_data.get("username")
+                user_email: str = form.cleaned_data.get("email")
+                logging.debug(f"{form.cleaned_data=}")
                 messages.success(
                     request, f"Your account has been created! You can login now {username}"
                 )
-                message: str = f"New account creation for {username} has succeeded"
-                email_message: EmailHTML = utils.build_email_message(
-                    subject="New Account Registration Completed",
-                    message=message,
-                    recipient_list=[
-                        form.cleaned_data.get("email"),
-                    ],
+                # message: str = f"New account creation for {username} has succeeded"
+
+                utils.send_welcome_email(
+                    user_email=user_email,
+                    username=username,
+                    profile_url=f"http://www.csctn.net/user/public-profile/{username}/",
                 )
 
-                utils.send_email_message(email_message)
-
-                # send_mail(
-                #     subject="New Account Registration Completed",
-                #     message=message,
-                #     from_email=None,
-                #     recipient_list=[
-                #         form.cleaned_data.get("email"),
-                #     ],
-                #     html_message=message,
-                # )
                 return redirect("login")
             else:
                 messages.error(request, "Invalid reCAPTCHA. Please try again.")
@@ -227,3 +224,42 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         # FRIENDS END
 
         return context
+
+
+def password_reset_request(request):
+    if request.method == "POST":
+        password_reset_form: PasswordResetForm = PasswordResetForm(request.POST)
+        if password_reset_form.is_valid():
+            data = password_reset_form.cleaned_data["email"]
+            associated_users = User.objects.filter(Q(email=data))
+            if associated_users.exists():
+                for user in associated_users:
+                    subject = "Password Reset Requested"
+                    email_template_name = "users/password_reset_email.txt"
+                    c = {
+                        "email": user.email,
+                        "domain": settings.SITE_DOMAIN,
+                        "site_name": settings.SITE_NAME,
+                        "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                        "user": user,
+                        "token": default_token_generator.make_token(user),
+                        "protocol": settings.PROTOCOL,
+                    }
+                    email: str = render_to_string(email_template_name, c)
+                    try:
+                        send_mail(
+                            subject,
+                            email,
+                            settings.DEFAULT_FROM_EMAIL,
+                            [user.email],
+                            fail_silently=False,
+                        )
+                    except BadHeaderError:
+                        return HttpResponse("Invalid header found.")
+                    return redirect("/password_reset/done/")
+    password_reset_form = PasswordResetForm()
+    return render(
+        request=request,
+        template_name="users/password_reset.html",
+        context={"password_reset_form": password_reset_form},
+    )

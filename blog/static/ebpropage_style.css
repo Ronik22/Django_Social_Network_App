@@ -1,0 +1,90 @@
+body,html{
+    width: 100%;
+    margin: 0;
+}
+
+.maintitle{
+    font-size: 2.5vw;
+    font-weight: bold;
+    color: greenyellow;
+    font-family: 'Courgette', cursive;
+    padding: 1.5vw 3vw 1.5vw 2vw;
+    width: 50%;
+    margin: 0;
+}   
+
+.topmenu{
+    width: 100%;
+    background-image: linear-gradient(to right,maroon,darkviolet);
+}
+
+.left_section{
+    display: inline-block;
+    width: 50%;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.right_section{
+    width: 50%;
+    float: right;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.menulink{
+    float: right;
+    font-size: 2.5vw;
+    color: orange;
+    text-decoration: none;
+    padding: 1.5vw 2vw 1.5vw 2vw;
+    overflow: hidden;
+    margin: 0;
+    font-weight: bold;
+    height: 100%;
+    font-family: 'Courgette', cursive;
+}
+
+.menulink:hover {
+    background-color: seagreen;
+}
+
+.active{
+    float: right;
+    font-size: 2.5vw;
+    color: orange;
+    text-decoration: none;
+    padding: 1.5vw 2vw 1.5vw 2vw;
+    overflow: hidden;
+    margin: 0;
+    font-weight: bold;
+    height: 100%;
+    font-family: 'Courgette', cursive;
+    background-color: rgb(24, 45, 136);
+}
+
+.nameofuser{
+    margin: 10vw 0vw 5vw 0vw;
+    text-align: center;
+    font-size: 5vw;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:darkslategray;
+}
+
+.mailofuser{
+    margin: 1vw 0vw 5vw 0vw;
+    text-align: center;
+    font-size: 4vw;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color:darkgoldenrod
+}
+
+.chgname{
+    display: inline-block;
+    margin: 4vw 13vw;
+    text-decoration: none;
+    font-size: 3vw;
+    color: darkblue;
+}

@@ -21,9 +21,18 @@ from dotenv import load_dotenv
 env_path: Path = Path(".") / ".env"
 load_dotenv(dotenv_path=env_path)
 
+SITE_NAME = "CSCTN.net"
+SITE_DOMAIN = "www.csctn.net"
+PROTOCOL = "http"
+# PROTOCOL = "https"
+
+INTERNAL_IPS = [
+    "192.168.2.115",
+    "127.0.0.1",
+]
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR: Path = Path(__file__).resolve().parent.parent
-# BASE_DIR = Path("/web/dsn/").resolve()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -33,6 +42,25 @@ SECRET_KEY: Union[str, None] = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG: Union[str, None] = os.getenv("DEBUG")
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "/web/dsn/logs/debug.log",
+        },
+    },
+    "loggers": {
+        "root": {
+            "handlers": ["file"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
+}
 
 ALLOWED_HOSTS: list[str] = ["*"]
 
@@ -50,12 +78,14 @@ INSTALLED_APPS: list[str] = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
+    "bootstrap_datepicker_plus",
     "ckeditor",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.github",
+    "debug_toolbar",
     "blog.apps.BlogConfig",
     "users.apps.UsersConfig",
     "notification",
@@ -63,6 +93,8 @@ INSTALLED_APPS: list[str] = [
     "channels",
     "friend",
     "videocall",
+    "EventManager",
+    "Home",
 ]
 
 MIDDLEWARE: list[str] = [
@@ -73,14 +105,39 @@ MIDDLEWARE: list[str] = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
+
+DEBUG_TOOLBAR_PANELS = [
+    "debug_toolbar.panels.history.HistoryPanel",
+    "debug_toolbar.panels.versions.VersionsPanel",
+    "debug_toolbar.panels.timer.TimerPanel",
+    "debug_toolbar.panels.settings.SettingsPanel",
+    "debug_toolbar.panels.headers.HeadersPanel",
+    "debug_toolbar.panels.request.RequestPanel",
+    "debug_toolbar.panels.sql.SQLPanel",
+    "debug_toolbar.panels.staticfiles.StaticFilesPanel",
+    "debug_toolbar.panels.templates.TemplatesPanel",
+    "debug_toolbar.panels.cache.CachePanel",
+    "debug_toolbar.panels.signals.SignalsPanel",
+    "debug_toolbar.panels.logging.LoggingPanel",
+    "debug_toolbar.panels.redirects.RedirectsPanel",
+    "debug_toolbar.panels.profiling.ProfilingPanel",
+]
+
+# DEBUG_TOOLBAR_CONFIG = {
+
+# }
 
 ROOT_URLCONF: str = "myproject.urls"
 
 TEMPLATES: list[dict[str, Union[bool, str, dict[str, list[str]]]]] = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "users/templates")],
+        "DIRS": [
+            os.path.join(BASE_DIR, "users/templates"),
+            os.path.join(BASE_DIR, "EventManager/templates"),
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
