@@ -11,7 +11,14 @@ class UserRegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "username", "email", "password1", "password2"]
+        fields = [
+            "first_name",
+            "last_name",
+            "username",
+            "email",
+            "password1",
+            "password2",
+        ]
 
 
 class UserUpdateForm(forms.ModelForm):
@@ -29,18 +36,24 @@ class ProfileUpdateForm(forms.ModelForm):
     height = forms.FloatField(widget=forms.HiddenInput(), required=False)
 
     image = forms.ImageField(
-        label=("Image"),
+        label=("Image of you (and partner if you have one) holding a sign saying CSCTN.net"),
         error_messages={"invalid": ("Image files only")},
         widget=forms.FileInput,
-        required=False,
+        required=True,
     )
 
     class Meta:
         model = Profile
         fields = [
-            "bio",
             "date_of_birth",
             "image",
+            "bio",
+            "sls_username",
+            "how_did_you_hear_about_us",
+            "relationship_status",
+            "facebook_link",
+            "instagram_link",
+            "twitter_link"
         ]
 
     """Saving Cropped Image"""

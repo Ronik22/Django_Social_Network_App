@@ -24,10 +24,15 @@
         <p class="card-text text-center text-muted">{{object.user.profile.bio}}</p>
 
 		<ul class="social-links list-inline text-center m-4">
-			<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-primary" href="" data-original-title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-			<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-info" href="" data-original-title="Twitter"><i class="fab fa-twitter"></i></a></li>
-			<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-danger" href="" data-original-title="Skype"><i class="fab fa-instagram"></i></a></li>
-			<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-primary" href="" data-original-title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
+			{% if user.profile.facebook_link %}
+				<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-primary" href={{ user.profile.facebook_link }} data-original-title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+			{% endif %}
+			{% if user.profile.twitter_link %}
+				<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-info" href={{ user.profile.twitter_link }} data-original-title="Twitter"><i class="fab fa-twitter"></i></a></li>
+			{% endif %}
+			{% if user.profile.instagram_link %}
+				<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-danger" href={{ user.profile.instagram_link }} data-original-title="Instagram"><i class="fab fa-instagram"></i></a></li>
+			{% endif %}
 		</ul>
 
         <div class="text-center">

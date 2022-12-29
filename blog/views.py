@@ -281,7 +281,7 @@ def PostDetailView(request, pk) -> Union[JsonResponse, HttpResponse]:
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields: list[str] = ["title", "content"]
+    fields: list[str] = ["title", "content", "image"]
 
     def form_valid(self, form) -> HttpResponse:
         form.instance.author = self.request.user
@@ -293,7 +293,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields: list[str] = ["title", "content"]
+    fields: list[str] = ["title", "content", "image"]
 
     def form_valid(self, form) -> HttpResponse:
         form.instance.author = self.request.user

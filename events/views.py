@@ -50,6 +50,8 @@ def events_home(request, uid=""):
     umail = ""
     userobj: Profile = Profile.objects.get(id=uid)
     umail = userobj.user.email
+    if userobj.relationship_status == "single_male" and not userobj.relationship_status_override:
+        raise PermissionDenied()  # This is the criteria to block on events per Gary
 
     # automatically remove events from the database which are ongoing or are finished
     curr_dt = timezone.now()
@@ -199,13 +201,12 @@ def allevent(request, uid=""):
     #     raise PermissionDenied()
     expired_event_id_list: list[Event] = []
     all_events_list: list[Event] = []
-    for all_users in Profile.objects.all():
-        if all_users.user.username == get_caller_username(request):
-            uname = all_users.user.first_name
-            umail = all_users.user.email
-        else:
-            uname = ""
-            umail = ""
+    userobj = Profile.objects.get(id=uid)
+    uname = userobj.user.first_name
+    umail = userobj.user.email
+
+    if userobj.relationship_status == "single_male" and not userobj.relationship_status_override:
+        raise PermissionDenied()  # This is the criteria to block on events per Gary
 
     for events in Event.objects.all():
         all_events_list.append(events)
@@ -265,13 +266,14 @@ def explore(request, uid=""):
     #     raise PermissionDenied()
     exp = []
     expired_eventid_lst = []
-    for all_users in Profile.objects.all():
-        if all_users.user.username == get_caller_username(request):
-            uname = all_users.user.first_name
-            umail = all_users.user.email
-    if uid == "":
-        uname = ""
-        umail = ""
+
+    userobj = Profile.objects.get(id=uid)
+    uname = userobj.user.first_name
+    umail = userobj.user.email
+
+    if userobj.relationship_status == "single_male" and not userobj.relationship_status_override:
+        raise PermissionDenied()  # This is the criteria to block on events per Gary
+
     curr_dt = timezone.now()
     for all_events in Event.objects.all():
         if all_events.event_start < curr_dt:

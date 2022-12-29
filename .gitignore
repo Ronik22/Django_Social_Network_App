@@ -132,5 +132,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-events/migrations/0001_initial.py
-users/migrations/0001_initial.py
+media/post_images/*

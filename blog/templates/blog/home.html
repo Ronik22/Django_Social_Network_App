@@ -22,6 +22,10 @@
       <h3><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h3>
       <hr>
       <p class="article-content">{{ post.content|safe|linebreaks|truncatewords_html:"20" }}<a href="{% url 'post-detail' post.id %}">[Read full post]</a></p>
+      {% if post.image %}
+        <hr>
+        <p class="article-content"><img src={{ post.image.url }}></p>
+      {% endif %}
     </article>
 
     {% endfor %}

@@ -13,14 +13,15 @@ class Profile(models.Model):
     friends: models.ManyToManyField = models.ManyToManyField(
         User, related_name="my_friends", blank=True
     )
-    bio: models.CharField = models.CharField(default="", blank=True, null=True, max_length=350)
-    date_of_birth: models.CharField = models.CharField(blank=True, max_length=150)
+    bio: models.CharField = models.CharField(default="", null=True, max_length=350)
+    date_of_birth: models.DateField = models.DateField(null=True)
     updated: models.DateTimeField = models.DateTimeField(auto_now=True)
     created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     image: models.ImageField = models.ImageField(
         default="default.jpg", upload_to="profile_pics", blank=True, null=True
     )
     verified: models.BooleanField = models.BooleanField(default=False)
+    relationship_status_override: models.BooleanField = models.BooleanField(default=False)
     relationship_status: models.CharField = models.CharField(
         choices=[
             ("single_male", "Single Male"),
@@ -30,6 +31,12 @@ class Profile(models.Model):
         null=True,
         max_length=17,
     )
+
+    sls_username: models.CharField = models.CharField(blank=True, null=True, max_length=150)
+    how_did_you_hear_about_us: models.CharField = models.CharField(null=True, max_length=350)
+    facebook_link: models.CharField = models.CharField(blank=True, null=True, max_length=200)
+    instagram_link: models.CharField = models.CharField(blank=True, null=True, max_length=200)
+    twitter_link: models.CharField = models.CharField(blank=True, null=True, max_length=200)
 
     def profile_posts(self):
         return self.user.post_set.all()

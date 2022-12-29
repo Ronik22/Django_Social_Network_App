@@ -30,6 +30,10 @@
 
     <hr>
     <p class="article-content">{{ post.content|safe }}</p>
+    {% if post.image.url %}
+        <hr>
+        <p class="article-content"><img src={{ post.image.url }}></p>
+    {% endif %}
 </article>
 
 <div id="like-section">

@@ -99,7 +99,7 @@ def register(request):
 
                 return redirect("login")
             else:
-                messages.error(request, "Invalid reCAPTCHA. Please try again.")
+                messages.error(request, "Invalid form data. Please try again.")
 
     else:
         form = UserRegisterForm()
