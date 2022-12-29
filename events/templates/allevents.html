@@ -1,0 +1,57 @@
+{% extends "blog/base.html" %}
+{% load static %}
+    {% block title %}All Events{% endblock %}
+    {% block stylesheet %}
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% endblock %}
+{% block content %}
+    <div class="topmenu">
+        <div class="right_section">
+            <br>
+            <a href="{% url 'event_manager_home:explore' uid%}" class="menulink" title="Explore trending events">Explore</a>
+            <br>
+            <a href="/" class="menulink" title="Events Home">Events Home</a>
+        </div>
+    </div>
+    {% for event in alleventlist%}
+        <article class="content-section" style="overflow: auto;">
+            <div class="media">
+                <div class="img-cont3">
+                <img class="rounded-circle article-img" src="{{ event.event_author.image.url }}" alt="image">
+                {% if event.event_author.is_online %}
+                    <span class="online-circle4"></span>
+                {% else %}
+                    <span class="offline-circle4"></span>
+                {% endif %}
+                </div>
+                <div class="media-body">
+                    <p>
+                    <a class="mr-2 h4" href="{% url 'profile-detail-view' event.event_author.pk %}">{{ event.event_author.user.username }}</a>
+                    </p>
+                    <small class="text-muted">{{ event.event_posted|date:"F d, Y-h:i A" }}</small>        
+                </div>
+            </div>
+            <hr>
+            <h3><a class="article-title" href="{# url 'event-detail' event.id #}">{{ event.event_name }}</a></h3>
+            <hr>
+                <p class="article-content">
+                    {% for detail in event.event_details %}
+                        <p class="field1">{{ detail }}</p>
+                    {% endfor %}
+                    <a href="{# url 'event-detail' event.id #}">[Read full event]</a></p>
+                {% if request.user.is_staff %}
+                    <p class="field1"><a href="{% url 'event_manager_home:viewparticipant' uid event.event_id%}" class="vplink" title="View all participants for this event">View Participants</a></p>
+                    <p class="field1"><a href="{% url 'event_manager_home:deleteevent' uid event.event_id%}" class="dellink">Delete</a></p>
+                {% endif %}
+        </article>       
+
+        {% endfor %}
+    </div>
+        {% if not alleventlist%}
+        <h1 class="errmess">No events scheduled.</h1>
+        {% endif %}
+    </div>
+{% endblock %}

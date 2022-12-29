@@ -94,21 +94,20 @@ body,html{
 
 .field2{
     font-family: 'Righteous',cursive;
-    font-size: 2.3vw;
+    font-size: 1.0vw;
     padding: 0 0.8vw;
-    font-weight: bold;
 }
 
 .plink{
     text-align: center;
     text-decoration: none;
-    font-size: 2.5vw;
+    font-size: 1.0vw;
     color: green;
 }
 
 .vplink{
     text-align: center;
     text-decoration: none;
-    font-size: 2.5vw;
+    font-size: 1.0vw;
     color: darkslateblue;
 }

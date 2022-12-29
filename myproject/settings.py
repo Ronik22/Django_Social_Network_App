@@ -79,6 +79,7 @@ INSTALLED_APPS: list[str] = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "bootstrap_datepicker_plus",
+    "django_tables2",
     "ckeditor",
     "allauth",
     "allauth.account",
@@ -94,7 +95,7 @@ INSTALLED_APPS: list[str] = [
     "friend",
     "videocall",
     "EventManager",
-    "Home",
+    "events",
 ]
 
 MIDDLEWARE: list[str] = [
@@ -136,7 +137,7 @@ TEMPLATES: list[dict[str, Union[bool, str, dict[str, list[str]]]]] = [
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
             os.path.join(BASE_DIR, "users/templates"),
-            os.path.join(BASE_DIR, "EventManager/templates"),
+            os.path.join(BASE_DIR, "events/templates"),
         ],
         "APP_DIRS": True,
         "OPTIONS": {

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}Create New Event{% endblock %}
+{% block stylesheet %}
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<section class=" page-header page-header-light bg-white mt-4 container">
+    <div class="page-header-content pt-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 " data-aos="fade-up">
+                    <div class="card">
+                        <form action="newevent" method="POST">
+                            {% csrf_token %}
+                            <fieldset class="form-group">
+                                <legend class="border-bottom mb-4">Create a New Event</legend>
+                                {% crispy form %}
+                                <button class="btn btn-info" type="submit">Post</button>
+                                <a class="btn btn-danger" href="/">Cancel</a>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <br>
+        <!--<form action="newevent" method="POST">
+            {% csrf_token %}
+            <input type="text" placeholder="Event name" name="ename" class="infield">
+            <h1 class="subs">From:</h1>
+            <input type="date" name="estartd" class="infield">
+            <input type="time" name="estartt" class="infield">
+            <h1 class="subs">To:</h1>
+            <input type="date" name="eendd" class="infield">
+            <input type="time" name="eendt" class="infield">
+            <h1 class="subs">Registration Deadline:</h1>
+            <input type="date" name="regendd" class="infield">
+            <input type="time" name="regendt" class="infield">
+            <input type="url" name="plink" class="infield" placeholder="Event Poster Link">
+            <textarea name="edes" class="infield" placeholder="Event Description"></textarea>
+            <h2 class="err">{{message}}</h2>
+            <input type="submit" value="Create Event" class="subbtn">
+        </form>-->
+    </div>
+</section>
+{% endblock %}

@@ -20,6 +20,16 @@ class Profile(models.Model):
     image: models.ImageField = models.ImageField(
         default="default.jpg", upload_to="profile_pics", blank=True, null=True
     )
+    verified: models.BooleanField = models.BooleanField(default=False)
+    relationship_status: models.CharField = models.CharField(
+        choices=[
+            ("single_male", "Single Male"),
+            ("single_female", "Single Female"),
+            ("couple", "Couple"),
+        ],
+        null=True,
+        max_length=17,
+    )
 
     def profile_posts(self):
         return self.user.post_set.all()
@@ -30,8 +40,14 @@ class Profile(models.Model):
     def get_friends_no(self) -> int:
         return self.friends.all().count()
 
+    def get_verified_status(self) -> bool:
+        return self.verified
+
+    def get_user_relationship_status(self) -> str:
+        return self.relationship_status
+
     def __str__(self) -> str:
-        return f"{self.user.username} Profile"
+        return f"{self.user.username}"
 
 
 STATUS_CHOICES = (("send", "send"), ("accepted", "accepted"))

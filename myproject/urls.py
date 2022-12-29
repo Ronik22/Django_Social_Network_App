@@ -68,7 +68,7 @@ urlpatterns = [
     path("friend/", include("friend.urls", namespace="friend")),
     path(
         "events/",
-        include("Home.urls", namespace="event_manager_home"),
+        include("events.urls", namespace="event_manager_home"),
     ),
 ]
 

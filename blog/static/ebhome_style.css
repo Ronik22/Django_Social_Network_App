@@ -53,10 +53,10 @@ body,html{
 
 .greeting{
     width:100%;
-    background: linear-gradient(rgba(255, 255, 255, 0.623), rgba(255, 255, 255, 0.623)), url('/static/homeback.jpg');
+    /* background: linear-gradient(rgba(255, 255, 255, 0.623), rgba(255, 255, 255, 0.623)), url('/static/homeback.jpg');*/
     background-repeat: no-repeat;
     background-size: cover;
-    height: 30vw;
+    height: 5vw;
     text-align: center;
 }
 
@@ -76,9 +76,9 @@ body,html{
 
 .greetmess{
     opacity: 100%;
-    font-size: 7vw;
+    font-size: 2vw;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    padding: 15vw;
+    padding: 5vw;
     color: darkblue;
     transition: 1s;
 }
@@ -101,7 +101,7 @@ body,html{
 .mainhead{
     display: inline-block;
     margin: 5vw 0 3vw 5vw;
-    font-size: 4vw;
+    font-size: 2vw;
     color: darkblue;
     font-family: 'Courgette',cursive;
 }
@@ -109,8 +109,8 @@ body,html{
 .addform{
     display: inline;
     float: right;
-    margin: 5vw 5vw 3vw 5vw;
-    font-size: 4vw;
+    margin: 4vw 5vw 3vw 0vw;
+    font-size: 2vw;
     text-decoration: none;
     font-weight: bold;
 }
@@ -123,7 +123,7 @@ body,html{
 }
 
 .eventsection > div{
-    width: 31%;
+    width: 100%;
     margin: 0 1.5%;
     background-color: rgb(238, 230, 161);
     border: 0.5vw solid rgb(238, 230, 161);
@@ -172,14 +172,14 @@ body,html{
 .errmess{
     margin: 2vw 0 3vw 5vw;
     color: red;
-    font-size: 3vw;
+    font-size: 1.75vw;
 }
 
 .showall{
     display: inline;
     float: right;
-    margin: 5.4vw 1vw 3vw 5vw;
-    font-size: 2.5vw;
+    margin: 5vw 1vw 3vw 5vw;
+    font-size: 2vw;
     text-decoration: none;
     font-weight: bold;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -208,7 +208,7 @@ body,html{
 
 .partitem{
     color:white;
-    font-size: 2vw;
+    font-size: 1.25vw;
     font-family: 'Courgette',cursive;
     margin:1.5vw 6vw;
 }
@@ -216,7 +216,7 @@ body,html{
 .lsthead{
     color: white;
     font-family: 'Righteous',cursive;
-    font-size: 3vw;
+    font-size: 1.75vw;
     margin:1.5vw 2.5vw;
     font-weight: normal;
 }

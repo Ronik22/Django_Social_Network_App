@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-steel fixed-top">
+<nav class="navbar navbar-expand-lg navbar-dark bg-steel relative-top">
     <div class="container">
       <a class="navbar-brand mr-4 pr-3" href="/">Cleveland Social Club</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,9 +28,23 @@
           <!-- <a class="nav-item nav-link" href="{% url 'vc-lobby' %}">Calls</a> -->
           <div class="dropdown">
             <a class="dropdown-toggle nav-link" href="#" role="button" id="dropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Posts
+              Events
             </a>                  
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
+              <a class="dropdown-item" href="{% url 'event_manager_home:events-root-home' %}">Events</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'event_manager_home:newevent' user.id %}">New Event</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'event_manager_home:explore' %}">Explore Available Events</a>
+              <a class="dropdown-item" href="{% url 'event_manager_home:allevent' user.id %}">All My Events</a>
+
+            </div>
+          </div>
+          <div class="dropdown">
+            <a class="dropdown-toggle nav-link" href="#" role="button" id="dropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Posts
+            </a>                  
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink2">
               <a class="dropdown-item" href="{% url 'post-create' %}"><i class="fas fa-plus-circle"></i>&nbsp;&nbsp;New Post</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="{% url 'posts-follow-view' %}">Feeds</a>
@@ -44,11 +58,11 @@
           
           {% if user.is_authenticated %}
             <div class="dropdown">
-              <a class="dropdown-toggle nav-link" href="#" role="button" id="dropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <a class="dropdown-toggle nav-link" href="#" role="button" id="dropdownMenuLink3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img class="rounded-circle" style="height: 20px; width: 20px;" src="{{user.profile.image.url}}" alt="">&nbsp;{{user|truncatechars:"10"}}
                 
               </a>                  
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink2">
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink3">
                 <a class="dropdown-item" href="{% url 'profile-detail-view' user.id %}"><i class="far fa-user"></i>&nbsp;&nbsp;Profile</a>
                 <a class="dropdown-item" href="{% url 'public-profile' user %}"><i class="far fa-eye"></i>&nbsp;&nbsp;Public-Profile</a>
                 <a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-sliders-h"></i>&nbsp;&nbsp;Settings</a>

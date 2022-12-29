@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Change Name</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'ebparform_style.css'%}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="card">
+        <h1 class="maintitle">EventBuddy</h1>
+        <form action="{% url 'changename' uid%}" method="POST">
+            {% csrf_token %}
+            <input type="text" name="upname" placeholder="New Name" class="infield">
+            <h2 class="err">{{err}}</h2>
+            <input type="submit" value="Change Name" class="subbtn">
+        </form>
+        <div class="backdiv"><a href="{% url 'home' uid%}" title="Back to Home" class="backbtn">Back to Home</a></div>
+    </div>
+</body>
+</html>

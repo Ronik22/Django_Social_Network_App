@@ -26,7 +26,6 @@
     <!-- MAIN SECTION -->
     <main role="main" class="container">
       <div class="row">
-
           <!-- MESSAGES -->
           <div class="col-md-8 m-auto">
             {% if messages %}
@@ -37,11 +36,10 @@
               {% endfor %}
             {% endif %}           
           </div>
-
-          
-          {% block content %}{% endblock %}
-          
-
+      </div>
+      <div class="row">
+        {% block content %}
+        {% endblock %}
       </div>
     </main>
 

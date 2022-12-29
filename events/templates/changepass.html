@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Change Password</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'ebparform_style.css'%}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="card">
+        <h1 class="maintitle">EventBuddy</h1>
+        <form action="{% url 'changepassword' uid%}" method="POST">
+            {% csrf_token %}
+            <h1 class="bookmarks">Confirm your current password</h1>
+            <input type="password" name="cono" placeholder="Confirm password" class="infield">
+            <input type="password" name="newpass" placeholder="Enter new password" class="infield">
+            <input type="password" name="cnewpass" placeholder="Confirm new password" class="infield">
+            <h2 class="err">{{err}}</h2>
+            <input type="submit" value="Change Password" class="subbtn">
+        </form>
+        <div class="backdiv"><a href="{% url 'home' uid%}" title="Back to Home" class="backbtn">Back to Home</a></div>
+    </div>
+</body>
+</html>    
