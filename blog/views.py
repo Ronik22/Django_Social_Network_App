@@ -23,6 +23,7 @@ from .models import Comment, Post
 """ Home page with all posts """
 
 
+@login_required
 def first(request) -> HttpResponse:
     context: dict[str, BaseManager[Post]] = {"posts": Post.objects.all()}
     return render(request, "blog/first.html", context)
