@@ -18,6 +18,7 @@ from users.models import Profile
 partlst = []  # global list for displaying participants for a particular event on home page
 flag = 0  # boolean variable for deciding whether to display participants or not on home page
 MAX_EVENT_SUMMARY_DISPLAY_COUNT = 2
+RELATIONSHIP_BLOCKLIST: list[str] = ["single_male", "single_female"]
 
 
 class EventsTable(tables.Table):
@@ -50,7 +51,10 @@ def events_home(request, uid=""):
     umail = ""
     userobj: Profile = Profile.objects.get(id=uid)
     umail = userobj.user.email
-    if userobj.relationship_status == "single_male" and not userobj.relationship_status_override:
+    if (
+        userobj.relationship_status in RELATIONSHIP_BLOCKLIST
+        and not userobj.relationship_status_override
+    ):
         raise PermissionDenied()  # This is the criteria to block on events per Gary
 
     # automatically remove events from the database which are ongoing or are finished
@@ -102,12 +106,13 @@ def events_home(request, uid=""):
 
 @login_required
 def newevent(request, uid=""):
-    form = NewEventForm(request.POST)
     if not uid:
         uid = request.user.id
     if request.method == "POST":
         if not request.user.is_staff:
             raise PermissionDenied()
+
+        form: NewEventForm = NewEventForm(request.POST, request.FILES)
 
         form.instance.event_author = Profile.objects.get(id=uid)
 
@@ -115,14 +120,6 @@ def newevent(request, uid=""):
             event_start = form.cleaned_data.get("event_start")
             event_end = form.cleaned_data.get("event_end")
             registration_deadline = form.cleaned_data.get("registration_deadline")
-
-            # for all_users in Profile.objects.all():
-            #     if all_users.user.username == get_caller_username(request):
-            #         uname = all_users.user.first_name
-            #         umail = all_users.user.email
-            #     else:
-            #         uname = ""
-            #         umail = ""
 
             # validation logic for event dates and times
             # dtnow = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -134,7 +131,7 @@ def newevent(request, uid=""):
                     "createevent.html",
                     {
                         "message": "Start date or end date can't be before current date",
-                        "uid": request.user.id,
+                        "uid": uid,
                         "form": form,
                     },
                 )
@@ -144,7 +141,7 @@ def newevent(request, uid=""):
                     "createevent.html",
                     {
                         "message": "Start date must be before end date",
-                        "uid": request.user.id,
+                        "uid": uid,
                         "form": form,
                     },
                 )
@@ -155,7 +152,7 @@ def newevent(request, uid=""):
                     "createevent.html",
                     {
                         "message": "Deadline date must be before end date or after current date.",
-                        "uid": request.user.id,
+                        "uid": uid,
                         "form": form,
                     },
                 )
@@ -165,47 +162,46 @@ def newevent(request, uid=""):
                     "createevent.html",
                     {
                         "message": "Deadline time must be after current time.",
-                        "uid": request.user.id,
+                        "uid": uid,
                         "form": form,
                     },
                 )
 
             form.save()
+            logging.info(f"Event Created: {form.fields}")
             # redirect to home page once event is created
-            return redirect("event_manager_home:events-root-home")
+            messages.success(request, "Successfully Created Event!")
+            return render(request, "createevent.html", {"uid": uid, "form": NewEventForm()})
         else:
+            logging.error(f"Failed to save form data with errors: {form.errors}")
             return render(
                 request,
                 "createevent.html",
                 {
                     "message": "Event form failed validation.",
-                    "uid": request.user.id,
+                    "uid": uid,
                     "form": form,
                 },
             )
     else:
-        # if uid != "" and uid not in request.session:
-        #     raise PermissionDenied()
-        # if uid != "" and request.session[uid] != uid:
-        #     raise PermissionDenied()
-        return render(request, "createevent.html", {"uid": request.user.id, "form": form})
+        return render(request, "createevent.html", {"uid": uid, "form": NewEventForm(request.GET)})
 
 
 @login_required
 def allevent(request, uid=""):
     if not uid:
         uid = request.user.id
-    # if uid != "" and uid not in request.session:
-    #     raise PermissionDenied()
-    # if uid != "" and request.session[uid] != uid:
-    #     raise PermissionDenied()
+
     expired_event_id_list: list[Event] = []
     all_events_list: list[Event] = []
     userobj = Profile.objects.get(id=uid)
     uname = userobj.user.first_name
     umail = userobj.user.email
 
-    if userobj.relationship_status == "single_male" and not userobj.relationship_status_override:
+    if (
+        userobj.relationship_status in RELATIONSHIP_BLOCKLIST
+        and not userobj.relationship_status_override
+    ):
         raise PermissionDenied()  # This is the criteria to block on events per Gary
 
     for events in Event.objects.all():
@@ -271,7 +267,10 @@ def explore(request, uid=""):
     uname = userobj.user.first_name
     umail = userobj.user.email
 
-    if userobj.relationship_status == "single_male" and not userobj.relationship_status_override:
+    if (
+        userobj.relationship_status in RELATIONSHIP_BLOCKLIST
+        and not userobj.relationship_status_override
+    ):
         raise PermissionDenied()  # This is the criteria to block on events per Gary
 
     curr_dt = timezone.now()
@@ -317,17 +316,10 @@ def viewparticipant(request, uid="", eid=""):
     if not uid:
         uid = request.user.id
 
-    # if uid != "" and uid not in request.session:
-    #     raise PermissionDenied()
-    # if uid != "" and request.session[uid] != uid:
-    #     raise PermissionDenied()
-    # clear the list everytime the user requests for participant information
-    partlst.clear()
-    global flag
-    flag = 1
-    user = Profile.objects.get(id=uid)
+    user: Profile = Profile.objects.get(id=uid)
 
-    if eid in user.participating_events:
-        partlst.append(user)
+    event: Event = Event.objects.get(event_id=eid)
+
+    participant_list: list[str] = event.event_participants.split(",")
 
     return redirect("event_manager_home:events-root-home")
