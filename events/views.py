@@ -245,22 +245,25 @@ def allevent(request, uid=""):
 
 
 @login_required
-def deleteevent(request, uid="", event_id=""):
+def deleteevent(request, uid="", eid=""):
     if not uid:
         uid = request.user.id
+    username: str = get_caller_username(request)  # noqa: F401
+    event = Event.objects.get(event_id=eid)  # noqa: F401
     if not request.user.is_staff:
+        # if not event.event_author == username:
         raise PermissionDenied()
 
     # find the event which has to be deleted in database and delete it
     for all_events in Event.objects.all():
-        if all_events.event_id == event_id:
+        if all_events.event_id == eid:
             all_events.delete()
 
     # also delete the participants of that corresponding event
     for all_participants in Participant.objects.all():
-        if all_participants.pevent_id == event_id:
+        if all_participants.pevent_id == eid:
             all_participants.delete()
-    return redirect(events_home, uid=uid)
+    return redirect("events-home", uid=uid)
 
 
 @login_required
