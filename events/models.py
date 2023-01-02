@@ -1,11 +1,18 @@
 import uuid
 
 from django.db import models
+from django.template.defaultfilters import slugify
 from django.utils import timezone
 
 from users.models import Profile
 
 # Create your models here.
+
+
+def get_image_filename(instance, filename) -> str:
+    title = instance.title
+    slug = slugify(title)
+    return f"event_posters/{slug}-{filename}"
 
 
 class Event(models.Model):
@@ -19,7 +26,7 @@ class Event(models.Model):
     host_name = models.CharField(max_length=100)
     event_description = models.CharField(max_length=300)
     registration_deadline = models.DateTimeField()
-    event_poster = models.URLField(max_length=150, default="")
+    event_poster = models.ImageField(upload_to=get_image_filename, null=True, blank=True)
     event_participants = models.CharField(max_length=10000, default="")
 
     @property
