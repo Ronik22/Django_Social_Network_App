@@ -62,6 +62,17 @@
               reader.readAsDataURL(this.files[0]);
             }
           });
+
+          $("#id_event_poster").change(function () {
+            if (this.files && this.files[0]) {
+              var reader = new FileReader();
+              reader.onload = function (e) {
+                $("#image").attr("src", e.target.result);
+                $("#modalCrop").modal('show');
+              }
+              reader.readAsDataURL(this.files[0]);
+            }
+          });
     
           /* SCRIPTS TO HANDLE THE CROPPER BOX */
           var $image = $("#image");
@@ -82,7 +93,7 @@
             cropBoxData = $image.cropper("getCropBoxData");
             canvasData = $image.cropper("getCanvasData");
             $image.cropper("destroy");
-            location.reload();
+            // location.reload();
           });
     
           $(".js-zoom-in").click(function () {
@@ -101,7 +112,8 @@
             $("#id_y").val(cropData["y"]);
             $("#id_height").val(cropData["height"]);
             $("#id_width").val(cropData["width"]);
-            $("#formUpload").submit();
+            $('#modalCrop').modal('hide');
+            //$("#formUpload").submit();
           });
     
         });
