@@ -12,6 +12,6 @@ urlpatterns = [
     path("<str:uid>home/delevent<str:eid>", views.deleteevent, name="deleteevent"),
     path("<str:uid>home/explore", views.explore, name="explore"),
     path("explore", views.explore, name="explore"),
-    path("<str:uid>home/participantform<str:eid>", views.participate, name="participate"),
+    path("event/participate/", views.ParticipateView, name="event-participate"),
     path("<str:uid>home/viewpart<str:eid>", views.viewparticipant, name="viewparticipant"),
 ]

@@ -26,7 +26,6 @@ class NewEventForm(forms.ModelForm):
     event_poster = forms.ImageField(
         label=("Poster for Event"),
         error_messages={"invalid": ("Image files only")},
-        widget=forms.FileInput,
         required=False,
     )
 
@@ -65,9 +64,9 @@ class NewEventForm(forms.ModelForm):
         h = self.cleaned_data.get("height")
 
         if x and y and w and h:
-            image = Image.open(img.image)
+            image = Image.open(img.event_poster)
             cropped_image = image.crop((x, y, w + x, h + y))
             resized_image = cropped_image.resize((300, 300), Image.ANTIALIAS)
-            resized_image.save(img.image.path)
+            resized_image.save(img.event_poster.path)
 
         return img

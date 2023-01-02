@@ -1,16 +1,21 @@
 import logging
+from typing import Any, Optional
 
 import django_tables2 as tables
 from django.conf import settings  # noqa: F401
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect, render
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template import Context, Template  # noqa: F401
+from django.template.loader import render_to_string
 from django.utils import timezone
 
+from blog.utils import is_ajax
 from events.forms import NewEventForm
 from events.models import Event, Participant
+from notification.models import Notification  # noqa: F401
 from users.models import Profile
 
 # from twilio.rest import Client
@@ -37,7 +42,7 @@ def get_caller_username(request) -> str:
 
 # Create your views here.
 @login_required
-def events_home(request, uid=""):
+def events_home(request, uid="") -> HttpResponse:
     if not uid:
         uid: str = request.user.id
     username: str = get_caller_username(request)
@@ -69,7 +74,7 @@ def events_home(request, uid=""):
         logging.debug(f"{event.event_details=}")
         logging.debug(f"{event.event_participants=}")
         for _ in range(0, MAX_EVENT_SUMMARY_DISPLAY_COUNT):
-            if username in event.event_participants.split(","):
+            if username in event.event_participants.all():
                 participating_event_list.append(event)
 
     for event in all_events:
@@ -84,10 +89,8 @@ def events_home(request, uid=""):
     logging.debug(f"{owned_event_list=}")
     logging.debug(f"{participating_event_list=}")
 
-    owned_table = EventsTable(
-        Event.objects.filter(event_author__user__username__icontains=username)
-    )
-    participating_table = EventsTable(Event.objects.filter(event_participants__icontains=username))
+    owned_table = EventsTable(Event.objects.filter(event_author__user__id__icontains=uid))
+    participating_table = EventsTable(Event.objects.filter(event_participants__id__icontains=uid))
 
     return render(
         request,
@@ -126,6 +129,9 @@ def newevent(request, uid=""):
             dtnow = timezone.now()
 
             if event_end < dtnow or event_end < dtnow:
+                logging.error(
+                    "Start date or end date can't be before current date" f"{form.fields=}"
+                )
                 return render(
                     request,
                     "createevent.html",
@@ -136,6 +142,7 @@ def newevent(request, uid=""):
                     },
                 )
             if event_start > event_end:
+                logging.error("Start date must be before end date" f"{form.fields=}")
                 return render(
                     request,
                     "createevent.html",
@@ -147,6 +154,9 @@ def newevent(request, uid=""):
                 )
 
             if registration_deadline > event_start or registration_deadline < dtnow:
+                logging.error(
+                    "Deadline date must be before end date or after current date." f"{form.fields=}"
+                )
                 return render(
                     request,
                     "createevent.html",
@@ -157,6 +167,7 @@ def newevent(request, uid=""):
                     },
                 )
             if registration_deadline == dtnow and registration_deadline <= dtnow:
+                logging.error("Deadline time must be after current time." f"{form.fields=}")
                 return render(
                     request,
                     "createevent.html",
@@ -184,7 +195,7 @@ def newevent(request, uid=""):
                 },
             )
     else:
-        return render(request, "createevent.html", {"uid": uid, "form": NewEventForm(request.GET)})
+        return render(request, "createevent.html", {"uid": uid, "form": NewEventForm()})
 
 
 @login_required
@@ -298,7 +309,8 @@ def participate(request, uid="", eid=""):
         uid = request.user.id
     username = get_caller_username(request)
     event = Event.objects.get(event_id=eid)
-    event_participants: list[str] = event.event_participants.split(",")
+    event_participants: list[str] = event.event_participants.all()
+    logging.debug(f"Get participant {event.event_participants.get(id=uid)}")
     if username not in event_participants:
         messages.success(request, messages.INFO, f"Adding {username} to participant list!")
         logging.debug(f"Adding {username} to participant list for event ID {event.event_id}")
@@ -316,10 +328,44 @@ def viewparticipant(request, uid="", eid=""):
     if not uid:
         uid = request.user.id
 
-    user: Profile = Profile.objects.get(id=uid)
-
     event: Event = Event.objects.get(event_id=eid)
 
-    participant_list: list[str] = event.event_participants.split(",")
+    logging.debug(f"{event.event_participants=}")
 
-    return redirect("event_manager_home:events-root-home")
+    participant_list: list[str] = event.event_participants.all()
+
+    logging.debug(f"{participant_list=}")
+
+    return render(
+        request,
+        "participant_list.html",
+        {"participant_list": participant_list, "event": event},
+    )
+
+
+@login_required
+def ParticipateView(request) -> Optional[JsonResponse]:
+    userobj = Profile.objects.get(id=request.user.id)
+    event: Event = get_object_or_404(Event, event_id=request.POST.get("event_id"))
+    participating: bool = False
+    if Event.objects.filter(event_participants__id__icontains=request.user.id).exists():
+        # event.event_participants.remove(userobj)
+        participating = False
+        # notify = Notification.objects.filter(post=event, sender=userobj, notification_type=1)
+        # notify.delete()
+    else:
+        event.event_participants.add(userobj)
+        participating = True
+        # notify = Notification(
+        #     post=event, sender=userobj, user=event.event_author, notification_type=1
+        # )
+        # notify.save()
+
+    context: dict[str, Any] = {
+        "event": event,
+        "participating": participating,
+    }
+
+    if is_ajax(request=request):
+        html: str = render_to_string("participate_section.html", context, request=request)
+        return JsonResponse({"form": html})

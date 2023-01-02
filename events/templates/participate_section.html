@@ -1,0 +1,13 @@
+<form action="{% url 'events:event-participate' %}" method="POST">
+    {% csrf_token %}
+
+    {% if user.is_authenticated %}
+        {% if participating %}
+            <button id="participate" type="submit" name="event_id" value="{{event.event_id}}" class="btn btn-info">Already Participating!</button>
+        {% else %}
+            <button id="participate" type="submit" name="event_id" value="{{event.event_id}}" class="btn btn-info">Add Me to Participants!</button>
+        {% endif %}
+    {% else %}
+        <small>Login to participate</small>
+    {% endif %}
+</form>

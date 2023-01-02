@@ -10,7 +10,7 @@ from users.models import Profile
 
 
 def get_image_filename(instance, filename) -> str:
-    title = instance.title
+    title = instance.event_name
     slug = slugify(title)
     return f"event_posters/{slug}-{filename}"
 
@@ -27,7 +27,10 @@ class Event(models.Model):
     event_description = models.CharField(max_length=300)
     registration_deadline = models.DateTimeField()
     event_poster = models.ImageField(upload_to=get_image_filename, null=True, blank=True)
-    event_participants = models.CharField(max_length=10000, default="")
+    # event_participants = models.CharField(max_length=10000, default="")
+    event_participants: models.ManyToManyField = models.ManyToManyField(
+        Profile, related_name="event_participants", null=True, blank=True
+    )
 
     @property
     def event_details(self):
