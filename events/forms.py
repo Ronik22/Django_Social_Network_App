@@ -15,13 +15,13 @@ class NewEventForm(forms.ModelForm):
 
     event_author = forms.FloatField(widget=forms.HiddenInput(), required=False)
     event_name = forms.CharField(label="Event Name", max_length=120)
-    event_start = forms.DateTimeField(label="Event Start")
-    event_end = forms.DateTimeField(label="Event End")
+    event_start = forms.DateTimeField(label="Event Start", widget=DateTimePickerInput())
+    event_end = forms.DateTimeField(label="Event End", widget=DateTimePickerInput())
     host_email = forms.EmailField()
     host_name = forms.CharField(label="Event Host Name", max_length=120)
     event_description = forms.CharField(label="Event Description")
     registration_deadline = forms.DateTimeField(
-        label="Registration Deadline",
+        label="Registration Deadline", widget=DateTimePickerInput()
     )
     event_poster = forms.ImageField(
         label=("Poster for Event"),
