@@ -97,6 +97,12 @@ def register(request):
                     profile_url=f"http://www.csctn.net/user/public-profile/{username}/",
                 )
 
+                utils.new_user_created_email(
+                    user_email=user_email,
+                    username=username,
+                    profile_url=f"http://www.csctn.net/user/public-profile/{username}/",
+                )
+
                 return redirect("login")
             else:
                 messages.error(request, "Invalid form data. Please try again.")
