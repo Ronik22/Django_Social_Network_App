@@ -2,7 +2,7 @@ import random
 from itertools import chain
 from typing import Any, Optional, Union
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -19,6 +19,7 @@ from users.models import Profile
 
 from .forms import CommentForm
 from .models import Comment, Post
+from .utils import is_user_verified
 
 """ Home page with all posts """
 
@@ -161,6 +162,7 @@ def LikeCommentView(request) -> Optional[JsonResponse]:
 """ Home page with all posts """
 
 
+@login_required
 class PostListView(ListView):
     model = Post
     template_name: str = "blog/home.html"
@@ -183,6 +185,7 @@ class PostListView(ListView):
 """ All the posts of the user """
 
 
+@login_required
 class UserPostListView(ListView):
     model = Post
     template_name: str = "blog/user_posts.html"
@@ -197,6 +200,7 @@ class UserPostListView(ListView):
 """ Post detail view """
 
 
+@login_required
 def PostDetailView(request, pk) -> Union[JsonResponse, HttpResponse]:
 
     stuff: Post = get_object_or_404(Post, id=pk)
@@ -280,6 +284,7 @@ def PostDetailView(request, pk) -> Union[JsonResponse, HttpResponse]:
 """ Create post """
 
 
+@login_required
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     fields: list[str] = ["title", "content", "image"]
@@ -292,6 +297,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 """ Update post """
 
 
+@login_required
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     fields: list[str] = ["title", "content", "image"]
@@ -310,6 +316,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 """ Delete post """
 
 
+@login_required
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     success_url: str = "/"
@@ -331,6 +338,7 @@ def about(request) -> HttpResponse:
 """ Search by post title or username """
 
 
+@login_required
 def search(request) -> HttpResponse:
     query = request.GET["query"]
     if len(query) >= 150 or len(query) < 1:
