@@ -1,3 +1,5 @@
+import logging
+
 from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
 from django.db import models
@@ -9,6 +11,7 @@ from django.utils import timezone
 def get_image_filename(instance, filename) -> str:
     title = instance.title
     slug = slugify(title)
+    logging.debug(f"Uploading file {slug}-{filename}")
     return f"post_images/{slug}-{filename}"
 
 
