@@ -35,8 +35,9 @@
               <a class="dropdown-item" href="{% url 'event_manager_home:newevent' user.id %}"><i class="fas fa-plus-circle"></i>&nbsp;&nbsp;New Event</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="{% url 'event_manager_home:explore' %}">Explore and Join Available Events</a>
-              <a class="dropdown-item" href="{% url 'event_manager_home:allevent' user.id %}">All Events</a>
-
+              {% if user.is_staff %}
+                <a class="dropdown-item" href="{% url 'event_manager_home:allevent' user.id %}">All Events</a>
+              {% endif %}
             </div>
           </div>
           <div class="dropdown">
