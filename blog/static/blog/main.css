@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
 
 body {
-    background: #f7f7f7;
+    background: #01E7FD;
     color: #333333;
     margin-top: 5rem;
     scroll-behavior: smooth;
@@ -16,7 +16,7 @@ body {
   }
   
   .bg-steel {
-    background: #6633FF;
+    background: #F800B1;
     /* box-shadow: 0 0 6px rgba(0,0,0,0.3); */
   }
   
@@ -56,7 +56,7 @@ body {
   }
   
   a.article-title:hover {
-    color: #1466ff;
+    color: #F800B1;
     text-decoration: none;
   }
   
