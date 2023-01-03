@@ -38,10 +38,14 @@
             <h3><a class="article-title" href="{# url 'event-detail' event.id #}">{{ event.event_name }}</a></h3>
             <hr>
                 <p class="article-content">
-                    {% for detail in event.event_details %}
-                        <p class="field1">{{ detail }}</p>
-                    {% endfor %}
-                    <a href="{# url 'event-detail' event.id #}">[Read full event]</a></p>
+                    <h5 class="field1">{{event.event_name}}</h5>
+                    <h6 class="field2">FROM: {{event.event_start}}</h6>
+                    <h6 class="field2">TO: {{event.event_end}}</h6>
+                    <h6 class="field2">HOST: {{event.host_name}}</h6>
+                    <h6 class="field2">DEADLINE: {{event.registration_deadline}}</h6>
+                    <img src="{{event.event_poster.url}}" width="450" height="600">
+                    <!-- <a href="{# url 'event-detail' event.id #}">[Read full event]</a> -->
+                </p>
                 {% if request.user.is_staff %}
                     <p class="field1"><a href="{% url 'event_manager_home:viewparticipant' uid event.event_id%}" class="vplink" title="View all participants for this event">View Participants</a></p>
                     <p class="field1"><a href="{% url 'event_manager_home:deleteevent' uid event.event_id%}" class="dellink">Delete</a></p>
