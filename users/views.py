@@ -1,5 +1,3 @@
-import logging
-
 from django.conf import settings  # noqa: F401
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
