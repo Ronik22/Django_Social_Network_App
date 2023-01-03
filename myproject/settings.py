@@ -246,7 +246,7 @@ MEDIA_URL: str = "/media/"
 
 CRISPY_TEMPLATE_PACK: str = "bootstrap4"
 
-LOGIN_REDIRECT_URL: str = "blog-home"
+LOGIN_REDIRECT_URL: str = "profile"
 LOGIN_URL: str = "account_login"
 
 CKEDITOR_CONFIGS: dict[str, dict[str, str]] = {

@@ -9,7 +9,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Model
 from django.db.models.manager import BaseManager
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
@@ -27,7 +27,11 @@ from .utils import is_user_verified  # noqa: F401
 @login_required
 def first(request) -> HttpResponse:
     context: dict[str, BaseManager[Post]] = {"posts": Post.objects.all()}
-    return render(request, "blog/first.html", context)
+    userobj = Profile.objects.get(id=request.user.id)
+    if not userobj.verified:
+        return redirect("profile")
+    else:
+        return render(request, "blog/first.html", context)
 
 
 """ Posts of following user profiles """
