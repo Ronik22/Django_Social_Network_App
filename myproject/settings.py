@@ -52,12 +52,23 @@ LOGGING = {
             "class": "logging.FileHandler",
             "filename": "/web/dsn/logs/debug.log",
         },
+        "daphne_file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "/web/dsn/logs/daphne_debug.log",
+        },
     },
     "loggers": {
         "root": {
             "handlers": ["file"],
             "level": "DEBUG",
             "propagate": True,
+        },
+        "daphne": {
+            "handlers": [
+                "daphne_file",
+            ],
+            "level": "DEBUG",
         },
     },
 }
@@ -69,6 +80,7 @@ ALLOWED_HOSTS: list[str] = ["*"]
 
 INSTALLED_APPS: list[str] = [
     "crispy_forms",
+    # "daphne",
     "django_cleanup",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -264,7 +276,10 @@ MESSAGE_TAGS: dict[int, str] = {
 ASGI_APPLICATION: str = "myproject.routing.application"
 
 CHANNEL_LAYERS: dict[str, dict[str, str]] = {
-    "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"},
+    "default": {"BACKEND": "channels_redis.core.RedisChannelLayer"},
+    "CONFIG": {
+        "hosts": [("127.0.0.1", 6379)],
+    },
 }
 
 SITE_ID: int = 2  # considering 2nd site in 'Sites' to be 127.0.0.1 (for dev)

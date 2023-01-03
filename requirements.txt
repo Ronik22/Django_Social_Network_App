@@ -6,6 +6,7 @@ Automat==20.2.0
 certifi==2021.5.30
 cffi==1.14.6
 channels==3.0.4
+channels_redis
 charset-normalizer==2.0.4
 constantly==15.1.0
 cryptography==3.4.7
@@ -47,4 +48,5 @@ txaio==21.2.1
 typing-extensions==3.10.0.0
 tzdata==2022.1
 urllib3==1.26.6
+uvicorn
 zope.interface==5.4.0
