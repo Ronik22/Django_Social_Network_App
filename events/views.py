@@ -263,7 +263,7 @@ def deleteevent(request, uid="", eid=""):
     for all_participants in Participant.objects.all():
         if all_participants.pevent_id == eid:
             all_participants.delete()
-    return redirect("events-home", uid=uid)
+    return events_home(request, uid=uid)
 
 
 @login_required

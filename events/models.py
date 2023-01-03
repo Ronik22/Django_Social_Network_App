@@ -27,13 +27,12 @@ class Event(models.Model):
     event_description = models.CharField(max_length=10000)
     registration_deadline = models.DateTimeField()
     event_poster = models.ImageField(upload_to=get_image_filename, null=True, blank=True)
-    # event_participants = models.CharField(max_length=10000, default="")
     event_participants: models.ManyToManyField = models.ManyToManyField(
         Profile, related_name="event_participants", null=True, blank=True
     )
 
     @property
-    def event_details(self):
+    def event_details(self) -> list[str]:
         return [
             f"Event Name: {self.event_name}",
             f"Event Author: {self.event_author}",
