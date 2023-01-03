@@ -85,7 +85,6 @@ def register(request):
                 form.save()
                 username: str = form.cleaned_data.get("username")
                 user_email: str = form.cleaned_data.get("email")
-                logging.debug(f"{form.cleaned_data=}")
                 messages.success(
                     request, f"Your account has been created! You can login now {username}"
                 )
