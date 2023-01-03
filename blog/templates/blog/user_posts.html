@@ -25,6 +25,11 @@
       <hr>
       
       <p class="article-content">{{ post.content|safe }}</p>
+      {% if post.image %}
+        <hr>
+        <p class="article-content"><img src={{ post.image.url }} width="685" height="600"></p>
+      {% endif %}
+
     </article>
     
     {% endfor %}

@@ -6,7 +6,7 @@
 {% block content %}
 <div class="m-auto w-100 container">
 <div class="content-section">
-    <form action="" method="POST">
+    <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset class="form-group">
             <legend class="border-bottom mb-4">New Post</legend>

@@ -24,7 +24,7 @@
       <p class="article-content">{{ post.content|safe|linebreaks|truncatewords_html:"20" }}<a href="{% url 'post-detail' post.id %}">[Read full post]</a></p>
       {% if post.image %}
         <hr>
-        <p class="article-content"><img src={{ post.image.url }}></p>
+        <p class="article-content"><img src={{ post.image.url }} width="685" height="600"></p>
       {% endif %}
     </article>
 
