@@ -113,7 +113,7 @@
         <br>
             <ul class="list-group">
                 {% for frnd in all_friends %}
-                    <li class="list-group-item list-group-item-light">{{frnd}}</li>
+                    <li class="list-group-item list-group-item-light"><a class="mr-2" href="{% url 'room-choice' frnd.id %}">{{frnd}}</a></li>
                 {% endfor %}
             </ul>
         <br>
