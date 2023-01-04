@@ -20,9 +20,10 @@
         <h6 class="field2">DEADLINE: {{event.registration_deadline}}</h6>
         <img src="{{event.event_poster.url}}" width="450" height="600">
         <h6 class="field1"><a href="{{event.event_poster}}" title="View poster for this event" class="vplink">View Poster</a></h6>
+        <p class="field1"><a href="{% url 'event_manager_home:viewparticipant' uid event.event_id%}" class="vplink" title="View all participants for this event">View Participants</a></p>
         {% if user.is_authenticated and event.registration_deadline >= curr_dt %}
-        <div id="like-section">
-            {% include 'participate_section.html' %}
+        <div id="participate-section">
+            {% include 'participate_section.html' with event=event user=user %}
         </div>
             {# <h6 class="field1"><a href="{% url 'event_manager_home:participate' uid event.event_id%}" class="plink">Participate</a></h6> #}<br>
         {% endif %}

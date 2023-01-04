@@ -5,7 +5,7 @@ import django_tables2 as tables
 from django.conf import settings  # noqa: F401
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.template import Context, Template  # noqa: F401
@@ -275,6 +275,7 @@ def explore(request, uid=""):
     #     raise PermissionDenied()
     exp = []
     expired_eventid_lst = []
+    participation_list = []
 
     userobj = Profile.objects.get(id=uid)
     uname = userobj.user.first_name
@@ -291,17 +292,27 @@ def explore(request, uid=""):
         if all_events.event_start < curr_dt:
             expired_eventid_lst.append(all_events.event_id)
             all_events.delete()
-    for ids in expired_eventid_lst:
-        for all_participants in Participant.objects.all():
-            if all_participants.pevent_id == ids:
-                all_participants.delete()
-    for all_events in Event.objects.all():
-        exp.append(all_events)
+
+    for event in Event.objects.all():
+        exp.append(event)
+
     exp.sort(key=lambda eve: eve.event_start)
+
+    for event in exp:
+        if is_user_participating(event.event_id, userobj.user.id):
+            participation_list.append(event.event_id)
+
     return render(
         request,
         "explorepage.html",
-        {"explst": exp, "uid": uid, "uname": uname, "umail": umail, "curr_dt": curr_dt},
+        {
+            "explst": exp,
+            "uid": uid,
+            "uname": uname,
+            "umail": umail,
+            "curr_dt": curr_dt,
+            "participation_list": participation_list,
+        },
     )
 
 
@@ -345,13 +356,30 @@ def viewparticipant(request, uid="", eid=""):
     )
 
 
+def is_user_participating(event_id, user_id) -> bool:
+    try:
+        events = Event.objects.filter(event_participants__id__icontains=user_id)
+    except Event.DoesNotExist:
+        return False
+
+    try:
+        if events.get(event_id=event_id):
+            logging.debug(f"{user_id} is participating in event {event_id}")
+            return True
+        else:
+            logging.debug(f"{user_id} is NOT participating in event {event_id}")
+            return False
+    except ObjectDoesNotExist:
+        return False
+
+
 @login_required
 def ParticipateView(request) -> Optional[JsonResponse]:
     userobj = Profile.objects.get(id=request.user.id)
     event: Event = get_object_or_404(Event, event_id=request.POST.get("event_id"))
     participating: bool = False
     if Event.objects.filter(event_participants__id__icontains=request.user.id).exists():
-        # event.event_participants.remove(userobj)
+        event.event_participants.remove(userobj)
         participating = False
         # notify = Notification.objects.filter(post=event, sender=userobj, notification_type=1)
         # notify.delete()

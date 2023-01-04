@@ -2,8 +2,8 @@
     {% csrf_token %}
 
     {% if user.is_authenticated %}
-        {% if participating %}
-            <button id="participate" type="submit" name="event_id" value="{{event.event_id}}" class="btn btn-info">Already Participating!</button>
+        {% if participating or event.event_id in participation_list %}
+            <button id="participate" type="submit" name="event_id" value="{{event.event_id}}" class="btn btn-danger">Remove me from participating!</button>
         {% else %}
             <button id="participate" type="submit" name="event_id" value="{{event.event_id}}" class="btn btn-info">Add Me to Participants!</button>
         {% endif %}
