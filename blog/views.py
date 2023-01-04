@@ -176,6 +176,7 @@ class PostListView(LoginRequiredMixin, ListView):
     def get_context_data(self, *args, **kwargs) -> dict[str, Any]:
         context: dict[str, Any] = super(PostListView, self).get_context_data()
         users: list[User] = list(User.objects.exclude(pk=self.request.user.pk))
+
         if len(users) > 3:
             cnt: int = 3
         else:
@@ -183,6 +184,14 @@ class PostListView(LoginRequiredMixin, ListView):
         random_users: list[User] = random.sample(users, cnt)
         context["random_users"] = random_users
         return context
+
+    def render_to_response(self, context):
+        userobj: Profile = Profile.objects.get(id=self.request.user.id)
+
+        if not userobj.verified:
+            return redirect("profile")
+
+        return super(PostListView, self).render_to_response(context)
 
 
 """ All the posts of the user """
