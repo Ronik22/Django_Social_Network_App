@@ -1,50 +1,45 @@
-{% extends "blog/base.html" %}
-
-{% block title %}Home{% endblock %}
-
-{% block content %}
-
-<!-- ADDITIONAL STYLING -->
-
-<style>
-  body{
-    background-color: #fff;
-  }
-</style>
-
-<div>
-    
-    <!-- Page Hero-->
-    <section class=" page-header page-header-light bg-white mt-4 container">
-      <div class="page-header-content pt-5">
-          <div class="container">
-              <div class="row align-items-center">
-                  <div class="col-lg-6 " data-aos="fade-up">
-                      <h1 style="" class="page-header-title font-weight-bold">Cleveland Social Club</h1>
-                      <br>
-                      <p class="page-header-text mb-5">
-                        Swinger Lifestyle friendly group for the Cleveland Tennessee and surrounding areas.
-                        With monthly house parties for optimal socializing!
-                        This is a Swingers Club designed for couples to interact with other couples.
-                        <br><br>
-                        Designed and developed by <a target="_blank" href="https://github.com/bubbaandy89">Andy Arp</a> based on work by <a target="_blank" href="https://github.com/Ronik22">Ronik Bhattacharjee</a>
-                      </p>
-
-                      {% if user.is_authenticated %}
-                        <a class="btn btn-lg btn-primary font-weight-bold mr-2 rounded-pill px-4 py-2" href="{% url 'profile' %}">Set Up Profile for Verification</a>
-                        <a class="btn btn-lg btn-primary-soft text-primary font-weight-bold" href="#"><i class="far fa-check-circle"></i>&nbsp;LOGGED IN</a>
-                      {% else %}
-                        <a class="btn btn-lg btn-primary font-weight-bold mr-2 rounded-pill px-4 py-2" href="{% url 'register' %}">REGISTER</a>
-                        <a class="btn btn-lg btn-primary-soft text-primary font-weight-bold" href="{% url 'account_login' %}">LOGIN</a>
-                      {% endif %}
-                  </div>
-                  <div class="col-lg-6 d-none d-lg-block" data-aos="fade-up" data-aos-delay="100"><img class="img-fluid" src="/static/blog/images/cscswingers.png" /></div>
-              </div>
-          </div>
-      </div>
-      <br>
-    </section>
-
-</div>
-
-{% endblock %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cleveland Social Club</title>
+    <meta name="robots" content="noindex,nofollow">
+    <link href="favicon.ico" rel="icon" type="image/x-icon" />
+    <meta http-equiv=“Pragma” content=”no-cache”>
+    <meta http-equiv=“Expires” content=”-1″>
+    <meta http-equiv=“CACHE-CONTROL” content=”NO-CACHE”>
+    <script>window.AgeCheckerAgeGateConfig={"background":"linear-gradient(135deg, #E020C7 0%,#FFFFFF 100%)","accent":"#20E0DC","titleText":"Age Verification","bodyText":"You must be 21 or older to visit Cleveland Social Club's adult site."};</script>
+    <script src="https://cdn.agechecker.net/static/age-gate/v1/age-gate.js"></script>
+    <style>
+    .button {
+      background-color: #20E0DC;
+      border-radius: 12px;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      display: inline-block;
+      margin: 20px;
+      font: 24px Georgia, serif;
+      font-variant: small-caps;
+      cursor: pointer;
+    }
+    .button1 {box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 24px 0 rgba(0,0,0,0.19)}
+    .button2 {box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 24px 0 rgba(0,0,0,0.19)}
+    a:link {
+      color: #000000;
+      text-decoration: none;}
+    a:hover {
+      color: #FF0000;
+      text-decoration: none;}
+    h1 {
+      text-shadow: -2px 2px 2px #000;}
+      </style>
+</head>
+<body BACKGROUND="media/images/back.jpg">
+    <font COLOR="#E020C7"><font SIZE=+4><center><b>Welcome to the Cleveland Social Club.<br>A Lifestyle Swingers Group.</b></center>
+    <center><img src="media/images/cscswingers.png" alt="Cleveland Social Club" style="width:600px;height:314px;"></center>
+    <center><button class="button button1"><a HREF="http://www.csctn.net/accounts/login/?next=/"><font size="6" color="#0000FF">Click here to ENTER</button></center>
+    <center><iframe src="https://www.swinglifestyle.com/autopilot/swinger468.cfm?signup=CNGSpot" name="swinger" id="swinger" width="468" height="60" marginwidth="0" marginheight="0" hspace="0" vspace="0" scrolling="no" frameborder="0"><a href="https://www.swinglifestyle.com/?signup=CNGSpot&tar=noframe" target="_blank"><img src="https://www.swinglifestyle.com/autopilot/swinger1.gif" alt="www.SwingLifeStyle.com" border="0"></a></iframe></center>
+    <center><font COLOR="#000000"><font SIZE=-2><center>&copy; 2023 Spitfire Inc. &reg;</center>
+    <script>
+</body>
+</html>
