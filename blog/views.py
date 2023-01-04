@@ -24,14 +24,14 @@ from .utils import is_user_verified  # noqa: F401
 """ Home page with all posts """
 
 
-@login_required
 def first(request) -> HttpResponse:
     context: dict[str, BaseManager[Post]] = {"posts": Post.objects.all()}
-    userobj = Profile.objects.get(id=request.user.id)
-    if not userobj.verified:
-        return redirect("profile")
-    else:
-        return render(request, "blog/first.html", context)
+    if request.user.is_authenticated:
+        userobj = Profile.objects.get(id=request.user.id)
+        if not userobj.verified:
+            return redirect("profile")
+
+    return render(request, "blog/first.html", context)
 
 
 """ Posts of following user profiles """
