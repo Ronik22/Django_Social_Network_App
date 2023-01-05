@@ -24,8 +24,8 @@
           {% if user.is_authenticated %}
           
           <a class="nav-item nav-link" href="{% url 'notification:show-notifications' %}">
-            {% if notifications %}
-              <span class="badge badge-pill badge-danger" style="float:right;margin-bottom:-10px;">{{ notifications|length }}</span>
+            {% if notifications_list %}
+              <span class="badge badge-pill badge-danger" style="float:right;margin-bottom:-10px;">{{ notifications_list|length }}</span>
             {% endif %}
             <span>Notifications</span>
           </a>
