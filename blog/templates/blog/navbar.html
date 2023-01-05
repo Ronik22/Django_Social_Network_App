@@ -22,7 +22,13 @@
           <a class="nav-item nav-link" href="{% url 'blog-about' %}">About</a>
           
           {% if user.is_authenticated %}
-          <a class="nav-item nav-link" href="{% url 'notification:show-notifications' %}">Notifications</a>
+          
+          <a class="nav-item nav-link" href="{% url 'notification:show-notifications' %}">
+            {% if notifications %}
+              <span class="badge badge-pill badge-danger" style="float:right;margin-bottom:-10px;">{{ notifications|length }}</span>
+            {% endif %}
+            <span>Notifications</span>
+          </a>
           <a class="nav-item nav-link" href="{% url 'room-enroll' %}">Chats</a>
           <!-- <a class="nav-item nav-link" href="{% url 'vc-lobby' %}">Calls</a> -->
           <div class="dropdown">
