@@ -21,7 +21,7 @@
             <hr color=#F800B1>
             <h6 class="field2">EVENT DESCRIPTION: {{event.event_description}}</h6>
             <hr color=#F800B1>
-            <img src="{{event.event_poster.url}}" width="450" height="600">
+            <img src="{{event.event_poster.url}}" class="img-fluid">
             <p class="field1"><a href="{% url 'event_manager_home:viewparticipant' uid event.event_id%}" class="vplink" title="View all participants for this event">View Participants</a></p>
             {% if user.is_authenticated and event.registration_deadline >= curr_dt and user.profile.verified %}
             <div id="participate-{{event.pk}}">
