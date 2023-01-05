@@ -375,15 +375,24 @@ def is_user_participating(event_id, user_id) -> bool:
 
 @login_required
 def ParticipateView(request) -> Optional[JsonResponse]:
-    userobj = Profile.objects.get(id=request.user.id)
-    event: Event = get_object_or_404(Event, event_id=request.POST.get("event_id"))
+    userobj: Profile = Profile.objects.get(id=request.user.id)
+    event_pk: str = request.POST.get("event_pk")
+
+    event: Event = get_object_or_404(Event, pk=event_pk)
+    participants = event.event_participants.all()
+
+    if not userobj.verified:
+        raise PermissionDenied()
+
     participating: bool = False
-    if Event.objects.filter(event_participants__id__icontains=request.user.id).exists():
+    if userobj in participants:
+        logging.debug(f"Removing {userobj} from participants of event {event.pk}")
         event.event_participants.remove(userobj)
         participating = False
         # notify = Notification.objects.filter(post=event, sender=userobj, notification_type=1)
         # notify.delete()
     else:
+        logging.debug(f"Adding {userobj} to participants of event {event.pk}")
         event.event_participants.add(userobj)
         participating = True
         # notify = Notification(
@@ -398,4 +407,5 @@ def ParticipateView(request) -> Optional[JsonResponse]:
 
     if is_ajax(request=request):
         html: str = render_to_string("participate_section.html", context, request=request)
+        logging.debug(html)
         return JsonResponse({"form": html})

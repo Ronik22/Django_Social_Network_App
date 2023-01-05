@@ -149,15 +149,16 @@
 
           $(document).on('click','#participate',function(event){
             event.preventDefault();
-            var event_id = $(this).attr('value');
+            var event_pk = $(this).attr('value');
+            event_pk.toString()
             $.ajax({
               type: 'POST',
               url: '{% url "events:event-participate" %}',
-              data: {'event_id':event_id, 'csrfmiddlewaretoken':'{{ csrf_token }}'},
+              data: {'event_pk':event_pk, 'csrfmiddlewaretoken':'{{ csrf_token }}'},
               dataType: 'json',
               success: function(response){
-                  $('#participate-section').html(response['form']);
-                  console.log($('#participate-section').html(response['form']));
+                  $('#participate-'+event_pk).html(response['form']);
+                  console.log($('#participate-'+event_pk).html(response['form']));
               },
               error: function(rs, e){
                   console.log(rs.responseText);
@@ -168,8 +169,8 @@
 
           // Mark Notification Read
 
-          $(document).on('click','#read',function(notification){
-            notification.preventDefault();
+          $(document).on('click','#read',function(event){
+            event.preventDefault();
             var notification_id = $(this).attr('value');
             $.ajax({
               type: 'POST',
