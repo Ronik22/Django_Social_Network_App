@@ -27,7 +27,7 @@
       <p class="article-content">{{ post.content|safe }}</p>
       {% if post.image %}
         <hr color=#F800B1>
-        <p class="article-content"><img src={{ post.image.url }} class="img-fluid"></p>
+        <p class="article-content"><a href={{post.image.url}}><img src={{ post.image.url }} class="img-fluid"></a></p>
       {% endif %}
 
     </article>
