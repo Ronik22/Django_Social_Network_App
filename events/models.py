@@ -33,13 +33,25 @@ class Event(models.Model):
 
     @property
     def event_details(self) -> list[str]:
+        posted = self.event_posted.astimezone(timezone.get_current_timezone()).strftime(
+            "%Y-%m-%d %I:%M %p"
+        )
+        starts: str = self.event_start.astimezone(timezone.get_current_timezone()).strftime(
+            "%Y-%m-%d %I:%M %p"
+        )
+        ends: str = self.event_end.astimezone(timezone.get_current_timezone()).strftime(
+            "%Y-%m-%d %I:%M %p"
+        )
+        deadline: str = self.registration_deadline.astimezone(
+            timezone.get_current_timezone()
+        ).strftime("%Y-%m-%d %I:%M %p")
         return [
             f"Event Name: {self.event_name}",
             f"Event Author: {self.event_author}",
-            f"Event Posted: {self.event_posted.strftime('%Y-%m-%d %I:%M %p')}",
-            f"Event Starts: {self.event_start.strftime('%Y-%m-%d %I:%M %p')}",
-            f"Event Ends: {self.event_end.strftime('%Y-%m-%d %I:%M %p')}",
-            f"Registration Deadline: {self.registration_deadline.strftime('%Y-%m-%d %I:%M %p')}",
+            f"Event Posted: {posted}",
+            f"Event Starts: {starts}",
+            f"Event Ends: {ends}",
+            f"Registration Deadline: {deadline}",
             f"Event Host: {self.host_name}",
             f"Event Description: {self.event_description}",
         ]
