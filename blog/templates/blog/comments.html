@@ -17,7 +17,7 @@
 <br>
 
 <h3>Comments ({{ comments.count }}) :</h3>
-<hr>
+<hr color=#F800B1>
 <br>
 {% if not comments %}
     No Comments Yet...
@@ -70,7 +70,7 @@
                 <br>
 
                 <div class="collapse multi-collapse" id="multiCollapse{{comment.id}}">
-                <hr>
+                <hr color=#F800B1>
                     {% if user.is_authenticated %}
                         <form class="reply-form" method="POST" action=".">
                             {% csrf_token %}
@@ -118,7 +118,7 @@
                                 </form>
                             </li>
                         </ul>
-                        <hr>
+                        <hr color=#F800B1>
                     {% endfor %}
                     
 

@@ -18,12 +18,12 @@
               <small class="text-muted">{{ post.date_posted|date:"F d, Y-h:i A" }}</small>
           </div>
       </div>
-      <hr>
+      <hr color=#F800B1>
       <h3><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h3>
-      <hr>
+      <hr color=#F800B1>
       <p class="article-content">{{ post.content|safe|linebreaks|truncatewords_html:"20" }}<a href="{% url 'post-detail' post.id %}">[Read full post]</a></p>
       {% if post.image %}
-        <hr>
+        <hr color=#F800B1>
         <p class="article-content"><img class="img-fluid" src={{ post.image.url }}></p>
       {% endif %}
     </article>
