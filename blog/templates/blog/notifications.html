@@ -28,6 +28,9 @@
             {% elif notification.notification_type == 4 %}
                 <p class="card-text"><i class="fas fa-reply"></i>&nbsp;&nbsp;Replied "{{notification.text_preview}}" to a comment on your post "<a href="{% url 'post-detail' notification.post.id %}" >{{notification.post}}</a>"</p>
             {% endif %}
+            <div id="mark-read-section-{{ notification.id }}">
+                {% include 'mark_read_section.html' %}
+            </div>
         </div>
     </div>
     <br>

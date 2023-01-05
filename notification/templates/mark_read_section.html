@@ -1,0 +1,11 @@
+<form action="{% url 'notification:notification-status' %}" method="POST">
+    {% csrf_token %}
+
+    {% if user.is_authenticated %}
+        {% if not notification.is_seen %}
+            <button id="read" type="submit" name="notification_id" value="{{notification.id}}" class="btn btn-danger">Mark As Read</button>
+        {% else %}
+            <button id="read" type="submit" name="notification_id" value="{{notification.id}}" class="btn btn-info">Mark As Unread</button>
+        {% endif %}
+    {% endif %}
+</form>

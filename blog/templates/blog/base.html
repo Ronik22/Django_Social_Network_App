@@ -166,6 +166,27 @@
           });
 
 
+          // Mark Notification Read
+
+          $(document).on('click','#read',function(notification){
+            notification.preventDefault();
+            var notification_id = $(this).attr('value');
+            $.ajax({
+              type: 'POST',
+              url: '{% url "notification:notification-status" %}',
+              data: {'notification_id':notification_id, 'csrfmiddlewaretoken':'{{ csrf_token }}'},
+              dataType: 'json',
+              success: function(response){
+                  $('#mark-read-section-'+notification_id).html(response['form']);
+                  console.log($('#mark-read-section-'+notification_id).html(response['form']));
+              },
+              error: function(rs, e){
+                  console.log(rs.responseText);
+              },
+            });
+          });
+
+
           // COMMENT LIKE
 
           $(document).on('click','.clike',function(event){

@@ -150,6 +150,7 @@ TEMPLATES: list[dict[str, Union[bool, str, dict[str, list[str]]]]] = [
         "DIRS": [
             os.path.join(BASE_DIR, "users/templates"),
             os.path.join(BASE_DIR, "events/templates"),
+            os.path.join(BASE_DIR, "notifications/templates"),
         ],
         "APP_DIRS": True,
         "OPTIONS": {

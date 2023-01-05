@@ -62,7 +62,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     path("", include("blog.urls")),
     path("user/", include("users.urls")),
-    path("notifications/", include("notification.urls")),
+    path("notifications/", include("notification.urls", namespace="notification")),
     path("chats/", include("chat.urls")),
     path("vc/", include("videocall.urls")),
     path("friend/", include("friend.urls", namespace="friend")),
