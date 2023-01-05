@@ -299,8 +299,10 @@ def explore(request, uid=""):
     exp.sort(key=lambda eve: eve.event_start)
 
     for event in exp:
-        if is_user_participating(event.event_id, userobj.user.id):
-            participation_list.append(event.event_id)
+        if is_user_participating(event.pk, userobj.user.id):
+            participation_list.append(event.pk)
+
+    logging.debug(f"{participation_list=}")
 
     return render(
         request,
@@ -356,18 +358,18 @@ def viewparticipant(request, uid="", eid=""):
     )
 
 
-def is_user_participating(event_id, user_id) -> bool:
+def is_user_participating(event_pk, user_id) -> bool:
     try:
         events = Event.objects.filter(event_participants__id__icontains=user_id)
     except Event.DoesNotExist:
         return False
 
     try:
-        if events.get(event_id=event_id):
-            logging.debug(f"{user_id} is participating in event {event_id}")
+        if events.get(pk=event_pk):
+            logging.debug(f"{user_id} is participating in event {event_pk}")
             return True
         else:
-            logging.debug(f"{user_id} is NOT participating in event {event_id}")
+            logging.debug(f"{user_id} is NOT participating in event {event_pk}")
             return False
     except ObjectDoesNotExist:
         return False
