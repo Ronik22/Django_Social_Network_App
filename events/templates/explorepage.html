@@ -19,7 +19,7 @@
             <h6 class="field2">HOST: {{event.host_name}}</h6>
             <h6 class="field2">DEADLINE: {{event.registration_deadline}}</h6>
             <hr color=#F800B1>
-            <h6 class="field2">DEADLINE: {{event.event_description}}</h6>
+            <h6 class="field2">EVENT DESCRIPTION: {{event.event_description}}</h6>
             <hr color=#F800B1>
             <img src="{{event.event_poster.url}}" width="450" height="600">
             <p class="field1"><a href="{% url 'event_manager_home:viewparticipant' uid event.event_id%}" class="vplink" title="View all participants for this event">View Participants</a></p>
