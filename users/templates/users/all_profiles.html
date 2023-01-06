@@ -1,6 +1,6 @@
 {% extends "blog/base.html" %}
 
-{% block title %}Profies{% endblock %}
+{% block title %}User Profiles{% endblock %}
 
 {% block content %}
 
@@ -8,7 +8,8 @@
 
 {% for profile in profiles %}
 <div class="content-section">
-    <a href="{% url 'profile-detail-view' profile.pk %}">{{profile}}</a>
+    <a href="{% url 'profile-detail-view' profile.pk %}"><img class="rounded-circle article-img" src="{{profile.image.url}}" alt="image">{{profile}}</a>
+    <p>{{profile.bio}}</p>
 </div>
 {% endfor %}
 

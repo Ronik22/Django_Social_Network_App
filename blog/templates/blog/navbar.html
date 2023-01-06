@@ -20,6 +20,7 @@
         <div class="navbar-nav">
           <a class="nav-item nav-link" href="{% url 'blog-home' %}">Home</a>
           <a class="nav-item nav-link" href="{% url 'blog-about' %}">About</a>
+          <a class="nav-item nav-link" href="{% url 'profile-list-view' %}">Members</a>
           
           {% if user.is_authenticated %}
           
@@ -29,7 +30,12 @@
             {% endif %}
             <span>Notifications</span>
           </a>
-          <a class="nav-item nav-link" href="{% url 'room-enroll' %}">Chats</a>
+          <a class="nav-item nav-link" href="{% url 'room-enroll' %}">
+            {% if chat_notifications_count %}
+              <span class="badge badge-pill badge-danger" style="float:right;margin-bottom:-10px;">{{ chat_notifications_count }}</span>
+            {% endif %}
+            <span>Chats</span>
+          </a>
           <!-- <a class="nav-item nav-link" href="{% url 'vc-lobby' %}">Calls</a> -->
           <div class="dropdown">
             <a class="dropdown-toggle nav-link" href="#" role="button" id="dropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
