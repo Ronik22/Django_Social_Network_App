@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+RELATIONSHIP_STATUS_CHOICES = (("send", "send"), ("accepted", "accepted"))
+
 """ Model for User Profile """
 
 
@@ -57,13 +59,10 @@ class Profile(models.Model):
         return f"{self.user.username}"
 
 
-STATUS_CHOICES = (("send", "send"), ("accepted", "accepted"))
-
-
 class Relationship(models.Model):
     sender = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="friend_sender")
     receiver = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="friend_receiver")
-    status = models.CharField(max_length=8, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=8, choices=RELATIONSHIP_STATUS_CHOICES)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
