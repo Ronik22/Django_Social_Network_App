@@ -30,8 +30,13 @@ def chat_notifications_processor(request) -> Dict[str, int]:
         ).order_by("-created")
 
         for room in all_rooms:
-            if room.friend == request.user and room.chats.all().last().author != request.user:
-                chat_notifications_count += 1
+            try:
+                if room.friend == request.user and room.chats.all().last().author != request.user:
+                    chat_notifications_count += 1
+            except AttributeError:
+                # If a user has no chats, the above line throws an AttributeError, this catches
+                # And ignores it silently
+                pass
 
     logging.debug(f"Chat notifications count for {request.user}: {chat_notifications_count}")
 
