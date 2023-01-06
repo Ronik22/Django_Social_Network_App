@@ -160,6 +160,7 @@ TEMPLATES: list[dict[str, Union[bool, str, dict[str, list[str]]]]] = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "myproject.custom_context_processors.notifications_processor",
+                "myproject.custom_context_processors.chat_notifications_processor",
             ],
         },
     },
