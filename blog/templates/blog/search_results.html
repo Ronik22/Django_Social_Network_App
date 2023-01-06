@@ -7,12 +7,12 @@
 <div class="col-md-8 m-auto">
   
 <div class="content-section">
-  <h3>Search Results ({{allposts|length}})</h3>
+  <h3>Search Results ({{query_results|length}})</h3>
 </div>
 
-    {% if allposts|length == 0 %}
+    {% if query_results|length == 0 %}
       <div class="content-section">
-        <p>Your search did not match any posts ...</p>
+        <p>Your search did not match any posts, users, or events ...</p>
 
         <p class="text-muted">Suggestions:</p>
         <ul class="text-muted">
@@ -22,25 +22,83 @@
       </div>
       <br><br>
     {% endif %}
-    {% for post in allposts %}
 
-    <article class="content-section" style="overflow: auto;">
-      <div class="media">
-          <img class="rounded-circle article-img" src="{{post.author.profile.image.url}}" alt="image">
-          <div class="media-body">
-              <p>
-                <a class="mr-2 h4" href="{% url 'profile-detail-view' post.author.pk %}">{{ post.author }}</a>
-              </p>
-              <small class="text-muted">{{ post.date_posted|date:"F d, Y-h:i A" }}</small>
+    <p>
+      <span>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#posts-collapse" aria-expanded="false" aria-controls="posts-collapse">
+          Post Results ({{query_results.posts|length}})
+        </button>
+      </span>
+    </p>
+
+    <div class="collapse" id="posts-collapse">
+      {% for post_result in query_results.posts %}
+        <article class="content-section" style="overflow: auto;">
+          <div class="media">
+              <img class="rounded-circle article-img" src="{{post_result.author.profile.image.url}}" alt="image">
+              <div class="media-body">
+                  <p>
+                    <a class="mr-2 h4" href="{% url 'profile-detail-view' post_result.author.pk %}">{{ post_result.author }}</a>
+                  </p>
+                  <small class="text-muted">{{ post_result.date_posted|date:"F d, Y-h:i A" }}</small>
+              </div>
           </div>
-      </div>
-      <hr color=#F800B1>
-      <h3><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h3>
-      <hr color=#F800B1>
-      <p class="article-content">{{ post.content|safe|linebreaks|truncatewords_html:"20" }}<a href="{% url 'post-detail' post.id %}">[Read full post]</a></p>
-    </article>
+          <hr color=#F800B1>
+          <h3><a class="article-title" href="{% url 'post-detail' post_result.id %}">{{ post_result.title }}</a></h3>
+          <hr color=#F800B1>
+          <p class="article-content">{{ post_result.content|safe|linebreaks|truncatewords_html:"20" }}<a href="{% url 'post-detail' post_result.id %}">[Read full post]</a></p>
+        </article>
+      {% endfor %}
+    </div>
 
-    {% endfor %}
+    <p>
+      <span>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#users-collapse" aria-expanded="false" aria-controls="users-collapse">
+          User Profile Results ({{query_results.profiles|length}})
+        </button>
+      </span>
+    </p>
+
+    <div class="collapse" id="users-collapse">
+      {% for profile_result in query_results.profiles %}
+        <div class="content-section">
+          <a href="{% url 'profile-detail-view' profile_result.pk %}"><img class="rounded-circle article-img" src="{{profile_result.image.url}}" alt="image">{{profile_result}}</a>
+          <p>{{profile_result.bio}}</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <p>
+      <span>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#events-collapse" aria-expanded="false" aria-controls="events-collapse">
+          Event Results ({{query_results.events|length}})
+        </button>
+      </span>
+    </p>
+
+    <div class="collapse" id="events-collapse">
+      <div class="eventsection">
+        {% for event_result in query_results.events %}
+          <div class="card">
+            <h5 class="field1">{{event_result.event_name}}</h5>
+            <h6 class="field2">FROM: {{event_result.event_start}}</h6>
+            <h6 class="field2">TO: {{event_result.event_end}}</h6>
+            <h6 class="field2">HOST: {{event_result.host_name}}</h6>
+            <h6 class="field2">DEADLINE: {{event_result.registration_deadline}}</h6>
+            <hr color=#F800B1>
+            <h6 class="field2">EVENT DESCRIPTION: {{event_result.event_description}}</h6>
+            <hr color=#F800B1>
+            <img src="{{event_result.event_poster.url}}" class="img-fluid">
+            <p class="field1"><a href="{% url 'event_manager_home:viewparticipant' request.user.id event_result.event_id%}" class="vplink" title="View all participants for this event">View Participants</a></p>
+            {% if user.is_authenticated and event_result.registration_deadline >= curr_dt and user.profile.verified %}
+            <div id="participate-{{event_result.pk}}">
+                {% include 'participate_section.html' %}
+            </div>
+            {% endif %}
+            <br>
+        {% endfor %}
+      </div>
+    </div>
 
     {% if is_paginated %}
 

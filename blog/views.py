@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.db.models import Model
+from django.db.models import Model, Q
 from django.db.models.manager import BaseManager
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -14,6 +14,7 @@ from django.template.loader import render_to_string
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from blog.utils import is_ajax
+from events.models import Event
 from notification.models import Notification
 from users.models import Profile
 
@@ -349,16 +350,27 @@ def about(request) -> HttpResponse:
 @login_required
 def search(request) -> HttpResponse:
     query = request.GET["query"]
+    query_results = {}
     if len(query) >= 150 or len(query) < 1:
-        allposts: BaseManager[Post] = Post.objects.none()
+        query_results["posts"] = Post.objects.none()
     elif len(query.strip()) == 0:
-        allposts: BaseManager[Post] = Post.objects.none()
+        query_results["posts"] = Post.objects.none()
     else:
         allpostsTitle: BaseManager[Post] = Post.objects.filter(title__icontains=query)
         allpostsAuthor: BaseManager[Post] = Post.objects.filter(author__username=query)
-        allposts = allpostsAuthor.union(allpostsTitle)
+        query_results["posts"] = allpostsAuthor.union(allpostsTitle)
 
-    params: dict[str, BaseManager[Post]] = {"allposts": allposts}
+        query_results["profiles"] = (
+            Profile.objects.filter(
+                Q(user__username__icontains=query)
+                | Q(user__first_name__icontains=query)
+                | Q(user__last_name__icontains=query)
+            )
+        )
+
+        query_results["events"] = Event.objects.filter(event_name__icontains=query)
+
+    params: dict[str, BaseManager[Post]] = {"query_results": query_results}
     return render(request, "blog/search_results.html", params)
 
 
