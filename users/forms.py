@@ -46,14 +46,14 @@ class ProfileUpdateForm(forms.ModelForm):
         model = Profile
         fields = [
             "date_of_birth",
-            "image",
             "bio",
             "sls_username",
             "how_did_you_hear_about_us",
             "relationship_status",
             "facebook_link",
             "instagram_link",
-            "twitter_link"
+            "twitter_link",
+            "image",
         ]
 
     """Saving Cropped Image"""
