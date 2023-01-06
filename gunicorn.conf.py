@@ -4,5 +4,5 @@ chdir: str = "/web/dsn/"
 workers: int = 5
 reload: bool = True
 errorlog: str = "/web/dsn/logs/gunicorn_error.log"
-loglevel: str = "debug"
+loglevel: str = "info"
 timeout: int = 300
