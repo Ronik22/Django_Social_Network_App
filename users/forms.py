@@ -36,7 +36,7 @@ class ProfileUpdateForm(forms.ModelForm):
     height = forms.FloatField(widget=forms.HiddenInput(), required=False)
 
     image = forms.ImageField(
-        label=("Image of you (and partner if you have one) holding a sign saying CSCTN.net"),
+        label=("An image of you is a must for Verification. (Both of you if you are a couple)."),
         error_messages={"invalid": ("Image files only")},
         widget=forms.FileInput,
         required=True,
