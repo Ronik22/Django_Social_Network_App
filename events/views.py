@@ -360,7 +360,7 @@ def viewparticipant(request, uid="", eid=""):
 
 def is_user_participating(event_pk, user_id) -> bool:
     try:
-        events = Event.objects.filter(event_participants__id__icontains=user_id)
+        events = Event.objects.filter(event_participants__id=user_id)
     except Event.DoesNotExist:
         return False
 
