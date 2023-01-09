@@ -6,12 +6,16 @@
 
 <div class="col-md-8 m-auto">
 
-{% for profile in profiles %}
-<div class="content-section">
-    <a href="{% url 'profile-detail-view' profile.pk %}"><img class="rounded-circle article-img" src="{{profile.image.url}}" alt="image">{{profile}}</a>
-    <p>{{profile.bio}}</p>
-</div>
-{% endfor %}
+    {% for profile in profiles %}
+    <div class="card">
+        <div class="card-title">
+            <a href="{% url 'profile-detail-view' profile.pk %}"><img class="rounded-circle article-img" src="{{profile.image.url}}" alt="image">{{profile}}</a>
+        </div>
+        <div class="card-body">
+            <p>{{profile.bio}}</p>
+        </div>
+    </div>
+    {% endfor %}
 
 </div>
 
