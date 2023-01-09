@@ -147,6 +147,7 @@ class ProfileListView(LoginRequiredMixin, ListView):
     model = Profile
     template_name = "users/all_profiles.html"
     context_object_name = "profiles"
+    paginate_by: int = 20
 
     def get_queryset(self):
         return Profile.objects.all().exclude(user=self.request.user)
