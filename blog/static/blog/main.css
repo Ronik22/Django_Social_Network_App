@@ -271,6 +271,13 @@ body {
   font-size: 16px;
 }
 
+.btn-outline-info {
+  color: #F800B1;
+  background-color: transparent;
+  background-image: none;
+  border-color: #F800B1
+}
+
 
 .btnhrt i{
   font-size: 22px;
