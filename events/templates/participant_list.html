@@ -20,7 +20,11 @@
                         <p>List of participants:</p>
                         <ul>
                             {% for participant in participant_list %}
-                            <li>{{ participant }}</li>
+                            <div class="card">
+                                <div class="card-body">
+                                    <a href="{% url 'profile-detail-view' participant.pk %}"><img class="rounded-circle article-img" src="{{participant.image.url}}" alt="image">{{participant}}</a>
+                                </div>
+                            </div>
                             {% endfor %}
                         </ul>
                     </div>
