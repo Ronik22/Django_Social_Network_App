@@ -12,23 +12,27 @@
 {% block content %}
     <div class="eventsection">
         {% for event in explst%}
-        <div>
-            <h5 class="field1">{{event.event_name}}</h5>
-            <h6 class="field2">FROM: {{event.event_start}}</h6>
-            <h6 class="field2">TO: {{event.event_end}}</h6>
-            <h6 class="field2">HOST: {{event.host_name}}</h6>
-            <h6 class="field2">DEADLINE: {{event.registration_deadline}}</h6>
-            <hr color=#F800B1>
-            <h6 class="field2">EVENT DESCRIPTION: {{event.event_description}}</h6>
-            <hr color=#F800B1>
-            <img src="{{event.event_poster.url}}" class="img-fluid">
-            <p class="field1"><a href="{% url 'event_manager_home:viewparticipant' uid event.event_id%}" class="vplink" title="View all participants for this event">View Participants</a></p>
-            {% if user.is_authenticated and event.registration_deadline >= curr_dt and user.profile.verified %}
-            <div id="participate-{{event.pk}}">
-                {% include 'participate_section.html' %}
+        <div class="card">
+            <div class="card-title">
+                <h5 class="field1">{{event.event_name}}</h5>
             </div>
-            <br>
-            {% endif %}
+            <div class="card-body">
+                <h6 class="field2">FROM: {{event.event_start}}</h6>
+                <h6 class="field2">TO: {{event.event_end}}</h6>
+                <h6 class="field2">HOST: {{event.host_name}}</h6>
+                <h6 class="field2">DEADLINE: {{event.registration_deadline}}</h6>
+                <hr color=#F800B1>
+                <h6 class="field2">EVENT DESCRIPTION: {{event.event_description}}</h6>
+                <hr color=#F800B1>
+                <img src="{{event.event_poster.url}}" class="img-fluid">
+                <p class="field1"><a href="{% url 'event_manager_home:viewparticipant' uid event.event_id%}" class="vplink" title="View all participants for this event">View Participants</a></p>
+                {% if user.is_authenticated and event.registration_deadline >= curr_dt and user.profile.verified %}
+                <div id="participate-{{event.pk}}">
+                    {% include 'participate_section.html' %}
+                </div>
+                <br>
+                {% endif %}
+            </div>
         </div>
         {% endfor %}
     </div>    
