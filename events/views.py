@@ -1,7 +1,6 @@
 import logging
 from typing import Any, Optional
 
-import django_tables2 as tables
 from django.conf import settings  # noqa: F401
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -15,6 +14,7 @@ from django.utils import timezone
 from blog.utils import is_ajax
 from events.forms import NewEventForm
 from events.models import Event, Participant
+from events.tables import EventsTable
 from notification.models import Notification  # noqa: F401
 from users.models import Profile
 
@@ -24,13 +24,6 @@ partlst = []  # global list for displaying participants for a particular event o
 flag = 0  # boolean variable for deciding whether to display participants or not on home page
 MAX_EVENT_SUMMARY_DISPLAY_COUNT = 2
 RELATIONSHIP_BLOCKLIST: list[str] = ["single_male", "single_female"]
-
-
-class EventsTable(tables.Table):
-    class Meta:
-        model = Event
-        exclude = ("event_id", "event_participants", "event_poster")
-        attrs = {"class": "table"}
 
 
 def get_caller_username(request) -> str:
