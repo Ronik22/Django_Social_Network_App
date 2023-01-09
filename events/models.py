@@ -31,6 +31,9 @@ class Event(models.Model):
         Profile, related_name="event_participants", null=True, blank=True
     )
 
+    def __str__(self):
+        return f"{self.event_name}"
+
     @property
     def event_details(self) -> list[str]:
         posted = self.event_posted.astimezone(timezone.get_current_timezone()).strftime(
@@ -55,6 +58,10 @@ class Event(models.Model):
             f"Event Host: {self.host_name}",
             f"Event Description: {self.event_description}",
         ]
+
+    @property
+    def participants_count(self) -> int:
+        return self.event_participants.all().count()
 
 
 class Participant(models.Model):

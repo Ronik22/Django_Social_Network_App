@@ -14,4 +14,5 @@ urlpatterns = [
     path("explore", views.explore, name="explore"),
     path("event/participate/", views.ParticipateView, name="event-participate"),
     path("<str:uid>home/viewpart<str:eid>", views.viewparticipant, name="viewparticipant"),
+    path("viewpart<str:eid>", views.viewparticipant, name="public-viewparticipant"),
 ]
