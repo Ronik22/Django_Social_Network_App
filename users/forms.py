@@ -3,11 +3,12 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from PIL import Image
 
-from .models import Profile
+from users.models import Profile
+from users.validators import validate_email
 
 
 class UserRegisterForm(UserCreationForm):
-    email = forms.EmailField()
+    email = forms.EmailField(validators=[validate_email])
 
     class Meta:
         model = User
