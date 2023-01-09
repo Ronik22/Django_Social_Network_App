@@ -89,8 +89,8 @@ def events_home(request, uid="") -> HttpResponse:
     logging.debug(f"{owned_event_list=}")
     logging.debug(f"{participating_event_list=}")
 
-    owned_table = EventsTable(Event.objects.filter(event_author__user__id__icontains=uid))
-    participating_table = EventsTable(Event.objects.filter(event_participants__id__icontains=uid))
+    owned_table = EventsTable(Event.objects.filter(event_author__user__id=uid))
+    participating_table = EventsTable(Event.objects.filter(event_participants__id=uid))
 
     return render(
         request,
