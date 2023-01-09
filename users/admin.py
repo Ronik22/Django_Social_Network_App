@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
 from users.forms import UserRegisterForm
-from users.models import Profile, Relationship
+from users.models import Profile, Relationship, BlockList
 
 
 @admin.register(Profile)
@@ -19,3 +19,4 @@ admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 
 admin.site.register(Relationship)
+admin.site.register(BlockList)
