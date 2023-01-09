@@ -6,7 +6,7 @@
 
 <div class="col-md-8 m-auto">
     <br>
-    <p>We have {{ profiles|length }} total users</p>
+    <p>We have {{ page_obj.paginator.count }} total users</p>
     <hr color=#F800B1>
 
     {% for profile in profiles %}
