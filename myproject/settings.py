@@ -121,7 +121,9 @@ MIDDLEWARE: list[str] = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
-DEBUG_TOOLBAR_PANELS = [
+SESSION_EXPIRE_AT_BROWSER_CLOSE: bool = True
+
+DEBUG_TOOLBAR_PANELS: list[str] = [
     "debug_toolbar.panels.history.HistoryPanel",
     "debug_toolbar.panels.versions.VersionsPanel",
     "debug_toolbar.panels.timer.TimerPanel",
