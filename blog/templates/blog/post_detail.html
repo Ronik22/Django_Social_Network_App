@@ -36,14 +36,14 @@
     {% endif %}
 </article>
 
-<div id="like-section">
+<div id="like-section-{{post.id}}">
     {% include 'blog/like_section.html' %}
 </div>
 
 
 <hr color=#F800B1>
 
-<div class="main-comment-section">
+<div class="main-comment-section-{{post.id}}">
     {% include 'blog/comments.html' %}
 </div>
 

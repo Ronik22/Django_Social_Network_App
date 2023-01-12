@@ -24,7 +24,9 @@ class Post(models.Model):
     date_posted: models.DateTimeField = models.DateTimeField(default=timezone.now)
     date_updated: models.DateTimeField = models.DateTimeField(auto_now=True)
     author: models.ForeignKey = models.ForeignKey(User, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to=get_image_filename, null=True, blank=True)
+    image: models.ImageField = models.ImageField(
+        upload_to=get_image_filename, null=True, blank=True
+    )
     likes: models.ManyToManyField = models.ManyToManyField(
         User, related_name="blogpost", blank=True
     )

@@ -16,14 +16,14 @@
 
 <br>
 
-<h3>Comments ({{ comments.count }}) :</h3>
+<h3>Comments ({{ post.comments.count }}) :</h3>
 <hr color=#F800B1>
 <br>
-{% if not comments %}
+{% if not post.comments %}
     No Comments Yet...
 {% else %}
     
-    {% for comment in comments %}
+    {% for comment in post.comments.all %}
 
     <div class="content-section">
         <div class="media g-mb-30 media-comment">
@@ -42,15 +42,11 @@
                             {% csrf_token %}
                             
                             {% if user.is_authenticated %}
-                                {% for key, value in clikes.items %}
-                                    {% if key == comment.id %}
-                                        {% if value == True %}
-                                            <button type="submit" name="comment_id" value="{{comment.id}}" class="btn btnhrt clike"><i class="fas fa-heart"></i></button>
-                                        {% else %}
-                                            <button type="submit" name="comment_id" value="{{comment.id}}" class="btn btnhrt clike"><i class="far fa-heart"></i></button>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
+                                {% if request.user in comment.likes.all %}
+                                    <button type="submit" name="comment_id" post="{{comment.post.pk}}" value="{{comment.id}}" class="btn btnhrt clike"><i class="fas fa-heart"></i></button>
+                                {% else %}
+                                    <button type="submit" name="comment_id" post="{{comment.post.pk}}" value="{{comment.id}}" class="btn btnhrt clike"><i class="far fa-heart"></i></button>
+                                {% endif %}
                             {% else %}
                                 <button class="btn btnhrt"><i class="far fa-heart"></i></button>
                             {% endif %}

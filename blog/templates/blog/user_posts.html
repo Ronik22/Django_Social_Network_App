@@ -30,6 +30,26 @@
         <p class="article-content"><a href={{post.image.url}}><img src={{ post.image.url }} class="img-fluid"></a></p>
       {% endif %}
 
+      
+      <div id="like-section-{{post.id}}">
+        {% include 'blog/like_section.html' with post=post %}
+      </div>
+      <br>   
+      <hr color=#F800B1>
+      <p>
+        <span>
+          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#comments-{{post.id}}-collapse" aria-expanded="false" aria-controls="comments-collapse">
+            Comments
+          </button>
+        </span>
+      </p>
+  
+      <div class="collapse" id="comments-{{post.id}}-collapse">
+        <div class="main-comment-section-{{post.id}}">
+          {% include 'blog/comments.html' with comments=post.comments.all clikes=post.comments.likes.all %}
+        </div>
+      </div>
+
     </article>
     
     {% endfor %}

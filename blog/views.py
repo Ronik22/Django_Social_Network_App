@@ -360,12 +360,10 @@ def search(request) -> HttpResponse:
         allpostsAuthor: BaseManager[Post] = Post.objects.filter(author__username=query)
         query_results["posts"] = allpostsAuthor.union(allpostsTitle)
 
-        query_results["profiles"] = (
-            Profile.objects.filter(
-                Q(user__username__icontains=query)
-                | Q(user__first_name__icontains=query)
-                | Q(user__last_name__icontains=query)
-            )
+        query_results["profiles"] = Profile.objects.filter(
+            Q(user__username__icontains=query)
+            | Q(user__first_name__icontains=query)
+            | Q(user__last_name__icontains=query)
         )
 
         query_results["events"] = Event.objects.filter(event_name__icontains=query)

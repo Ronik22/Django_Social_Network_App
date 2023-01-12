@@ -127,7 +127,7 @@
 
           // LIKE POSTS
 
-          $(document).on('click','#like',function(event){
+          /* $(document).on('click','#like',function(event){
             event.preventDefault();
             var pk = $(this).attr('value');
             $.ajax({
@@ -138,6 +138,26 @@
               success: function(response){
                   $('#like-section').html(response['form']);
                   console.log($('#like-section').html(response['form']));
+              },
+              error: function(rs, e){
+                  console.log(rs.responseText);
+              },
+            });
+          }); */
+
+          // Like posts in Home/Feeds
+
+          $(document).on('click','#like',function(event){
+            event.preventDefault();
+            var post_pk = $(this).attr('value');
+            $.ajax({
+              type: 'POST',
+              url: '{% url "post-like" %}',
+              data: {'id':post_pk, 'csrfmiddlewaretoken':'{{ csrf_token }}'},
+              dataType: 'json',
+              success: function(response){
+                  $('#like-section-'+post_pk).html(response['form']);
+                  console.log($('#like-section'+post_pk).html(response['form']));
               },
               error: function(rs, e){
                   console.log(rs.responseText);
@@ -192,15 +212,16 @@
 
           $(document).on('click','.clike',function(event){
             event.preventDefault();
-            var pk = $(this).attr('value');
+            var comment_id = $(this).attr('value');
+            var post_pk = $(this).attr('post');
             $.ajax({
               type: 'POST',
               url: "{% url 'comment-like' %}",
-              data: {'id':pk, 'pid':'{{post.pk}}', 'csrfmiddlewaretoken':'{{ csrf_token }}'},
+              data: {'id':comment_id, 'pid':post_pk, 'csrfmiddlewaretoken':'{{ csrf_token }}'},
               dataType: 'json',
               success: function(response){
-                  $('.main-comment-section').html(response['form']);
-                  console.log($('.main-comment-section').html(response['form']));
+                  $('.main-comment-section-'+post_pk).html(response['form']);
+                  console.log($('.main-comment-section-'+post_pk).html(response['form']));
               },
               error: function(rs, e){
                   console.log(rs.responseText);

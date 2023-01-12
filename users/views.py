@@ -1,19 +1,10 @@
-from django.conf import settings  # noqa: F401
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.signals import user_logged_in, user_logged_out
-from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import BadHeaderError, send_mail
-from django.db.models.query_utils import Q
 from django.dispatch import receiver
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
 from django.views.generic import DetailView, ListView
 
 from friend.friend_request_status import FriendRequestStatus
@@ -21,9 +12,8 @@ from friend.models import FriendList, FriendRequest
 from friend.utils import get_friend_request_or_false
 from myproject import utils
 from notification.models import Notification
-
-from .forms import ProfileUpdateForm, UserRegisterForm, UserUpdateForm
-from .models import Profile
+from users.forms import ProfileUpdateForm, UserRegisterForm, UserUpdateForm
+from users.models import Profile
 
 
 @receiver(user_logged_in)

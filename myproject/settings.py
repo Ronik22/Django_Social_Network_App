@@ -121,7 +121,8 @@ MIDDLEWARE: list[str] = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
-SESSION_EXPIRE_AT_BROWSER_CLOSE: bool = True
+# This is for forcing a new login every time someone connects to the site
+# SESSION_EXPIRE_AT_BROWSER_CLOSE: bool = True
 
 DEBUG_TOOLBAR_PANELS: list[str] = [
     "debug_toolbar.panels.history.HistoryPanel",
