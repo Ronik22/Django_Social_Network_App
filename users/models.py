@@ -62,6 +62,9 @@ class Profile(models.Model):
 class BlockList(models.Model):
     email = models.EmailField(unique=True, null=True)  # don't want conflicting results
 
+    def __str__(self) -> str:
+        return f"{self.email}"
+
 
 class Relationship(models.Model):
     sender = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="friend_sender")
