@@ -1,3 +1,4 @@
+import logging
 import random
 from itertools import chain
 from typing import Any, Optional, Union
@@ -130,7 +131,12 @@ def SaveView(request) -> Optional[JsonResponse]:
 @login_required
 def LikeCommentView(request) -> Optional[JsonResponse]:
     # , id1, id2              id1=post.pk id2=reply.pk
-    post: Comment = get_object_or_404(Comment, id=request.POST.get("id"))
+    comment_pk = request.POST.get("comment_pk")
+    post_pk = request.POST.get("post_pk")
+    logging.debug(f"{comment_pk=}")
+    logging.debug(f"{post_pk=}")
+    post = Comment.objects.get(pk=comment_pk)
+    # post: Comment = get_object_or_404(Comment, pk=comment_pk)
     cliked: bool = False
     if post.likes.filter(id=request.user.id).exists():
         post.likes.remove(request.user)
@@ -139,7 +145,7 @@ def LikeCommentView(request) -> Optional[JsonResponse]:
         post.likes.add(request.user)
         cliked = True
 
-    cpost: Post = get_object_or_404(Post, id=request.POST.get("pid"))
+    cpost: Post = get_object_or_404(Post, pk=post_pk)
     total_comments2 = cpost.comments.all().order_by("-id")
     total_comments = cpost.comments.all().filter(reply=None).order_by("-id")
     tcl = {}
@@ -227,13 +233,15 @@ def PostDetailView(request, pk) -> Union[JsonResponse, HttpResponse]:
         comment_qs = None
         comment_form: CommentForm = CommentForm(request.POST or None)
         if comment_form.is_valid():
+            is_reply: bool = False
             form = request.POST.get("body")
             reply_id = request.POST.get("comment_id")
             if reply_id:
                 comment_qs: Comment = Comment.objects.get(id=reply_id)
+                is_reply = True
 
             comment: Comment = Comment.objects.create(
-                name=request.user, post=stuff, body=form, reply=comment_qs
+                name=request.user, post=stuff, body=form, reply=comment_qs, is_reply=is_reply
             )
             comment.save()
             if reply_id:

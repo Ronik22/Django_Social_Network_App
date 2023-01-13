@@ -63,6 +63,7 @@ class Comment(models.Model):
     reply: models.ForeignKey = models.ForeignKey(
         "self", null=True, related_name="replies", on_delete=models.CASCADE
     )
+    is_reply: models.BooleanField = models.BooleanField(default=False)
 
     def total_clikes(self) -> int:
         return self.likes.count()

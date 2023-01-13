@@ -1,15 +1,16 @@
+{% load crispy_forms_tags %}
 <div id="tempocs">
 
 
 {% if user.is_authenticated %}
-    <form class="comment-form" method="post" action=".">
+    <form class="comment-form" method="post" post="{{post.id}}" action="{% url 'post-detail' post.id %}">
         {% csrf_token %}
         <fieldset class="form-group">
             <legend class=" mb-4">Add Comment</legend>
             <textarea required style="width: 100%;" name="body" id="cmtbody" cols="40" rows="5"></textarea>
         </fieldset>
         <div class="form-group">
-            <button class="btn btn-outline-info" id="acsubmit" type="submit">Add Comment</button>
+            <button class="btn btn-outline-info" id="acsubmit" type="submit" value="{{post.id}}">Add Comment</button>
         </div>
     </form>
 {% endif %}
@@ -25,6 +26,7 @@
     
     {% for comment in post.comments.all %}
 
+    {% if not comment.is_reply %}
     <div class="content-section">
         <div class="media g-mb-30 media-comment">
             <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15 rounded-circle article-img" src="{{comment.name.profile.image.url}}" alt="Profile-image">
@@ -56,7 +58,7 @@
                     </li>
                     <li class="list-inline-item">
                         &nbsp;&nbsp;&nbsp;
-                        <a class="btn btncmt" data-toggle="collapse" href="#multiCollapse{{comment.id}}" role="button" aria-expanded="false" aria-controls="multiCollapse{{comment.id}}">
+                        <a class="btn btncmt" data-toggle="collapse" href="#multiCollapse-reply-{{comment.id}}" role="button" aria-expanded="false" aria-controls="multiCollapse-reply-{{comment.id}}">
                             <i class="far fa-comment"></i>
                         </a>
                          {{comment.replies.count}}
@@ -64,11 +66,11 @@
                 </ul>
 
                 <br>
-
-                <div class="collapse multi-collapse" id="multiCollapse{{comment.id}}">
+                {# Replies start here #}
+                <div class="collapse multi-collapse" id="multiCollapse-reply-{{comment.id}}">
                 <hr color=#F800B1>
                     {% if user.is_authenticated %}
-                        <form class="reply-form" method="POST" action=".">
+                        <form class="reply-form" post="{{post.id}}" method="POST" action="{% url 'post-detail' post.id %}">
                             {% csrf_token %}
                             <input type="hidden" name="comment_id" value="{{comment.id}}">
                             <fieldset class="form-group">
@@ -97,15 +99,11 @@
                                     {% csrf_token %}
                                 
                                     {% if user.is_authenticated %}
-                                        {% for key, value in clikes.items %}
-                                            {% if reply.id == key %}
-                                                {% if value == True %}
-                                                    <button type="submit" name="comment_id" value="{{reply.id}}" class="btn btnhrt clike"><i class="fas fa-heart"></i></button>
-                                                {% else %}
-                                                    <button type="submit" name="comment_id" value="{{reply.id}}" class="btn btnhrt clike"><i class="far fa-heart"></i></button>
-                                                {% endif %}
-                                            {% endif %}
-                                        {% endfor %}
+                                        {% if user in reply.likes.all %}
+                                            <button type="submit" name="comment_id" post="{{reply.post.pk}}" value="{{reply.pk}}" class="btn btnhrt clike"><i class="fas fa-heart"></i></button>
+                                        {% else %}
+                                            <button type="submit" name="comment_id" post="{{reply.post.pk}}" value="{{reply.pk}}" class="btn btnhrt clike"><i class="far fa-heart"></i></button>
+                                        {% endif %}
                                     {% else %}
                                         <button class="btn btnhrt"><i class="far fa-heart"></i></button>
                                     {% endif %}
@@ -124,7 +122,7 @@
         </div>
     </div>
     <br>
-
+    {% endif %}
     {% endfor %}
 {% endif %}
 

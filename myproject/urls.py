@@ -19,10 +19,13 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.urls import include, path
+from django.urls import include, path, re_path
+from django.views.generic.base import RedirectView
 
 # from EventManager import urls
 from users import views as user_views
+
+favicon_view = RedirectView.as_view(url="/static/favicon.ico", permanent=True)
 
 app_name = "myproject"
 
@@ -70,6 +73,7 @@ urlpatterns = [
         "events/",
         include("events.urls", namespace="event_manager_home"),
     ),
+    re_path(r"^favicon\.ico$", favicon_view),
 ]
 
 if settings.DEBUG:
