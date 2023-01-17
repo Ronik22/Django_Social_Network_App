@@ -173,6 +173,7 @@
             text_div_date.classList.add('small', 'text-muted')
             text_div_date.innerHTML = new Date().toLocaleString()
             text_div.appendChild(text_div_date)
+            $("#chat-box").stop().animate({ scrollTop: $("#chat-box")[0].scrollHeight}, 1000);
 
         }
 
@@ -200,6 +201,7 @@
             text_div_date.classList.add('small', 'text-muted')
             text_div_date.innerHTML = new Date().toLocaleString()
             text_div.appendChild(text_div_date)
+            $("#chat-box").stop().animate({ scrollTop: $("#chat-box")[0].scrollHeight}, 1000);
 
             // var image = document.createElement('img')
             // image.src = '{{my_name.profile.image.url}}'
