@@ -1,4 +1,5 @@
-from typing import Any, Union
+import logging
+from typing import Any, Optional, Union
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -13,9 +14,9 @@ from django.http import (
 )
 from django.shortcuts import redirect, render
 
+from chat.models import Chat, Room, Shout, ShoutBox
 from friend.models import FriendList
-
-from .models import Chat, Room, Shout, ShoutBox
+from users.models import Profile
 
 
 @login_required
@@ -98,11 +99,22 @@ def shoutbox_create(request) -> HttpResponse:
 def shoutbox(
     request, shoutbox_id
 ) -> Union[HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponse]:
+    shoutbox: Optional[ShoutBox] = None
+    userobj: Profile = Profile.objects.get(id=request.user.id)
     try:
-        ShoutBox.objects.get(shoutbox_id=shoutbox_id)
+        shoutbox = ShoutBox.objects.get(shoutbox_id=shoutbox_id)
     except ShoutBox.DoesNotExist:
         messages.error(request, "Invalid ShoutBox ID")
-        return redirect("shoutbox-create")
+        # return redirect("shoutbox-join")
+
+    if shoutbox.shoutbox_name.lower() == "admin" and not userobj.is_staff:
+        raise PermissionDenied()  # Only Admins/staff in admin chat
+    elif not userobj.verified:
+        raise PermissionDenied()  # Only verified individuals can get into group chat
+    else:
+        if request.user not in shoutbox.participants.all():
+            logging.debug(f"Adding user {userobj} to {shoutbox}")
+            shoutbox.participants.add(request.user)
 
     shouts: BaseManager = Shout.objects.filter(shoutbox_id=shoutbox_id).order_by("date")
 
