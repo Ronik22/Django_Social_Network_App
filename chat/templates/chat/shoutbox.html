@@ -88,9 +88,10 @@
     {{ shoutbox_id|json_script:"shoutbox-id" }}
     {{ request.user.profile.image.url|json_script:"user_image"}}
     <script>
-        // $(document).ready(function(event){
+        $(document).ready(function(event){
+            $("#chat-box").stop().animate({ scrollTop: $("#chat-box")[0].scrollHeight}, 1000);
         //     $("#chat-box").scrollTop($("#chat-box").scrollHeight);
-        // });
+        });
         document.querySelector('#input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
