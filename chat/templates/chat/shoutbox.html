@@ -1,0 +1,215 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+
+<div class="col-md-8 m-auto">
+
+<div class="container content-section px-0 py-0">
+    
+    <!-- Chat Box-->
+    <div id="chat-section" class="px-0">
+        <div id="chat-box" class="chat-text-add py-5 px-4 chat-box bg-white">
+            <!-- OLD CHATS ARE FETCHED FROM DATABASE AND NEW ONES ARE APPENDED BELOW -->
+            {% for shout in old_shouts %}
+                {% if shout.author != request.user %}
+                <!-- Sender Message-->
+                <div class="media w-75 mb-3">
+                <img src="{{shout.author.profile.image.url}}" alt="user" width="40" height="40" class="rounded-circle">
+                <div class="media-body ml-3">
+                    <div class="bg-light rounded py-2 px-3 mb-2">
+                    <p class="text-small mb-0 text-muted">{{shout.text}}</p>
+                    </div>
+                    <p class="small text-muted">{{shout.date}}</p>
+                </div>
+                </div>
+                
+                {% else %}
+
+                <!-- Reciever Message-->
+                <div class="media w-75 ml-auto mb-3">
+                <div class="media-body">
+                    <div class="bg-primary rounded py-2 px-3 mb-2">
+                    <p class="text-small mb-0 text-white">{{chat.text}}</p>
+                    </div>
+                    <p class="small text-muted">{{chat.date}}</p>
+                </div>
+                </div>
+                
+                {% endif %}
+
+            {% endfor %}
+        </div>
+    </div>
+    <br>
+
+
+    <div class="px-0">
+        <!-- Typing area -->
+        <form class="bg-light chat-form">
+          <div class="input-group">
+            <input id="input" name="body" type="text" placeholder="Type your message here" aria-describedby="submit" class="form-control rounded-0 border-0 py-4 bg-light">
+            <div class="input-group-append">
+              <button id="submit" type="button" class="btn btn-link"> <i class="fa fa-paper-plane"></i></button>
+            </div>
+          </div>
+        </form>
+    </div>
+
+</div>
+
+</div>
+
+<br>
+
+<!-- SIDEBAR -->
+<!-- <div class="col-md-4">
+    <div class="content-section">
+        <h3>Our Sidebar</h3>
+        <p class="text-muted">You can put any information here you'd like.
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-light">Latest Posts</li>
+                <li class="list-group-item list-group-item-light">Announcements</li>
+                <li class="list-group-item list-group-item-light">Calendars</li>
+                <li class="list-group-item list-group-item-light">etc</li>
+            </ul>
+        </p>
+    </div>
+</div>   -->
+
+
+{% endblock %}
+
+{% block script %}
+
+    {{ request.user.username|json_script:"user_username" }}
+    {{ shoutbox_id|json_script:"shoutbox-id" }}
+    {{ request.user.profile.image.url|json_script:"user_image"}}
+    <script>
+        // $(document).ready(function(event){
+        //     $("#chat-box").scrollTop($("#chat-box").scrollHeight);
+        // });
+        document.querySelector('#input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.querySelector('#submit').click();
+            }
+        });
+
+        let my_name = '{{ my_name }}';
+        const user_username = JSON.parse(document.getElementById('user_username').textContent);
+        const user_image = JSON.parse(document.getElementById('user_image').textContent);
+        document.querySelector('#submit').onclick = function (e) {
+            const messageInputDom = document.querySelector('#input');
+            const message = messageInputDom.value;
+            if(message.trim().length!=0) {
+                chatSocket.send(JSON.stringify({
+                    'message': message,
+                    'username': user_username,
+                    'user_image': user_image,
+                }));
+                messageInputDom.value = '';
+                messageInputDom.focus();
+            }
+            else{
+                alert("Message cannot be blank");
+                messageInputDom.focus();
+            }
+        };
+
+
+        const shoutbox_id = JSON.parse(document.getElementById('shoutbox-id').textContent);
+
+        const chatSocket = new WebSocket(
+            'ws://' +
+            window.location.host +
+            '/ws/shout/' +
+            shoutbox_id +
+            '/'
+        );
+
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            console.log(data)
+            
+            if (data.username != my_name)
+                add_sender_chat(data)
+            else
+                add_receiver_chat(data)
+        }
+
+
+        function add_sender_chat(data) {
+            
+            var chat_window = document.querySelector('.chat-text-add')
+            var message = document.createElement('div')
+            message.classList.add('media', 'w-75', 'mb-3')
+            chat_window.appendChild(message)
+
+            var image = document.createElement('img')
+            image.src = String(data.user_image)
+            image.classList.add('rounded-circle')
+            image.width = 40
+            image.height = 40
+            image.alt = data.username
+            message.appendChild(image)
+
+            var text_div = document.createElement('div')
+            text_div.classList.add('media-body', 'ml-3')
+            message.appendChild(text_div)
+
+            var text_div_div = document.createElement('div')
+            text_div_div.classList.add('bg-light', 'rounded', 'py-2', 'px-3', 'mb-2')
+            text_div.appendChild(text_div_div)
+
+            var text_div_div_p = document.createElement('p')
+            text_div_div_p.classList.add('text-small', 'mb-0', 'text-muted')
+            text_div_div_p.innerHTML = data.message
+            text_div_div.appendChild(text_div_div_p)
+
+            text_div_date = document.createElement('p')
+            text_div_date.classList.add('small', 'text-muted')
+            text_div_date.innerHTML = new Date().toLocaleString()
+            text_div.appendChild(text_div_date)
+
+        }
+
+        function add_receiver_chat(data){
+            var chat_window = document.querySelector('.chat-text-add')
+
+            var message = document.createElement('div')
+            message.classList.add('media', 'w-75', 'ml-auto', 'mb-3')
+            chat_window.appendChild(message)
+
+            var text_div = document.createElement('div')
+            text_div.classList.add('media-body')
+            message.appendChild(text_div)
+
+            var text_div_div = document.createElement('div')
+            text_div_div.classList.add('bg-primary', 'rounded', 'py-2', 'px-3', 'mb-2')
+            text_div.appendChild(text_div_div)
+
+            var text_div_div_p = document.createElement('p')
+            text_div_div_p.classList.add('text-small', 'mb-0', 'text-white')
+            text_div_div_p.innerHTML = data.message
+            text_div_div.appendChild(text_div_div_p)
+
+            text_div_date = document.createElement('p')
+            text_div_date.classList.add('small', 'text-muted')
+            text_div_date.innerHTML = new Date().toLocaleString()
+            text_div.appendChild(text_div_date)
+
+            // var image = document.createElement('img')
+            // image.src = '{{my_name.profile.image.url}}'
+            // image.classList.add('rounded-circle','ml-2')
+            // image.width = 40
+            // image.height = 40
+            // message.appendChild(image)
+
+        }
+
+    </script>
+
+
+{% endblock %}

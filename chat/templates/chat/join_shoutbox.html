@@ -1,0 +1,155 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}Chats{% endblock %}
+
+{% block content %}
+
+{% if not all_shoutboxes %}
+    <span class="container">You need to be friends wih someone to chat</span>
+{% endif %}
+
+<div class="col-md-8">
+
+    <!-- ALL CHATROOMS-->
+    <div class="px-0">
+        <div class="bg-white">
+
+        <div class="">
+            <div class="list-group rounded-0">
+
+            {% for shoutbox in all_shoutboxes %}
+            
+            {# If you're not the author #}
+
+            {% if shoutbox.author == request.user %}
+                <div class="list-group-item list-group-item-action list-group-item-light rounded-0">
+                    <div class="media">
+                        <div class="img-cont2">
+                            <img src="{{shoutbox.author.profile.image.url}}" alt="room" width="50" height="50" class="rounded-circle">
+                            {% if shoutbox.author.profile.is_online %}
+                                <span class="online-circle2"></span>  
+                            {% else %}
+                                <span class="offline-circle2"></span>
+                            {% endif %}
+                        </div>
+                        <div class="media-body ml-4">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <h6 class="mb-0">
+                                    {{shoutbox.author}}
+                                </h6>
+                                <small class="small font-weight-bold">{{shoutbox.shouts.all.last.date}}</small>
+                            </div>
+                            <p class="font-italic text-muted mb-0 text-small d-inline">
+                                {% if shoutbox.shouts.all.last.text %}
+                                    
+                                    {% if shoutbox.shouts.all.last.author == request.user %}
+                                        You : {{shoutbox.shouts.all.last.text|truncatechars_html:"30"}}
+                                    {% else %}
+                                        {{shoutbox.shouts.all.last.author}} : {{shoutbox.shouts.all.last.text|truncatechars_html:"30"}}
+                                    {% endif %}
+        
+                                {% endif %}
+                            </p>
+                            <div class="float-right d-inline">
+                                <a class="p-2 h5" href="{% url 'room-choice' shoutbox.author.pk %}"><i class="fas fa-comment-alt"></i></a>
+                                <a style="cursor:pointer;" class="p-2 h4" onclick="handleVCRedirect('{{shoutbox.author.pk}}','{{request.user.username}}')"><i class="fas fa-video"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %} {# If you are the author #}
+                <div class="list-group-item list-group-item-action list-group-item-light rounded-0">
+                    <div class="media">
+                        <div class="img-cont2">
+                            <img src="{{request.user.profile.image.url}}" alt="room" width="50" height="50" class="rounded-circle">
+                            {% if request.user.profile.is_online %}
+                                <span class="online-circle2"></span>  
+                            {% else %}
+                                <span class="offline-circle2"></span>
+                            {% endif %}
+                        </div>
+                        <div class="media-body ml-4">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <h6 class="mb-0">
+                                    {{shoutbox.author}}
+                                </h6>
+                                <small class="small font-weight-bold">{{shoutbox.chats.all.last.date}}</small>
+                            </div>
+                            <p class="font-italic text-muted mb-0 text-small d-inline">
+                                {% if shoutbox.shoutss.all.last.text %}
+                                    
+                                    {% if shoutbox.shouts.all.last.author == request.user %}
+                                        You : {{shoutbox.shouts.all.last.text|truncatechars_html:"30"}}
+                                    {% else %}
+                                        {{shoutbox.shouts.all.last.author}} : {{shoutbox.shouts.all.last.text|truncatechars_html:"30"}}
+                                    {% endif %}
+
+                                {% endif %}
+                            </p>
+                            <div class="float-right d-inline">
+                                <a class="p-2 h5" href="{% url 'shoutbox' shoutbox.shoutbox_id %}"><i class="fas fa-comment-alt"></i></a>
+                                <a style="cursor:pointer;" class="p-2 h4" onclick="handleVCRedirect('{{request.user.pk}}','{{request.user.username}}')"><i class="fas fa-video"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% endfor %}
+
+            </div>
+        </div>
+        </div>
+    </div>
+<br>
+</div>
+
+<br>
+
+<!-- SIDEBAR -->
+<div class="col-md-4">
+    <div class="content-section">
+        <h3>Friends ({{all_friends.count}})</h3>
+        <br>
+            <ul class="list-group">
+                {% for frnd in all_friends %}
+                    <li class="list-group-item list-group-item-light"><a class="mr-2" href="{% url 'room-choice' frnd.id %}">{{frnd}}</a></li>
+                {% endfor %}
+            </ul>
+        <br>
+    </div>
+</div>  
+
+{% endblock %}
+
+
+{% block script %}
+<script>
+    async function handleVCRedirect(id1,name) {
+        // let room = (parseInt(id1) > parseInt(id2)) ? "vcroom_" + id1 + "_" + {{request.user.id}} : "vcroom_" + {{request.user.id}} + "_" + id1;
+        // room = room.toUpperCase()
+        room = id1
+
+        let response = await fetch(`/vc/get_token/?channel=${room}`)
+        
+        if(response.status == 200) {
+            let data = await response.json()
+            console.log(response);
+
+            let UID = data.uid
+            let token = data.token
+            let room_name = data.room_name
+
+            sessionStorage.setItem('UID', UID)
+            sessionStorage.setItem('token', token)
+            sessionStorage.setItem('room', room_name)
+            sessionStorage.setItem('name', name)
+
+            window.open('/vc/room/', '_blank')
+        }
+    }
+    
+</script>
+{% endblock script %}

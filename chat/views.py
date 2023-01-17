@@ -3,6 +3,7 @@ from typing import Any, Union
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.db.models.manager import BaseManager
 from django.http import (
@@ -14,7 +15,7 @@ from django.shortcuts import redirect, render
 
 from friend.models import FriendList
 
-from .models import Chat, Room
+from .models import Chat, Room, Shout, ShoutBox
 
 
 @login_required
@@ -74,3 +75,40 @@ def room(
         "room_name": room_name,
     }
     return render(request, "chat/chatroom.html", context)
+
+
+@login_required
+def shoutbox_create(request) -> HttpResponse:
+    if not request.user.is_staff:
+        raise PermissionDenied()
+    all_shoutboxes: BaseManager = ShoutBox.objects.filter(
+        Q(author=request.user) | Q(participants=request.user)
+    ).order_by("-created")
+
+    context: dict[str, Any] = {
+        "all_shoutboxes": all_shoutboxes,
+    }
+    return render(request, "chat/join_shoutbox.html", context)
+
+
+""" Shoutbox for all users """
+
+
+@login_required
+def shoutbox(
+    request, shoutbox_id
+) -> Union[HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponse]:
+    try:
+        ShoutBox.objects.get(shoutbox_id=shoutbox_id)
+    except ShoutBox.DoesNotExist:
+        messages.error(request, "Invalid ShoutBox ID")
+        return redirect("shoutbox-create")
+
+    shouts: BaseManager = Shout.objects.filter(shoutbox_id=shoutbox_id).order_by("date")
+
+    context: dict[str, Any] = {
+        "old_shouts": shouts,
+        "my_name": request.user,
+        "shoutbox_id": shoutbox_id,
+    }
+    return render(request, "chat/shoutbox.html", context)
