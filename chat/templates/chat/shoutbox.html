@@ -16,13 +16,14 @@
                 {% if shout.author != request.user %}
                 <!-- Sender Message-->
                 <div class="media w-75 mb-3">
-                <img src="{{shout.author.profile.image.url}}" alt="user" width="40" height="40" class="rounded-circle">
-                <div class="media-body ml-3">
-                    <div class="bg-light rounded py-2 px-3 mb-2">
-                    <p class="text-small mb-0 text-muted">{{shout.text}}</p>
+
+                    <img src="{{shout.author.profile.image.url}}" alt="user" width="40" height="40" class="rounded-circle"><br>{{shout.author}}
+                    <div class="media-body ml-3">
+                        <div class="bg-light rounded py-2 px-3 mb-2">
+                        <p class="text-small mb-0 text-muted">{{shout.text}}</p>
+                        </div>
+                        <p class="small text-muted">{{shout.date}}</p>
                     </div>
-                    <p class="small text-muted">{{shout.date}}</p>
-                </div>
                 </div>
                 
                 {% else %}
@@ -31,9 +32,9 @@
                 <div class="media w-75 ml-auto mb-3">
                 <div class="media-body">
                     <div class="bg-primary rounded py-2 px-3 mb-2">
-                    <p class="text-small mb-0 text-white">{{chat.text}}</p>
+                    <p class="text-small mb-0 text-white">{{shout.text}}</p>
                     </div>
-                    <p class="small text-muted">{{chat.date}}</p>
+                    <p class="small text-muted">{{shout.date}}</p>
                 </div>
                 </div>
                 
