@@ -107,7 +107,7 @@ def shoutbox(
         messages.error(request, "Invalid ShoutBox ID")
         # return redirect("shoutbox-join")
 
-    if shoutbox.shoutbox_name.lower() == "admin" and not userobj.is_staff:
+    if shoutbox.shoutbox_name.lower() == "admin" and not request.user.is_staff:
         raise PermissionDenied()  # Only Admins/staff in admin chat
     elif not userobj.verified:
         raise PermissionDenied()  # Only verified individuals can get into group chat
