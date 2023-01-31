@@ -19,7 +19,7 @@ from events.models import Event
 from notification.models import Notification
 from users.models import Profile
 
-from .forms import CommentForm, PostFormset  # noqa: F401
+from .forms import CommentForm  # noqa: F401
 from .models import Comment, Post
 from .utils import is_user_verified  # noqa: F401
 
