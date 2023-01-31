@@ -226,3 +226,11 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         # FRIENDS END
 
         return context
+
+    def render_to_response(self, context):
+        userobj: Profile = Profile.objects.get(id=self.request.user.id)
+
+        if not userobj.verified and self.request.user != self.get_object().user:
+            return redirect("profile")
+
+        return super(ProfileListView, self).render_to_response(context)

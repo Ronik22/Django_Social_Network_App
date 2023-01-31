@@ -43,6 +43,10 @@ def first(request) -> HttpResponse:
 def posts_of_following_profiles(request) -> HttpResponse:
 
     profile: Profile = Profile.objects.get(user=request.user)
+
+    if not profile.verified:
+        return redirect("profile")
+
     users: list[User] = [user for user in profile.following.all()]
     posts: list[Post] = []
     qs: str = None
