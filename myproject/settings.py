@@ -92,6 +92,7 @@ INSTALLED_APPS: list[str] = [
     "django.contrib.humanize",
     "bootstrap_datepicker_plus",
     "django_tables2",
+    "imagekit",
     "ckeditor",
     "allauth",
     "allauth.account",
@@ -249,6 +250,7 @@ EMAIL_TEMPLATE_ROOT: str = os.path.join(BASE_DIR, "email_templates")
 
 MEDIA_ROOT: str = os.path.join(BASE_DIR, "media")
 MEDIA_URL: str = "/media/"
+CKEDITOR_UPLOAD_PATH: str = os.path.join(MEDIA_ROOT, "uploads")
 
 CRISPY_TEMPLATE_PACK: str = "bootstrap4"
 
