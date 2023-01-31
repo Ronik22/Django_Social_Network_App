@@ -233,4 +233,4 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         if not userobj.verified and self.request.user != self.get_object().user:
             return redirect("profile")
 
-        return super(ProfileListView, self).render_to_response(context)
+        return super(ProfileDetailView, self).render_to_response(context)

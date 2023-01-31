@@ -224,7 +224,7 @@ class UserPostListView(LoginRequiredMixin, ListView):
         if not userobj.verified:
             return redirect("profile")
 
-        return super(PostListView, self).render_to_response(context)
+        return super(UserPostListView, self).render_to_response(context)
 
 
 """ Post detail view """
@@ -334,7 +334,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         if not userobj.verified:
             return redirect("profile")
 
-        return super(PostListView, self).render_to_response(context)
+        return super(PostCreateView, self).render_to_response(context)
 
 
 """ Update post """
@@ -360,7 +360,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if not userobj.verified:
             return redirect("profile")
 
-        return super(PostListView, self).render_to_response(context)
+        return super(PostUpdateView, self).render_to_response(context)
 
 
 """ Delete post """
@@ -382,7 +382,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if not userobj.verified:
             return redirect("profile")
 
-        return super(PostListView, self).render_to_response(context)
+        return super(PostDeleteView, self).render_to_response(context)
 
 
 """ About page """
