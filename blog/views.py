@@ -19,7 +19,7 @@ from events.models import Event
 from notification.models import Notification
 from users.models import Profile
 
-from .forms import CommentForm
+from .forms import CommentForm, PostFormset  # noqa: F401
 from .models import Comment, Post
 from .utils import is_user_verified  # noqa: F401
 
@@ -214,12 +214,24 @@ class UserPostListView(LoginRequiredMixin, ListView):
         user: User = get_object_or_404(User, username=self.kwargs.get("username"))
         return Post.objects.filter(author=user).order_by("-date_posted")
 
+    def render_to_response(self, context):
+        userobj: Profile = Profile.objects.get(id=self.request.user.id)
+
+        if not userobj.verified:
+            return redirect("profile")
+
+        return super(PostListView, self).render_to_response(context)
+
 
 """ Post detail view """
 
 
 @login_required
 def PostDetailView(request, pk) -> Union[JsonResponse, HttpResponse]:
+    userobj: Profile = Profile.objects.get(id=request.user.id)
+
+    if not userobj.verified:
+        return redirect("profile")
 
     stuff: Post = get_object_or_404(Post, id=pk)
     total_likes: int = stuff.total_likes()
@@ -312,6 +324,14 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+    def render_to_response(self, context):
+        userobj: Profile = Profile.objects.get(id=self.request.user.id)
+
+        if not userobj.verified:
+            return redirect("profile")
+
+        return super(PostListView, self).render_to_response(context)
+
 
 """ Update post """
 
@@ -330,6 +350,14 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             return True
         return False
 
+    def render_to_response(self, context):
+        userobj: Profile = Profile.objects.get(id=self.request.user.id)
+
+        if not userobj.verified:
+            return redirect("profile")
+
+        return super(PostListView, self).render_to_response(context)
+
 
 """ Delete post """
 
@@ -344,6 +372,14 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False
 
+    def render_to_response(self, context):
+        userobj: Profile = Profile.objects.get(id=self.request.user.id)
+
+        if not userobj.verified:
+            return redirect("profile")
+
+        return super(PostListView, self).render_to_response(context)
+
 
 """ About page """
 
@@ -357,6 +393,11 @@ def about(request) -> HttpResponse:
 
 @login_required
 def search(request) -> HttpResponse:
+    userobj: Profile = Profile.objects.get(id=request.user.id)
+
+    if not userobj.verified:
+        return redirect("profile")
+
     query = request.GET["query"]
     query_results = {}
     if len(query) >= 150 or len(query) < 1:
@@ -385,6 +426,11 @@ def search(request) -> HttpResponse:
 
 @login_required
 def AllLikeView(request) -> HttpResponse:
+    userobj: Profile = Profile.objects.get(id=request.user.id)
+
+    if not userobj.verified:
+        return redirect("profile")
+
     user = request.user
     liked_posts = user.blogpost.all()
     context: dict[str, Any] = {"liked_posts": liked_posts}
@@ -396,6 +442,11 @@ def AllLikeView(request) -> HttpResponse:
 
 @login_required
 def AllSaveView(request) -> HttpResponse:
+    userobj: Profile = Profile.objects.get(id=request.user.id)
+
+    if not userobj.verified:
+        return redirect("profile")
+
     user = request.user
     saved_posts = user.blogsave.all()
     context: dict[str, Any] = {"saved_posts": saved_posts}

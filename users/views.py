@@ -142,6 +142,14 @@ class ProfileListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return Profile.objects.all().exclude(user=self.request.user)
 
+    def render_to_response(self, context):
+        userobj: Profile = Profile.objects.get(id=self.request.user.id)
+
+        if not userobj.verified:
+            return redirect("profile")
+
+        return super(ProfileListView, self).render_to_response(context)
+
 
 """ User profile details view """
 
