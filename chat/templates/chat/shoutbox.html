@@ -13,7 +13,7 @@
         <div id="chat-box" class="chat-text-add py-5 px-4 chat-box bg-white">
             <!-- OLD CHATS ARE FETCHED FROM DATABASE AND NEW ONES ARE APPENDED BELOW -->
             {% for shout in old_shouts %}
-                {% if shout.author != request.user %}
+                {% if shout.author != user %}
                     <!-- Sender Message-->
                     <div class="media w-75 mb-3">
 
@@ -26,7 +26,7 @@
                         </div>
                     </div>
                 
-                {% elif shout.author == request.user %}
+                {% elif shout.author == user %}
 
                     <!-- Reciever Message-->
                     <div class="media w-75 ml-auto mb-3">
