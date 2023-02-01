@@ -336,7 +336,9 @@ def viewparticipant(request, uid="", eid=""):
     if not uid:
         uid = request.user.id
 
-    if not request.user.verified:
+    userobj: Profile = Profile.objects.get(id=request.user.id)
+
+    if not userobj.verified:
         return redirect("profile")
 
     event: Event = Event.objects.get(event_id=eid)
