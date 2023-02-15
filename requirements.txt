@@ -11,7 +11,7 @@ constantly==15.1.0
 cryptography==3.4.7
 daphne==3.0.2
 defusedxml==0.7.1
-Django==4.0.7
+Django==4.1.7
 django-allauth==0.45.0
 django-ckeditor==6.1.0
 django-cleanup==5.2.0
