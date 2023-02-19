@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 import os
 from pathlib import Path
-from typing import Union
+from typing import List, Tuple, Union
 
 from django.contrib.messages import constants as messages
 from dotenv import load_dotenv
@@ -33,6 +33,10 @@ INTERNAL_IPS = [
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR: Path = Path(__file__).resolve().parent.parent
+
+ADMINS: List[Tuple[str, str]] = [
+    ("Andy", "bubbaandy89@gmail.com"),
+]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -92,7 +96,9 @@ INSTALLED_APPS: list[str] = [
     "django.contrib.humanize",
     "bootstrap_datepicker_plus",
     "django_tables2",
+    "thumbnails",
     "imagekit",
+    "protected_media.apps.ProtectedMediaConfig",
     "ckeditor",
     "allauth",
     "allauth.account",
@@ -177,6 +183,52 @@ AUTHENTICATION_BACKENDS: list[str] = [
 
 WSGI_APPLICATION: str = "myproject.wsgi.application"
 
+# Image Configs
+PROTECTED_MEDIA_ROOT: str = f"{BASE_DIR}/protected/"
+PROTECTED_MEDIA_URL: str = "/protected"
+# PROTECTED_MEDIA_SERVER: str = "nginx"  # Defaults to "django", doesnt work when set as nginx
+PROTECTED_MEDIA_LOCATION_PREFIX: str = "/internal/"  # Prefix used in nginx config
+PROTECTED_MEDIA_AS_DOWNLOADS = False
+
+THUMBNAILS = {
+    "METADATA": {
+        "BACKEND": "thumbnails.backends.metadata.DatabaseBackend",
+    },
+    "STORAGE": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        # You can also use Amazon S3 or any other Django storage backends
+    },
+    "SIZES": {
+        "small": {
+            "PROCESSORS": [
+                {"PATH": "thumbnails.processors.resize", "width": 80, "height": 80},
+                {"PATH": "thumbnails.processors.crop", "width": 80, "height": 80},
+            ],
+            "POST_PROCESSORS": [
+                {
+                    "PATH": "thumbnails.post_processors.optimize",
+                    "png_command": 'optipng -force -o7 "%(filename)s"',
+                    "jpg_command": 'jpegoptim -f --strip-all "%(filename)s"',
+                },
+            ],
+        },
+        "large": {
+            "PROCESSORS": [
+                {"PATH": "thumbnails.processors.resize", "width": 200, "height": 200},
+                {"PATH": "thumbnails.processors.flip", "direction": "horizontal"},
+            ],
+        },
+        "watermarked": {
+            "PROCESSORS": [
+                {"PATH": "thumbnails.processors.resize", "width": 20, "height": 20},
+                # Only supports PNG. File must be of the same size with thumbnail
+                # (20 x 20 in this case)
+                {"PATH": "thumbnails.processors.add_watermark", "watermark_path": "watermark.png"},
+            ],
+        },
+    },
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -241,8 +293,10 @@ STATICFILES_FINDERS: tuple[str] = (
 )
 
 STATICFILES_DIRS: list[str] = [
-    "/web/dsn/blog/static",
+    "static",
 ]
+
+STATIC_ROOT: str = "/web/dsn/static"
 
 STATIC_URL: str = "static/"
 
