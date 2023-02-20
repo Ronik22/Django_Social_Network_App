@@ -1,4 +1,7 @@
+import os
+
 from django import forms
+from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from PIL import Image
@@ -71,6 +74,7 @@ class ProfileUpdateForm(forms.ModelForm):
             image = Image.open(img.image)
             cropped_image = image.crop((x, y, w + x, h + y))
             resized_image = cropped_image.resize((300, 300), Image.ANTIALIAS)
-            resized_image.save(img.image.path)
+            if img.image.path != os.path.join(settings.MEDIA_ROOT, "default.jpg"):
+                resized_image.save(img.image.path)
 
         return img
