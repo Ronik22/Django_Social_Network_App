@@ -22,7 +22,7 @@ from notification.models import Notification
 from users.models import Profile
 
 from .forms import CommentForm, CreateUpdatePostForm
-from .models import Comment, Image, Post
+from .models import Comment, Images, Post
 
 
 def handler500(request, *args, **argv) -> HttpResponse:
@@ -342,7 +342,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
             post.save()
             for f in files:
                 logging.debug(f"Creating image {f}")
-                img: Image = Image(image=f, post=post)
+                img: Images = Images(image=f, post=post)
                 img.save()
 
             return self.form_valid(form)
@@ -385,7 +385,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             post.save()
             for f in files:
                 logging.debug(f"Creating image {f}")
-                img: Image = Image(image=f, post=post)
+                img: Images = Images(image=f, post=post)
                 img.save()
 
             return self.form_valid(form)

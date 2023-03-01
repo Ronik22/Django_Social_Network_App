@@ -2,7 +2,7 @@ import logging
 
 from django import forms
 
-from .models import Comment, Image, Post  # noqa: F401
+from .models import Comment, Images, Post  # noqa: F401
 
 
 class CreateUpdatePostForm(forms.ModelForm):
@@ -19,7 +19,7 @@ class CreateUpdatePostForm(forms.ModelForm):
         images = request.FILES.getlist("images")
         if form.is_valid():
             for image in images:
-                Image.objects.create(post=form.instance.post.pk, image=image)
+                Images.objects.create(post=form.instance.post.pk, image=image)
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
