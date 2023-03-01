@@ -1,0 +1,6 @@
+{% if post.images %}
+    <hr color=#F800B1>
+    {% for image in post.images.all %}
+    <p class="article-content"><a href={{image.image.url}}><img src={{ image.image.url }} class="img-fluid"></a></p>
+    {% endfor %}
+{% endif %}

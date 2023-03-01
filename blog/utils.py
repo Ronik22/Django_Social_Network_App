@@ -17,3 +17,9 @@ def is_ajax(request) -> bool:
 def is_user_verified(request):
     userobj = Profile.objects.get(id=request.user.id)
     return userobj.verified
+
+
+def handle_uploaded_file(filedata, dest_filepath: str):
+    with open(dest_filepath, "wb+") as destination:
+        for chunk in filedata.chunks():
+            destination.write(chunk)

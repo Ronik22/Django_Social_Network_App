@@ -15,10 +15,10 @@ Including another URLconf
 """
 
 from django.conf import settings
-from django.conf.urls.static import static
+from django.conf.urls.static import static  # noqa: F401
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns  # noqa: F401
 from django.urls import include, path, re_path
 from django.views.generic.base import RedirectView
 
@@ -74,8 +74,10 @@ urlpatterns = [
         include("events.urls", namespace="event_manager_home"),
     ),
     re_path(r"^favicon\.ico$", favicon_view),
+    path("protected/", include("protected_media.urls")),
 ]
 
 if settings.DEBUG:
-    urlpatterns += staticfiles_urlpatterns()
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # urlpatterns += staticfiles_urlpatterns()
+    # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    pass

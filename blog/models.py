@@ -6,13 +6,22 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
+from protected_media.models import ProtectedImageField
+from thumbnails.fields import ImageField
 
 
 def get_image_filename(instance, filename) -> str:
-    title = instance.title
+    try:
+        title = instance.title
+    except Exception:
+        title = instance.post.title
     slug = slugify(title)
     logging.debug(f"Uploading file {slug}-{filename}")
     return f"post_images/{slug}-{filename}"
+
+
+class ImageModelField(ImageField, ProtectedImageField):
+    pass
 
 
 """ Post model """
@@ -45,6 +54,21 @@ class Post(models.Model):
 
     def get_absolute_url(self) -> str:
         return reverse("post-detail", kwargs={"pk": self.pk})
+
+
+class Image(models.Model):
+    post: models.ForeignKey = models.ForeignKey(
+        Post, related_name="images", on_delete=models.CASCADE
+    )
+    image: ImageModelField = ImageModelField(
+        upload_to=get_image_filename,
+        null=True,
+        blank=True,
+        pregenerated_sizes=["small", "large"],
+    )
+
+    def __str__(self) -> str:
+        return self.post.title
 
 
 """ Comment model """

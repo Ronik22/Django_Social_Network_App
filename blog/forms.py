@@ -1,7 +1,28 @@
-from django import forms
-from django.forms import widgets  # noqa: F401
+import logging
 
-from .models import Comment, Post  # noqa: F401
+from django import forms
+
+from .models import Comment, Image, Post  # noqa: F401
+
+
+class CreateUpdatePostForm(forms.ModelForm):
+    images = forms.ImageField(widget=forms.FileInput(attrs={"multiple": True}), required=False)
+
+    class Meta:
+        model = Post
+        exclude = ["date_posted", "date_updated", "author", "likes", "saves", "image"]
+
+    def post(self, request, *args, **kwargs):
+        logging.debug(f"{dir(request)}")
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        images = request.FILES.getlist("images")
+        if form.is_valid():
+            for image in images:
+                Image.objects.create(post=form.instance.post.pk, image=image)
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
 
 class CommentForm(forms.ModelForm):

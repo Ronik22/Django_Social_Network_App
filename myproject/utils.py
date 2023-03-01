@@ -52,3 +52,16 @@ def new_user_created_email(user_email: str, username: str, profile_url: str) -> 
         recipient_list=EMAIL_ADMIN_RECIPIENTS,
         html_message=html_message,
     )
+
+
+def balance_user_profiles():
+    from django.contrib.auth.models import User
+
+    from users.models import Profile
+
+    for user in User.objects.all():
+        try:
+            Profile.objects.get(user=user)
+        except Profile.DoesNotExist:
+            print(f"{user.username} is missing a profile")
+            user.delete()

@@ -9,8 +9,10 @@ from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Model, Q
 from django.db.models.manager import BaseManager
+from django.forms import BaseModelForm
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
@@ -19,9 +21,15 @@ from events.models import Event
 from notification.models import Notification
 from users.models import Profile
 
-from .forms import CommentForm  # noqa: F401
-from .models import Comment, Post
-from .utils import is_user_verified  # noqa: F401
+from .forms import CommentForm, CreateUpdatePostForm
+from .models import Comment, Image, Post
+
+
+def handler500(request, *args, **argv) -> HttpResponse:
+    response: HttpResponse = render("blog/500.html", {}, context_instance=RequestContext(request))
+    response.status_code = 500
+    return response
+
 
 """ Home page with all posts """
 
@@ -322,11 +330,24 @@ def PostDetailView(request, pk) -> Union[JsonResponse, HttpResponse]:
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields: list[str] = ["title", "content", "image"]
+    form_class = CreateUpdatePostForm
 
-    def form_valid(self, form) -> HttpResponse:
+    def post(self, request, *args, **kwargs) -> HttpResponse:
+        form_class = self.get_form_class()
+        form: BaseModelForm = self.get_form(form_class)
+        files = request.FILES.getlist("images")
         form.instance.author = self.request.user
-        return super().form_valid(form)
+        post: Post = form.instance
+        if form.is_valid():
+            post.save()
+            for f in files:
+                logging.debug(f"Creating image {f}")
+                img: Image = Image(image=f, post=post)
+                img.save()
+
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
     def render_to_response(self, context):
         userobj: Profile = Profile.objects.get(id=self.request.user.id)
@@ -342,7 +363,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields: list[str] = ["title", "content", "image"]
+    form_class = CreateUpdatePostForm
 
     def form_valid(self, form) -> HttpResponse:
         form.instance.author = self.request.user
@@ -353,6 +374,23 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if self.request.user == post.author:
             return True
         return False
+
+    def post(self, request, *args, **kwargs) -> HttpResponse:
+        form_class = self.get_form_class()
+        form: BaseModelForm = self.get_form(form_class)
+        files = request.FILES.getlist("images")
+        form.instance.author = self.request.user
+        post: Post = form.instance
+        if form.is_valid():
+            post.save()
+            for f in files:
+                logging.debug(f"Creating image {f}")
+                img: Image = Image(image=f, post=post)
+                img.save()
+
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
     def render_to_response(self, context):
         userobj: Profile = Profile.objects.get(id=self.request.user.id)

@@ -25,10 +25,15 @@
       <hr color=#F800B1>
       
       <p class="article-content">{{ post.content|safe }}</p>
-      {% if post.image %}
-        <hr color=#F800B1>
-        <p class="article-content"><a href={{post.image.url}}><img src={{ post.image.url }} class="img-fluid"></a></p>
-      {% endif %}
+        {% if post.image %}
+          <p class="article-content"><a href={{post.image.url}}><img src={{ post.image.url }} class="img-fluid"></a></p>
+        {% endif %}
+        {% if post.images %}
+          <hr color=#F800B1>
+          {% for image in post.images.all %}
+            <p class="article-content"><a href={{image.image.url}}><img src={{ image.image.thumbnails.small.url }} class="img-fluid"></a></p>
+          {% endfor %}
+        {% endif %}
 
       
       <div id="like-section-{{post.id}}">
