@@ -93,6 +93,11 @@
                 
               </a>                  
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink3">
+                {% if user.is_staff %}
+                <a class="dropdown-item" href="{% url 'admin:index' %}">
+                  <span>Admin Portal</span>
+                </a>
+                {% endif %}
                 <a class="dropdown-item" href="{% url 'profile-detail-view' user.id %}"><i class="far fa-user"></i>&nbsp;&nbsp;Profile</a>
                 <a class="dropdown-item" href="{% url 'public-profile' user %}"><i class="far fa-eye"></i>&nbsp;&nbsp;Public-Profile</a>
                 <a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-sliders-h"></i>&nbsp;&nbsp;Settings</a>
