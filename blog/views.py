@@ -10,13 +10,13 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Model, Q
 from django.db.models.manager import BaseManager
 from django.forms import BaseModelForm
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from blog.utils import is_ajax
+from blog.utils import can_user_see_images, is_ajax
 from events.models import Event
 from notification.models import Notification
 from users.models import Profile
@@ -25,8 +25,10 @@ from .forms import CommentForm, CreateUpdatePostForm
 from .models import Comment, Images, Post
 
 
-def handler500(request, *args, **argv) -> HttpResponse:
-    response: HttpResponse = render("blog/500.html", {}, context_instance=RequestContext(request))
+def handler500(request: HttpRequest, *args, **argv) -> HttpResponse:
+    response: HttpResponse = render(
+        "blog/500.html", {}, context_instance=RequestContext(request)
+    )
     response.status_code = 500
     return response
 
@@ -49,7 +51,6 @@ def first(request) -> HttpResponse:
 
 @login_required
 def posts_of_following_profiles(request) -> HttpResponse:
-
     profile: Profile = Profile.objects.get(user=request.user)
 
     if not profile.verified:
@@ -84,7 +85,6 @@ def posts_of_following_profiles(request) -> HttpResponse:
 
 @login_required
 def LikeView(request) -> Optional[JsonResponse]:
-
     post: Post = get_object_or_404(Post, id=request.POST.get("id"))
     liked: bool = False
     if post.likes.filter(id=request.user.id).exists():
@@ -97,7 +97,9 @@ def LikeView(request) -> Optional[JsonResponse]:
     else:
         post.likes.add(request.user)
         liked = True
-        notify = Notification(post=post, sender=request.user, user=post.author, notification_type=1)
+        notify = Notification(
+            post=post, sender=request.user, user=post.author, notification_type=1
+        )
         notify.save()
 
     context: dict[str, Any] = {
@@ -116,7 +118,6 @@ def LikeView(request) -> Optional[JsonResponse]:
 
 @login_required
 def SaveView(request) -> Optional[JsonResponse]:
-
     post: Post = get_object_or_404(Post, id=request.POST.get("id"))
     saved: bool = False
     if post.saves.filter(id=request.user.id).exists():
@@ -210,6 +211,8 @@ class PostListView(LoginRequiredMixin, ListView):
         if not userobj.verified:
             return redirect("profile")
 
+        context["render_images"] = can_user_see_images(userobj)
+
         return super(PostListView, self).render_to_response(context)
 
 
@@ -231,6 +234,8 @@ class UserPostListView(LoginRequiredMixin, ListView):
 
         if not userobj.verified:
             return redirect("profile")
+
+        context["render_images"] = can_user_see_images(userobj)
 
         return super(UserPostListView, self).render_to_response(context)
 
@@ -265,7 +270,11 @@ def PostDetailView(request, pk) -> Union[JsonResponse, HttpResponse]:
                 is_reply = True
 
             comment: Comment = Comment.objects.create(
-                name=request.user, post=stuff, body=form, reply=comment_qs, is_reply=is_reply
+                name=request.user,
+                post=stuff,
+                body=form,
+                reply=comment_qs,
+                is_reply=is_reply,
             )
             comment.save()
             if reply_id:
@@ -317,6 +326,8 @@ def PostDetailView(request, pk) -> Union[JsonResponse, HttpResponse]:
 
     context["post"] = stuff
     context["comments"] = total_comments
+
+    context["render_images"] = can_user_see_images(userobj)
 
     if is_ajax(request=request):
         html: str = render_to_string("blog/comments.html", context, request=request)
