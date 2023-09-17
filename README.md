@@ -33,6 +33,7 @@ https://user-images.githubusercontent.com/64803043/118666705-02735600-b811-11eb-
 ## Installation
 
 ```bash
+    $ sudo apt-get install build-essential autoconf libtool libffi-dev pkg-config python3-dev python3-setuptools
     $ python -m venv venv
     $ source venv/Scripts/activate
     (venv) pip install -r requirements.txt
