@@ -61,6 +61,9 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
         "file": {
             "level": "DEBUG",
             "class": "logging.FileHandler",
@@ -74,7 +77,9 @@ LOGGING = {
     },
     "loggers": {
         "root": {
-            "handlers": ["file"],
+            "handlers": [
+                "file",
+            ],
             "level": "DEBUG",
             "propagate": True,
         },
@@ -86,6 +91,11 @@ LOGGING = {
         },
     },
 }
+
+if DEBUG:
+    # make all loggers use the console.
+    for logger in LOGGING["loggers"]:
+        LOGGING["loggers"][logger]["handlers"].append("console")
 
 ALLOWED_HOSTS: list[str] = ["*"]
 
