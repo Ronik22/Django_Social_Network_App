@@ -41,6 +41,7 @@ https://user-images.githubusercontent.com/64803043/118666705-02735600-b811-11eb-
     (venv) python manage.py makemigrations
     (venv) python manage.py migrate
     (venv) python manage.py createsuperuser
+    (venv) python manage.py collectstatic
     (venv) python manage.py runserver
 ```
 
