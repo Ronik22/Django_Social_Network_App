@@ -9,12 +9,12 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
 import os
 from pathlib import Path
 from typing import List, Tuple, Union
 
 from django.contrib.messages import constants as messages
+from django.core.management.utils import get_random_secret_key
 from dotenv import load_dotenv
 
 # Loading ENV
@@ -32,7 +32,13 @@ INTERNAL_IPS = [
 ]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR: Path = Path(__file__).resolve().parent.parent
+BASE_DIR_OVERRIDE = os.environ.get("BASE_DIR_OVERRIDE", None)
+BASE_DIR: Path = (
+    Path(BASE_DIR_OVERRIDE) if BASE_DIR_OVERRIDE else Path(__file__).resolve().parent.parent
+)
+LOG_DIR: Path = BASE_DIR.joinpath(os.environ.get("LOGS_DIR_NAME", "logs"))
+# Make sure the dirs for logs exist
+LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 ADMINS: List[Tuple[str, str]] = [
     ("Andy", "bubbaandy89@gmail.com"),
@@ -42,10 +48,14 @@ ADMINS: List[Tuple[str, str]] = [
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY: Union[str, None] = os.getenv("SECRET_KEY")
+SECRET_KEY: Union[str, None] = os.environ.get("SECRET_KEY", get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG: Union[str, None] = os.getenv("DEBUG")
+DEBUG: Union[str, None] = os.environ.get("DEBUG", "False")
+
+# Define log file locations
+DEBUG_LOG_FILE_PATH = LOG_DIR.joinpath(os.environ.get("DEBUG_LOG_FILE_NAME", "debug.log"))
+DAPHNE_LOG_FILE_PATH = LOG_DIR.joinpath(os.environ.get("DAPHNE_LOG_FILE_NAME", "daphne.log"))
 
 LOGGING = {
     "version": 1,
@@ -54,12 +64,12 @@ LOGGING = {
         "file": {
             "level": "DEBUG",
             "class": "logging.FileHandler",
-            "filename": "/web/dsn/logs/debug.log",
+            "filename": DEBUG_LOG_FILE_PATH,
         },
         "daphne_file": {
             "level": "DEBUG",
             "class": "logging.FileHandler",
-            "filename": "/web/dsn/logs/daphne_debug.log",
+            "filename": DAPHNE_LOG_FILE_PATH,
         },
     },
     "loggers": {
@@ -158,9 +168,9 @@ TEMPLATES: list[dict[str, Union[bool, str, dict[str, list[str]]]]] = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
-            os.path.join(BASE_DIR, "users/templates"),
-            os.path.join(BASE_DIR, "events/templates"),
-            os.path.join(BASE_DIR, "notifications/templates"),
+            BASE_DIR.joinpath("users/templates"),
+            BASE_DIR.joinpath("events/templates"),
+            BASE_DIR.joinpath("notifications/templates"),
         ],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -184,7 +194,7 @@ AUTHENTICATION_BACKENDS: list[str] = [
 WSGI_APPLICATION: str = "myproject.wsgi.application"
 
 # Image Configs
-PROTECTED_MEDIA_ROOT: str = f"{BASE_DIR}/protected/"
+PROTECTED_MEDIA_ROOT: str = BASE_DIR.joinpath("protected/")
 PROTECTED_MEDIA_URL: str = "/protected"
 # PROTECTED_MEDIA_SERVER: str = "nginx"  # Defaults to "django", doesnt work when set as nginx
 PROTECTED_MEDIA_LOCATION_PREFIX: str = "/internal/"  # Prefix used in nginx config
@@ -223,7 +233,10 @@ THUMBNAILS = {
                 {"PATH": "thumbnails.processors.resize", "width": 20, "height": 20},
                 # Only supports PNG. File must be of the same size with thumbnail
                 # (20 x 20 in this case)
-                {"PATH": "thumbnails.processors.add_watermark", "watermark_path": "watermark.png"},
+                {
+                    "PATH": "thumbnails.processors.add_watermark",
+                    "watermark_path": "watermark.png",
+                },
             ],
         },
     },
@@ -296,15 +309,15 @@ STATICFILES_DIRS: list[str] = [
     "static",
 ]
 
-STATIC_ROOT: str = "/web/dsn/static"
+STATIC_ROOT: Path = BASE_DIR.joinpath("static")
 
 STATIC_URL: str = "static/"
 
-EMAIL_TEMPLATE_ROOT: str = os.path.join(BASE_DIR, "email_templates")
+EMAIL_TEMPLATE_ROOT: Path = BASE_DIR.joinpath("email_templates")
 
-MEDIA_ROOT: str = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT: Path = BASE_DIR.joinpath("media")
 MEDIA_URL: str = "/media/"
-CKEDITOR_UPLOAD_PATH: str = os.path.join(MEDIA_ROOT, "uploads")
+CKEDITOR_UPLOAD_PATH: Path = MEDIA_ROOT.joinpath("uploads")
 
 CRISPY_TEMPLATE_PACK: str = "bootstrap4"
 
@@ -319,13 +332,13 @@ CKEDITOR_CONFIGS: dict[str, dict[str, str]] = {
 
 EMAIL_BACKEND: str = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST: str = "smtp.gmail.com"
-EMAIL_PORT: str = os.getenv("EMAIL_TLS_PORT")
+EMAIL_PORT: str = os.environ.get("EMAIL_TLS_PORT")
 EMAIL_USE_TLS: str = True
-DEFAULT_FROM_EMAIL: str = "bubbaandy89@gmail.com"
-EMAIL_HOST_USER: str = os.getenv("EMAIL_USER")  # environment variable containing username
-EMAIL_HOST_PASSWORD: str = os.getenv("EMAIL_PASS")  # environment variable containing password
+DEFAULT_FROM_EMAIL: str = "admin@django-social.com"
+EMAIL_HOST_USER: str = os.environ.get("EMAIL_USER")  # environment variable containing username
+EMAIL_HOST_PASSWORD: str = os.environ.get("EMAIL_PASS")  # environment variable containing password
 
-GOOGLE_RECAPTCHA_SECRET_KEY: str = os.getenv("GOOGLE_RECAPTCHA_SECRET_KEY")
+GOOGLE_RECAPTCHA_SECRET_KEY: str = os.environ.get("GOOGLE_RECAPTCHA_SECRET_KEY")
 
 MESSAGE_TAGS: dict[int, str] = {
     messages.DEBUG: "alert-secondary",
