@@ -16,7 +16,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from blog.utils import can_user_see_images, is_ajax
+from blog.utils import can_user_see_images, is_ajax, is_user_verified
 from events.models import Event
 from notification.models import Notification
 from users.models import Profile
@@ -26,9 +26,7 @@ from .models import Comment, Images, Post
 
 
 def handler500(request: HttpRequest, *args, **argv) -> HttpResponse:
-    response: HttpResponse = render(
-        "blog/500.html", {}, context_instance=RequestContext(request)
-    )
+    response: HttpResponse = render("blog/500.html", {}, context_instance=RequestContext(request))
     response.status_code = 500
     return response
 
@@ -40,7 +38,7 @@ def first(request) -> HttpResponse:
     context: dict[str, BaseManager[Post]] = {"posts": Post.objects.all()}
     if request.user.is_authenticated:
         userobj = Profile.objects.get(id=request.user.id)
-        if not userobj.verified:
+        if not is_user_verified(userobj):
             return redirect("profile")
 
     return render(request, "blog/first.html", context)
@@ -53,7 +51,7 @@ def first(request) -> HttpResponse:
 def posts_of_following_profiles(request) -> HttpResponse:
     profile: Profile = Profile.objects.get(user=request.user)
 
-    if not profile.verified:
+    if not is_user_verified(profile):
         return redirect("profile")
 
     users: list[User] = [user for user in profile.following.all()]
@@ -97,9 +95,7 @@ def LikeView(request) -> Optional[JsonResponse]:
     else:
         post.likes.add(request.user)
         liked = True
-        notify = Notification(
-            post=post, sender=request.user, user=post.author, notification_type=1
-        )
+        notify = Notification(post=post, sender=request.user, user=post.author, notification_type=1)
         notify.save()
 
     context: dict[str, Any] = {
@@ -208,7 +204,7 @@ class PostListView(LoginRequiredMixin, ListView):
     def render_to_response(self, context):
         userobj: Profile = Profile.objects.get(id=self.request.user.id)
 
-        if not userobj.verified:
+        if not is_user_verified(userobj):
             return redirect("profile")
 
         context["render_images"] = can_user_see_images(userobj)
@@ -232,7 +228,7 @@ class UserPostListView(LoginRequiredMixin, ListView):
     def render_to_response(self, context):
         userobj: Profile = Profile.objects.get(id=self.request.user.id)
 
-        if not userobj.verified:
+        if not is_user_verified(userobj):
             return redirect("profile")
 
         context["render_images"] = can_user_see_images(userobj)
@@ -247,7 +243,7 @@ class UserPostListView(LoginRequiredMixin, ListView):
 def PostDetailView(request, pk) -> Union[JsonResponse, HttpResponse]:
     userobj: Profile = Profile.objects.get(id=request.user.id)
 
-    if not userobj.verified:
+    if not is_user_verified(userobj):
         return redirect("profile")
 
     stuff: Post = get_object_or_404(Post, id=pk)
@@ -363,7 +359,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def render_to_response(self, context):
         userobj: Profile = Profile.objects.get(id=self.request.user.id)
 
-        if not userobj.verified:
+        if not is_user_verified(userobj):
             return redirect("profile")
 
         return super(PostCreateView, self).render_to_response(context)
@@ -406,7 +402,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def render_to_response(self, context):
         userobj: Profile = Profile.objects.get(id=self.request.user.id)
 
-        if not userobj.verified:
+        if not is_user_verified(userobj):
             return redirect("profile")
 
         return super(PostUpdateView, self).render_to_response(context)
@@ -428,7 +424,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def render_to_response(self, context):
         userobj: Profile = Profile.objects.get(id=self.request.user.id)
 
-        if not userobj.verified:
+        if not is_user_verified(userobj):
             return redirect("profile")
 
         return super(PostDeleteView, self).render_to_response(context)
@@ -448,7 +444,7 @@ def about(request) -> HttpResponse:
 def search(request) -> HttpResponse:
     userobj: Profile = Profile.objects.get(id=request.user.id)
 
-    if not userobj.verified:
+    if not is_user_verified(userobj):
         return redirect("profile")
 
     query = request.GET["query"]
@@ -481,7 +477,7 @@ def search(request) -> HttpResponse:
 def AllLikeView(request) -> HttpResponse:
     userobj: Profile = Profile.objects.get(id=request.user.id)
 
-    if not userobj.verified:
+    if not is_user_verified(userobj):
         return redirect("profile")
 
     user = request.user
@@ -497,7 +493,7 @@ def AllLikeView(request) -> HttpResponse:
 def AllSaveView(request) -> HttpResponse:
     userobj: Profile = Profile.objects.get(id=request.user.id)
 
-    if not userobj.verified:
+    if not is_user_verified(userobj):
         return redirect("profile")
 
     user = request.user

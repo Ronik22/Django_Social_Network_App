@@ -17,16 +17,18 @@ def is_ajax(request: HttpRequest) -> bool:
     return request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest"
 
 
-def is_user_verified(request) -> bool:
-    userobj: Profile = Profile.objects.get(id=request.user.id)
-    return userobj.verified
+def is_user_verified(userobj: Profile) -> bool:
+    if userobj.verified or userobj.user.is_staff:
+        return True
+    else:
+        return False
 
 
 def can_user_see_images(userobj: Profile) -> bool:
     if (
         userobj.relationship_status in RELATIONSHIP_BLOCKLIST
         and not userobj.relationship_status_override
-    ):
+    ) or not is_user_verified(userobj):
         return False
     else:
         return True

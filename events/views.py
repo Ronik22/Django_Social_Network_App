@@ -11,7 +11,7 @@ from django.template import Context, Template  # noqa: F401
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-from blog.utils import is_ajax
+from blog.utils import is_ajax, is_user_verified
 from events.forms import NewEventForm
 from events.models import Event, Participant
 from events.tables import EventsTable
@@ -338,7 +338,7 @@ def viewparticipant(request, uid="", eid=""):
 
     userobj: Profile = Profile.objects.get(id=request.user.id)
 
-    if not userobj.verified:
+    if not is_user_verified(userobj):
         return redirect("profile")
 
     event: Event = Event.objects.get(event_id=eid)
@@ -381,7 +381,7 @@ def ParticipateView(request) -> Optional[JsonResponse]:
     event: Event = get_object_or_404(Event, pk=event_pk)
     participants = event.event_participants.all()
 
-    if not userobj.verified:
+    if not is_user_verified(userobj):
         raise PermissionDenied()
 
     participating: bool = False

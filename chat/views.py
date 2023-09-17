@@ -14,6 +14,7 @@ from django.http import (
 )
 from django.shortcuts import redirect, render
 
+from blog.utils import is_user_verified
 from chat.models import Chat, Room, Shout, ShoutBox
 from friend.models import FriendList
 from users.models import Profile
@@ -109,7 +110,7 @@ def shoutbox(
 
     if shoutbox.shoutbox_name.lower() == "admin" and not request.user.is_staff:
         raise PermissionDenied()  # Only Admins/staff in admin chat
-    elif not userobj.verified:
+    elif not is_user_verified(userobj):
         raise PermissionDenied()  # Only verified individuals can get into group chat
     else:
         if request.user not in shoutbox.participants.all():

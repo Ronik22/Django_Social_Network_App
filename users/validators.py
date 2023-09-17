@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from users.models import BlockList
 
 
-def validate_email(value):
+def validate_email(value) -> None:
     if User.objects.filter(email=value).exists():
         raise ValidationError(
             (f"{value} is already registered to an account."), params={"value": value}
