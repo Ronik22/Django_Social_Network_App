@@ -14,14 +14,6 @@ A social media web-application with Django.
 <li>Chats using websockets</li>
 <li>Video Calls</li>
 
-## Demo (Not up-to-date)
-
-
-https://user-images.githubusercontent.com/64803043/118666705-02735600-b811-11eb-80f9-445bbe6e55c9.mp4
-
-
-<a href="./demo/demo1.mp4">Video Link</a>
-
 ## Adding env variables
 
 - Add env variables to ".test.env" and rename it to ".env"
@@ -33,11 +25,10 @@ https://user-images.githubusercontent.com/64803043/118666705-02735600-b811-11eb-
 ## Installation
 
 ```bash
-    $ sudo apt-get install build-essential autoconf libtool libffi-dev pkg-config python3-dev python3-setuptools
+    $ sudo apt-get install build-essential autoconf libtool libffi-dev pkg-config python3-dev python3-setuptools python3-testresources
     $ python -m venv venv
-    $ source venv/Scripts/activate
+    $ source venv/bin/activate
     (venv) pip install -r requirements.txt
-    (venv) cd Django_Social_Network_App
     (venv) python manage.py makemigrations
     (venv) python manage.py migrate
     (venv) python manage.py createsuperuser
