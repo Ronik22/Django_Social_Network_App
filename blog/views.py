@@ -6,6 +6,7 @@ from typing import Any, Optional, Union
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
+from django.core.exceptions import SuspiciousOperation
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Model, Q
 from django.db.models.manager import BaseManager
@@ -37,7 +38,7 @@ def handler500(request: HttpRequest, *args, **argv) -> HttpResponse:
 def first(request) -> HttpResponse:
     context: dict[str, BaseManager[Post]] = {"posts": Post.objects.all()}
     if request.user.is_authenticated:
-        userobj = Profile.objects.get(id=request.user.id)
+        userobj: Profile = Profile.objects.get(id=request.user.id)
         if not is_user_verified(userobj):
             return redirect("profile")
 
@@ -144,7 +145,7 @@ def LikeCommentView(request) -> Optional[JsonResponse]:
     post_pk = request.POST.get("post_pk")
     logging.debug(f"{comment_pk=}")
     logging.debug(f"{post_pk=}")
-    post = Comment.objects.get(pk=comment_pk)
+    post: Comment = Comment.objects.get(pk=comment_pk)
     # post: Comment = get_object_or_404(Comment, pk=comment_pk)
     cliked: bool = False
     if post.likes.filter(id=request.user.id).exists():
@@ -350,7 +351,10 @@ class PostCreateView(LoginRequiredMixin, CreateView):
             for f in files:
                 logging.debug(f"Creating image {f}")
                 img: Images = Images(image=f, post=post)
-                img.save()
+                try:
+                    img.save()
+                except Exception as e:
+                    raise SuspiciousOperation("Image submission failed") from e
 
             return self.form_valid(form)
         else:
