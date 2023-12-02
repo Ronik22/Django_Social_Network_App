@@ -1,7 +1,7 @@
 agora-token-builder==1.0.0
 asgiref==3.7.2
 attrs==21.2.0
-autobahn==23.6.2
+autobahn
 Automat==20.2.0
 certifi==2022.12.7
 cffi==1.15.1
@@ -35,6 +35,8 @@ psycopg2-binary==2.9.7
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.20
+pydantic
+pydantic-core
 PyJWT==2.4.0
 pyOpenSSL==20.0.1
 python-dotenv==1.0.0
@@ -48,7 +50,7 @@ six==1.16.0
 sqlparse==0.4.2
 Twisted==22.4.0
 txaio==21.2.1
-typing-extensions==3.10.0.0
+typing-extensions
 tzdata==2022.1
 urllib3==1.26.6
 uvicorn
