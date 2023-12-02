@@ -315,10 +315,6 @@ STATICFILES_FINDERS: tuple[str] = (
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 )
 
-STATICFILES_DIRS: list[str] = [
-    "static",
-]
-
 STATIC_ROOT: Path = BASE_DIR.joinpath("static")
 
 STATIC_URL: str = "static/"
