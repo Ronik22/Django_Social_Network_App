@@ -26,7 +26,8 @@ from django.views.generic.base import RedirectView
 from users import views as user_views
 
 favicon_view = RedirectView.as_view(url="/static/favicon.ico", permanent=True)
-
+handler404 = "blog.views.handler404"
+handler500 = "blog.views.handler500"
 app_name = "myproject"
 
 urlpatterns = [
