@@ -57,7 +57,7 @@ def posts_of_following_profiles(request) -> HttpResponse:
 
     users: list[User] = [user for user in profile.following.all()]
     posts: list[Post] = []
-    qs: str = None
+    qs: Optional[str] = None
     for u in users:
         p: Profile = Profile.objects.get(user=u)
         p_posts = p.user.post_set.all()
