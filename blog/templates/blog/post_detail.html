@@ -18,7 +18,7 @@
             <p><small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small></p>
         </div>
     </div>
-    <hr>
+    <hr color=#F800B1>
     <h3 class="d-inline"><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h3>
     {% if post.author == user %}
         <div class="d-inline float-right">
@@ -28,18 +28,32 @@
     {% endif %} 
     
 
-    <hr>
+    <hr color=#F800B1>
     <p class="article-content">{{ post.content|safe }}</p>
+    {% if render_images %}
+        {% if post.image %}
+            {{ user.profile.relationship_status_override }}
+            <p class="article-content"><a href={{post.image.url}}><img src={{ post.image.url }} class="img-fluid"></a></p>
+        {% endif %}
+        {% if post.images %}
+            <hr color=#F800B1>
+            {% for image in post.images.all %}
+            <p class="article-content"><a href={{image.image.url}}><img src={{ image.image.thumbnails.small.url }} class="img-fluid"></a></p>
+            {% endfor %}
+        {% endif %}
+    {% else %}
+        <p class="article-content"><font color="red"><b>You do not have permission to view posted images.  Please contact an Admin to request permissions to view posted images</font></b></p>
+    {% endif %}
 </article>
 
-<div id="like-section">
+<div id="like-section-{{post.id}}">
     {% include 'blog/like_section.html' %}
 </div>
 
 
-<hr>
+<hr color=#F800B1>
 
-<div class="main-comment-section">
+<div class="main-comment-section-{{post.id}}">
     {% include 'blog/comments.html' %}
 </div>
 

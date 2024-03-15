@@ -1,0 +1,73 @@
+body,html{
+    width: 100%;
+    margin: 0;
+    background-color: wheat;
+}
+
+.signincard{
+    margin: 10vw 14vw 10vw 14vw;
+    background-color: white;
+    border-radius: 3%;
+}
+
+.maintitle{
+    font-size: 2.5vw;
+    font-weight: bold;
+    color: darkcyan;
+    font-family: 'Courgette', cursive;
+    padding: 2.5vw 3vw 4vw 2vw;
+    margin: 0;
+    text-align: center;
+} 
+
+.infield{
+    width:60%;
+    margin: 3vw 20% 3vw 20%;
+    font-size: 2vw;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 0.2vw solid gray;
+    font-family: 'Courgette', cursive;
+}
+
+.infield:focus{
+    outline: none;
+    border-bottom: 0.2vw solid darkblue;
+    transition: 1s;
+}
+
+.subbtn{
+    width:60%;
+    margin: 3vw 20% 3vw 20%;
+    font-size: 2vw;
+    border: 0.3vw solid blue;
+    border-radius: 0.3vw;
+    background-color: blue;
+    color: white;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.err{
+    text-align: center;
+    color:red;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 2vw;
+}
+
+.backbtn{
+    font-size: 2vw;
+    text-decoration: none;
+    color: blue;
+}
+
+.backdiv{
+    display: inline-block;
+    font-size: 2vw;
+    border-radius: 0.3vw;
+    margin: 3vw 20% 4vw 20%;
+    text-align: center;
+    padding: 0;
+    font-family: 'Courgette',cursive;
+    color: darkcyan;
+}

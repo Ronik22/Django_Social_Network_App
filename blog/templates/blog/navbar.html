@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-steel fixed-top">
+<nav class="navbar navbar-expand-lg navbar-dark bg-steel absolute-top">
     <div class="container">
-      <a class="navbar-brand mr-4 pr-3" href="/">Word-Bucket</a>
+      <a class="navbar-brand mr-4 pr-3" href="/">Cleveland Social Club</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
       </button>
@@ -20,16 +20,61 @@
         <div class="navbar-nav">
           <a class="nav-item nav-link" href="{% url 'blog-home' %}">Home</a>
           <a class="nav-item nav-link" href="{% url 'blog-about' %}">About</a>
-
+          <a class="nav-item nav-link" href="{% url 'profile-list-view' %}">Members</a>
+          
           {% if user.is_authenticated %}
-          <a class="nav-item nav-link" href="{% url 'show-notifications' %}">Notifications</a>
-          <a class="nav-item nav-link" href="{% url 'room-enroll' %}">Chats</a>
+          
+          <a class="nav-item nav-link" href="{% url 'notification:show-notifications' %}">
+            {% if notifications_list %}
+              <span class="badge badge-pill badge-danger" style="float:right;margin-bottom:-10px;">{{ notifications_list|length }}</span>
+            {% endif %}
+            <span>Notifications</span>
+          </a>
+          <div class="dropdown">
+            <a class="dropdown-toggle nav-link" href="#" role="button" id="dropdownMenuLinkChats" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {% if chat_notifications_count %}
+                <span class="badge badge-pill badge-danger" style="float:right;margin-bottom:-10px;">{{ chat_notifications_count }}</span>
+              {% endif %}
+              <span>Chats</span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLinkChats">
+              <a class="dropdown-item" href="{% url 'room-enroll' %}">
+                {% if chat_notifications_count %}
+                  <span class="badge badge-pill badge-danger" style="float:right;margin-bottom:-10px;">{{ chat_notifications_count }}</span>
+                {% endif %}
+                <span>Private</span>
+              </a>
+              <a class="dropdown-item" href="{% url 'shoutbox' 2 %}">
+                <span>Group</span>
+              </a>
+              {% if user.is_staff %}
+                <a class="dropdown-item" href="{% url 'shoutbox' 1 %}">
+                  <span>Admin</span>
+                </a>
+              {% endif %}
+            </div>
+          </div>
           <!-- <a class="nav-item nav-link" href="{% url 'vc-lobby' %}">Calls</a> -->
           <div class="dropdown">
             <a class="dropdown-toggle nav-link" href="#" role="button" id="dropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Posts
+              Events
             </a>                  
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
+              <a class="dropdown-item" href="{% url 'event_manager_home:events-root-home' %}">Events Dashboard</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'event_manager_home:newevent' user.id %}"><i class="fas fa-plus-circle"></i>&nbsp;&nbsp;New Event</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'event_manager_home:explore' %}">Explore and Join Available Events</a>
+              {% if user.is_staff %}
+                <a class="dropdown-item" href="{% url 'event_manager_home:allevent' user.id %}">All Events</a>
+              {% endif %}
+            </div>
+          </div>
+          <div class="dropdown">
+            <a class="dropdown-toggle nav-link" href="#" role="button" id="dropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Posts
+            </a>                  
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink2">
               <a class="dropdown-item" href="{% url 'post-create' %}"><i class="fas fa-plus-circle"></i>&nbsp;&nbsp;New Post</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="{% url 'posts-follow-view' %}">Feeds</a>
@@ -43,11 +88,16 @@
           
           {% if user.is_authenticated %}
             <div class="dropdown">
-              <a class="dropdown-toggle nav-link" href="#" role="button" id="dropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <a class="dropdown-toggle nav-link" href="#" role="button" id="dropdownMenuLink3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img class="rounded-circle" style="height: 20px; width: 20px;" src="{{user.profile.image.url}}" alt="">&nbsp;{{user|truncatechars:"10"}}
                 
               </a>                  
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink2">
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink3">
+                {% if user.is_staff %}
+                <a class="dropdown-item" href="{% url 'admin:index' %}">
+                  <span>Admin Portal</span>
+                </a>
+                {% endif %}
                 <a class="dropdown-item" href="{% url 'profile-detail-view' user.id %}"><i class="far fa-user"></i>&nbsp;&nbsp;Profile</a>
                 <a class="dropdown-item" href="{% url 'public-profile' user %}"><i class="far fa-eye"></i>&nbsp;&nbsp;Public-Profile</a>
                 <a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-sliders-h"></i>&nbsp;&nbsp;Settings</a>

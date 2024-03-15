@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Participate</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'ebparform_style.css' %}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="card">
+        <h1 class="maintitle">EventBuddy</h1>
+        <form action="{% url 'participate' uid eid%}" method="POST">
+            {% csrf_token %}
+            <input type="tel" name="cono" placeholder="Contact Number" class="infield">
+            <h1 class="bookmarks">Type of Participation</h1>
+            <div class="container"><h1 class="guidetext">Group</h1><input type="radio" name="grpreg" style="height: 1.5vw; width: 1.5vw;" value="group" id="grpbtn" onclick="validator()"><h1 class="guidetext">Individual</h1>
+                <input type="radio" name="grpreg" style="height: 1.5vw; width: 1.5vw;" value="individual" id="indibtn" onclick="validator()"></div>
+            <input type="text" name="nopar" placeholder="Number of members(valid if type is group)" id="tempinfield">    
+            <h2 class="err">{{message}}</h2>
+            <input type="submit" value="Participate" class="subbtn">
+        </form>
+        <div class="backdiv"><a href="{% url 'home' uid%}" title="Back to Home" class="backbtn">Back to Home</a></div>
+    </div>
+</body>
+<script>
+    function validator(){
+        if(document.getElementById('grpbtn').checked == true){
+            document.getElementById('tempinfield').disabled = false;
+        }
+        else{
+            document.getElementById('tempinfield').disabled = true;
+        }
+    }
+</script>
+</html>   

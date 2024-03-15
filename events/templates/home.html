@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+{% load render_table from django_tables2 %}
+    {% block title %}Events Home{% endblock %}
+    {% block stylesheet %}
+    <link rel="stylesheet" type="text/css" href="{% static 'ebhome_style.css'%}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% endblock %}
+
+{% block content %}
+    <div class="greeting">
+        {% if uid%}
+            <h5 class="greetmess">Hello {{ user.username }}!</h5>
+        {% endif %}
+        {% if not uid%}
+            <h5 class="greetmess">Welcome!</h5>
+        {% endif %}
+    </div>
+    <h4 class="mainhead">My Events</h4><a href="{% url 'event_manager_home:newevent' uid%}" class="addform" title="Create a new event">+</a><a href="{% url 'event_manager_home:explore' uid%}" class="showall" title="See all your events">View all</a>
+    <div class="eventsection">
+        <div name="owned_table">
+            <h1>Events I Own</h1>
+            {% if not owned_table %}
+                <h1 class="errmess">No events scheduled.</h1>
+            {% else %}
+                {% render_table owned_table %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="eventsection">
+        <div name="participating_table">
+            <h1>Events I'm Participating In</h1>
+            {% if not participating_table %}
+                <h1 class="errmess">No events scheduled.</h1>
+            {% else %}
+                {% render_table participating_table %}
+            {% endif %}
+        </div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}Create New Event{% endblock %}
+{% block stylesheet %}
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<section class=" page-header page-header-light bg-white mt-4 container">
+    <div class="page-header-content pt-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 " data-aos="fade-up">
+                    <div class="card">
+                        <form id="formUpload" action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <fieldset class="form-group">
+                                <legend class="border-bottom mb-4">Create a New Event</legend>
+                                {% crispy form %}
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <br>
+    </div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="modalCrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Crop the photo</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button> 
+        </div>
+        <div class="modal-body" style="max-width: 100%; overflow:auto">
+            <img style="max-height:100%; max-width: 100%" src="" id="image">
+        </div>
+        <div class="modal-footer">
+            <div class="float-left">
+                <button type="button" class="btn btn-primary js-zoom-in">
+                    <i class="fas fa-search-plus"></i>
+                </button>
+                <button type="button" class="btn btn-primary js-zoom-out">
+                    <i class="fas fa-search-minus"></i>
+                </button>
+            </div>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary js-crop-and-upload">Crop and upload</button>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

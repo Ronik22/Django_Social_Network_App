@@ -20,7 +20,7 @@
 }
 
 .line-separator {
-    background-color: #ccc;
+    background-color: #F800B1;
     flex-grow: 5;
     height: 1px
 }
@@ -40,9 +40,11 @@
         {% csrf_token %}
         <fieldset class="form-group">
             
-            {{form|crispy}}
+            {{ form|crispy }}
+	    <!-- Taking this out for now because it's not working as expected
             <script src="https://www.google.com/recaptcha/api.js"></script>
-            <div class="g-recaptcha" data-sitekey="6Lc6oUkaAAAAANkQnN5HaqEaDix1IvP7vkJSA1Zv"></div>
+            <div class="g-recaptcha" data-sitekey="6LfVs10jAAAAAFXcddNNt8n65-8W596Z83sqr_ew"></div>
+	    -->
         </fieldset>
         <div class="form-group">
             <button class="btn btn-outline-info" type="submit">Sign Up</button>

@@ -18,10 +18,43 @@
               <small class="text-muted">{{ post.date_posted|date:"F d, Y-h:i A" }}</small>
           </div>
       </div>
-      <hr>
+      <hr color=#F800B1>
       <h3><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h3>
-      <hr>
+      <hr color=#F800B1>
       <p class="article-content">{{ post.content|safe|linebreaks|truncatewords_html:"20" }}<a href="{% url 'post-detail' post.id %}">[Read full post]</a></p>
+      {% if render_images %}
+        {% if post.image %}
+          <p class="article-content"><a href={{post.image.url}}><img src={{ post.image.url }} class="img-fluid"></a></p>
+        {% endif %}
+        {% if post.images %}
+          <hr color=#F800B1>
+          {% for image in post.images.all %}
+            <p class="article-content"><a href={{image.image.url}}><img src={{ image.image.thumbnails.small.url }} class="img-fluid"></a></p>
+          {% endfor %}
+        {% endif %}
+      {% else %}
+        <p class="article-content"><font color="red"><b>You do not have permission to view posted images.  Please contact an Admin to request permissions to view posted images</font></b></p>
+      {% endif %}
+
+      <div id="like-section-{{post.id}}">
+        {% include 'blog/like_section.html' with post=post %}
+      </div>
+      <br>   
+      <hr color=#F800B1>
+      <p>
+        <span>
+          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#comments-{{post.id}}-collapse" aria-expanded="false" aria-controls="comments-collapse">
+            Comments
+          </button>
+        </span>
+      </p>
+  
+      <div class="collapse" id="comments-{{post.id}}-collapse">
+        <div class="main-comment-section-{{post.id}}">
+          {% include 'blog/comments.html' with comments=post.comments.all clikes=post.comments.likes.all %}
+        </div>
+      </div>
+
     </article>
 
     {% endfor %}

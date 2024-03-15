@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}{{ event.event_name }}Participants{% endblock %}
+{% block stylesheet %}
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<section class=" page-header page-header-light bg-white mt-4 container">
+    <div class="page-header-content pt-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 " data-aos="fade-up">
+                    <div class="card">
+                        {% for detail in event.event_details %}
+                            <p class="field1">{{ detail }}</p>
+                        {% endfor %}
+                        <hr color=#F800B1>
+                        <p>List of participants:</p>
+                        <ul>
+                            {% for participant in participant_list %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <a href="{% url 'profile-detail-view' participant.pk %}"><img class="rounded-circle article-img" src="{{participant.image.url}}" alt="image">{{participant}}</a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,234 @@
+body,html{
+    width: 100%;
+    margin: 0;
+}
+
+.maintitle{
+    font-size: 2.5vw;
+    font-weight: bold;
+    color: greenyellow;
+    font-family: 'Courgette', cursive;
+    padding: 1.5vw 3vw 1.5vw 2vw;
+    width: 50%;
+    margin: 0;
+}   
+
+.topmenu{
+    width: 100%;
+    background-image: linear-gradient(to right,maroon,darkviolet);
+}
+
+.left_section{
+    display: inline-block;
+    width: 50%;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.right_section{
+    width: 50%;
+    float: right;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.menulink{
+    float: right;
+    font-size: 2.5vw;
+    color: orange;
+    text-decoration: none;
+    padding: 1.5vw 2vw 1.5vw 2vw;
+    overflow: hidden;
+    margin: 0;
+    font-weight: bold;
+    height: 100%;
+    font-family: 'Courgette', cursive;
+}
+
+.menulink:hover {
+    background-color: seagreen;
+}
+
+.greeting{
+    width:100%;
+    /* background: linear-gradient(rgba(255, 255, 255, 0.623), rgba(255, 255, 255, 0.623)), url('/static/homeback.jpg');*/
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 5vw;
+    text-align: center;
+}
+
+.active{
+    float: right;
+    font-size: 2.5vw;
+    color: orange;
+    text-decoration: none;
+    padding: 1.5vw 2vw 1.5vw 2vw;
+    overflow: hidden;
+    margin: 0;
+    font-weight: bold;
+    height: 100%;
+    font-family: 'Courgette', cursive;
+    background-color: rgb(24, 45, 136);
+}
+
+.greetmess{
+    opacity: 100%;
+    font-size: 2vw;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    padding: 5vw;
+    color: darkblue;
+    transition: 1s;
+}
+
+.intro{
+    margin: 0 10% 0 10%;
+    background: linear-gradient(to right,wheat,whitesmoke);
+    border-radius: 7%;
+}
+
+.introcon{
+    padding: 6vw 2vw 0vw 2vw;
+    text-align: justify;
+    font-weight: bold;
+    font-size: 3vw;
+    font-family: 'Courgette',cursive;
+    color: maroon;
+}
+
+.mainhead{
+    display: inline-block;
+    margin: 5vw 0 3vw 5vw;
+    font-size: 2vw;
+    color: darkblue;
+    font-family: 'Courgette',cursive;
+}
+
+.addform{
+    display: inline;
+    float: right;
+    margin: 4vw 5vw 3vw 0vw;
+    font-size: 2vw;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.eventsection{
+    width: 100%;
+    display: flex;
+    margin-top: 2vw;
+    flex-direction: row;
+}
+
+.eventsection > div{
+    width: 100%;
+    margin: 0 1.5%;
+    background-color: rgb(238, 230, 161);
+    border: 0.5vw solid rgb(238, 230, 161);
+    border-radius: 1.5vw;
+}
+
+.eventsection > div:hover{
+    box-shadow: 0.5vw 0.5vw 0.5vw gray;
+}
+
+.field1{
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 3vw;
+    text-align: center;
+    color: blue;
+}
+
+.field2{
+    font-family: 'Righteous',cursive;
+    font-size: 2.3vw;
+    padding: 0 0.4vw;
+}
+
+.sobtn{
+    margin: 5vw 10% 3vw 10%;
+    width: 80%;
+    font-size: 3vw;
+    text-align: center;
+    background-color:  rgb(49, 216, 208);
+    border: 0.4vw solid rgb(49, 216, 208);
+    border-radius: 1vw;
+}
+
+.sobtn:hover{
+    background-color: lightseagreen;
+    border: 0.4vw solid lightseagreen;
+}
+
+.sbtnlink{
+    color: red;
+    text-decoration: none;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.errmess{
+    margin: 2vw 0 3vw 5vw;
+    color: red;
+    font-size: 1.75vw;
+}
+
+.showall{
+    display: inline;
+    float: right;
+    margin: 5vw 1vw 3vw 5vw;
+    font-size: 2vw;
+    text-decoration: none;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.dellink{
+    text-align: center;
+    text-decoration: none;
+    font-size: 2.5vw;
+    color: red;
+}
+
+.vplink{
+    text-align: center;
+    text-decoration: none;
+    font-size: 2.5vw;
+    color: darkslateblue;
+}
+
+.participantinfo{
+    margin: 5vw;
+    border: 0.3vw solid darkblue;
+    background-color: darkblue;
+    border-radius: 2vw;
+}
+
+.partitem{
+    color:white;
+    font-size: 1.25vw;
+    font-family: 'Courgette',cursive;
+    margin:1.5vw 6vw;
+}
+
+.lsthead{
+    color: white;
+    font-family: 'Righteous',cursive;
+    font-size: 1.75vw;
+    margin:1.5vw 2.5vw;
+    font-weight: normal;
+}
+
+.featurelst{
+    padding: 0vw 2vw 1vw 6vw;
+    font-size: 3vw;
+    margin: 0;
+    font-family: 'Courgette',cursive;
+    color: darkslateblue;
+}
+
+.featurelst > li{
+    padding: 1vw 0;
+}

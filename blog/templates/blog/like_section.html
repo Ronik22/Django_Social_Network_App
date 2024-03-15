@@ -2,7 +2,7 @@
     {% csrf_token %}
 
     {% if user.is_authenticated %}
-        {% if liked %}
+        {% if liked or user in post.likes.all %}
             <button id="like" type="submit" name="post_id" value="{{post.id}}" class="btn btnhrt"><i class="fas fa-heart"></i></button>
         {% else %}
             <button id="like" type="submit" name="post_id" value="{{post.id}}" class="btn btnhrt"><i class="far fa-heart"></i></button>
@@ -10,5 +10,5 @@
     {% else %}
         <small>Login to like</small>
     {% endif %}
-    - {{total_likes}} Like{{ total_likes|pluralize }}
+    - {{ post.total_likes }} Like{{ post.total_likes|pluralize }}
 </form>

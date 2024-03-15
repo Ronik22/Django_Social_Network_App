@@ -9,105 +9,257 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
-from pathlib import Path
 import os
-from dotenv import load_dotenv
+from pathlib import Path
+from typing import List, Tuple, Union
+
 from django.contrib.messages import constants as messages
+from django.core.management.utils import get_random_secret_key
+from dotenv import load_dotenv
 
 # Loading ENV
-env_path = Path('.') / '.env'
+env_path: Path = Path(".") / ".env"
 load_dotenv(dotenv_path=env_path)
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+SITE_NAME = "CSCTN.net"
+SITE_DOMAIN = "www.csctn.net"
+PROTOCOL = "http"
+# PROTOCOL = "https"
 
+INTERNAL_IPS = [
+    "192.168.2.115",
+    "127.0.0.1",
+]
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR_OVERRIDE = os.environ.get("BASE_DIR_OVERRIDE", None)
+BASE_DIR: Path = (
+    Path(BASE_DIR_OVERRIDE) if BASE_DIR_OVERRIDE else Path(__file__).resolve().parent.parent
+)
+LOG_DIR: Path = BASE_DIR.joinpath(os.environ.get("LOGS_DIR_NAME", "logs"))
+# Make sure the dirs for logs exist
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+ADMINS: List[Tuple[str, str]] = [
+    ("Andy", "bubbaandy89@gmail.com"),
+]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY: Union[str, None] = os.environ.get("SECRET_KEY", get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG")
+DEBUG: Union[str, None] = os.environ.get("DEBUG", "False")
 
-ALLOWED_HOSTS = ['*'] 
+# Define log file locations
+DEBUG_LOG_FILE_PATH = LOG_DIR.joinpath(os.environ.get("DEBUG_LOG_FILE_NAME", "debug.log"))
+DAPHNE_LOG_FILE_PATH = LOG_DIR.joinpath(os.environ.get("DAPHNE_LOG_FILE_NAME", "daphne.log"))
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": DEBUG_LOG_FILE_PATH,
+        },
+        "daphne_file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": DAPHNE_LOG_FILE_PATH,
+        },
+    },
+    "loggers": {
+        "root": {
+            "handlers": [
+                "file",
+            ],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+        "daphne": {
+            "handlers": [
+                "daphne_file",
+            ],
+            "level": "DEBUG",
+        },
+    },
+}
+
+if DEBUG:
+    # make all loggers use the console.
+    for logger in LOGGING["loggers"]:
+        LOGGING["loggers"][logger]["handlers"].append("console")
+
+ALLOWED_HOSTS: list[str] = ["*"]
 
 
 # Application definition
 
-INSTALLED_APPS = [
-    'crispy_forms',
-    'django_cleanup',
-
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.sites',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.humanize',
-
-    'ckeditor',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.github',
-    'blog.apps.BlogConfig',
-    'users.apps.UsersConfig',
-    'notification',
-    'chat',
-    'channels',
-    'friend',
-    'videocall',
+INSTALLED_APPS: list[str] = [
+    "crispy_forms",
+    # "daphne",
+    "django_cleanup",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.sites",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.humanize",
+    "bootstrap_datepicker_plus",
+    "django_tables2",
+    "thumbnails",
+    "imagekit",
+    "protected_media.apps.ProtectedMediaConfig",
+    "ckeditor",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.github",
+    "debug_toolbar",
+    "blog.apps.BlogConfig",
+    "users.apps.UsersConfig",
+    "notification",
+    "chat",
+    "channels",
+    "friend",
+    "videocall",
+    "EventManager",
+    "events",
 ]
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+MIDDLEWARE: list[str] = [
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
-ROOT_URLCONF = 'myproject.urls'
+# This is for forcing a new login every time someone connects to the site
+# SESSION_EXPIRE_AT_BROWSER_CLOSE: bool = True
 
-TEMPLATES = [
+DEBUG_TOOLBAR_PANELS: list[str] = [
+    "debug_toolbar.panels.history.HistoryPanel",
+    "debug_toolbar.panels.versions.VersionsPanel",
+    "debug_toolbar.panels.timer.TimerPanel",
+    "debug_toolbar.panels.settings.SettingsPanel",
+    "debug_toolbar.panels.headers.HeadersPanel",
+    "debug_toolbar.panels.request.RequestPanel",
+    "debug_toolbar.panels.sql.SQLPanel",
+    "debug_toolbar.panels.staticfiles.StaticFilesPanel",
+    "debug_toolbar.panels.templates.TemplatesPanel",
+    "debug_toolbar.panels.cache.CachePanel",
+    "debug_toolbar.panels.signals.SignalsPanel",
+    "debug_toolbar.panels.logging.LoggingPanel",
+    "debug_toolbar.panels.redirects.RedirectsPanel",
+    "debug_toolbar.panels.profiling.ProfilingPanel",
+]
+
+# DEBUG_TOOLBAR_CONFIG = {
+
+# }
+
+ROOT_URLCONF: str = "myproject.urls"
+
+TEMPLATES: list[dict[str, Union[bool, str, dict[str, list[str]]]]] = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'users/templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [
+            BASE_DIR.joinpath("users/templates"),
+            BASE_DIR.joinpath("events/templates"),
+            BASE_DIR.joinpath("notifications/templates"),
+        ],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "myproject.custom_context_processors.notifications_processor",
+                "myproject.custom_context_processors.chat_notifications_processor",
             ],
         },
     },
 ]
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+AUTHENTICATION_BACKENDS: list[str] = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-WSGI_APPLICATION = 'myproject.wsgi.application'
+WSGI_APPLICATION: str = "myproject.wsgi.application"
+
+# Image Configs
+PROTECTED_MEDIA_ROOT: str = BASE_DIR.joinpath("protected/")
+PROTECTED_MEDIA_URL: str = "/protected"
+# PROTECTED_MEDIA_SERVER: str = "nginx"  # Defaults to "django", doesnt work when set as nginx
+PROTECTED_MEDIA_LOCATION_PREFIX: str = "/internal/"  # Prefix used in nginx config
+PROTECTED_MEDIA_AS_DOWNLOADS = False
+
+THUMBNAILS = {
+    "METADATA": {
+        "BACKEND": "thumbnails.backends.metadata.DatabaseBackend",
+    },
+    "STORAGE": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        # You can also use Amazon S3 or any other Django storage backends
+    },
+    "SIZES": {
+        "small": {
+            "PROCESSORS": [
+                {"PATH": "thumbnails.processors.resize", "width": 80, "height": 80},
+                {"PATH": "thumbnails.processors.crop", "width": 80, "height": 80},
+            ],
+            "POST_PROCESSORS": [
+                {
+                    "PATH": "thumbnails.post_processors.optimize",
+                    "png_command": 'optipng -force -o7 "%(filename)s"',
+                    "jpg_command": 'jpegoptim -f --strip-all "%(filename)s"',
+                },
+            ],
+        },
+        "large": {
+            "PROCESSORS": [
+                {"PATH": "thumbnails.processors.resize", "width": 200, "height": 200},
+                {"PATH": "thumbnails.processors.flip", "direction": "horizontal"},
+            ],
+        },
+        "watermarked": {
+            "PROCESSORS": [
+                {"PATH": "thumbnails.processors.resize", "width": 20, "height": 20},
+                # Only supports PNG. File must be of the same size with thumbnail
+                # (20 x 20 in this case)
+                {
+                    "PATH": "thumbnails.processors.add_watermark",
+                    "watermark_path": "watermark.png",
+                },
+            ],
+        },
+    },
+}
 
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASES: dict[str, dict[str, str]] = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
@@ -126,18 +278,18 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
+AUTH_PASSWORD_VALIDATORS: list[dict[str, str]] = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -145,78 +297,89 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE: str = "en-us"
 
-TIME_ZONE = 'Asia/Kolkata'
+TIME_ZONE: str = "America/New_York"
 
-USE_I18N = True
+USE_I18N: bool = True
 
-USE_L10N = True
+USE_L10N: bool = True
 
-USE_TZ = True
+USE_TZ: bool = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
+STATICFILES_FINDERS: tuple[str] = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+)
 
-STATIC_URL = '/static/'
+STATIC_ROOT: Path = BASE_DIR.joinpath("static")
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+STATIC_URL: str = "static/"
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+EMAIL_TEMPLATE_ROOT: Path = BASE_DIR.joinpath("email_templates")
 
-LOGIN_REDIRECT_URL = 'blog-home'
-LOGIN_URL = 'account_login'
+MEDIA_ROOT: Path = BASE_DIR.joinpath("media")
+MEDIA_URL: str = "/media/"
+CKEDITOR_UPLOAD_PATH: Path = MEDIA_ROOT.joinpath("uploads")
 
-CKEDITOR_CONFIGS = {
-    'default': {
-        'width':'auto',
+CRISPY_TEMPLATE_PACK: str = "bootstrap4"
+
+LOGIN_REDIRECT_URL: str = "blog-home"
+LOGIN_URL: str = "account_login"
+
+CKEDITOR_CONFIGS: dict[str, dict[str, str]] = {
+    "default": {
+        "width": "auto",
     },
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = os.getenv("EMAIL_PORT")
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_USER')     # environment variable containing username
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASS')  # environment variable containing password
+EMAIL_BACKEND: str = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST: str = "smtp.gmail.com"
+EMAIL_PORT: str = os.environ.get("EMAIL_TLS_PORT")
+EMAIL_USE_TLS: str = True
+DEFAULT_FROM_EMAIL: str = "admin@django-social.com"
+EMAIL_HOST_USER: str = os.environ.get("EMAIL_USER")  # environment variable containing username
+EMAIL_HOST_PASSWORD: str = os.environ.get("EMAIL_PASS")  # environment variable containing password
 
-GOOGLE_RECAPTCHA_SECRET_KEY = os.getenv("GOOGLE_RECAPTCHA_SECRET_KEY")
+GOOGLE_RECAPTCHA_SECRET_KEY: str = os.environ.get("GOOGLE_RECAPTCHA_SECRET_KEY")
 
-MESSAGE_TAGS = {
-        messages.DEBUG: 'alert-secondary',
-        messages.INFO: 'alert-info',
-        messages.SUCCESS: 'alert-success',
-        messages.WARNING: 'alert-warning',
-        messages.ERROR: 'alert-danger',
+MESSAGE_TAGS: dict[int, str] = {
+    messages.DEBUG: "alert-secondary",
+    messages.INFO: "alert-info",
+    messages.SUCCESS: "alert-success",
+    messages.WARNING: "alert-warning",
+    messages.ERROR: "alert-danger",
 }
 
-ASGI_APPLICATION = "myproject.routing.application"
+ASGI_APPLICATION: str = "myproject.routing.application"
 
-CHANNEL_LAYERS = {
-    "default":{
-        "BACKEND":"channels.layers.InMemoryChannelLayer"
+CHANNEL_LAYERS: dict[str, dict[str, str]] = {
+    "default": {"BACKEND": "channels_redis.core.RedisChannelLayer"},
+    "CONFIG": {
+        "hosts": [("127.0.0.1", 6379)],
     },
 }
 
-SITE_ID = 2     # considering 2nd site in 'Sites' to be 127.0.0.1 (for dev)
+SITE_ID: int = 2  # considering 2nd site in 'Sites' to be 127.0.0.1 (for dev)
 
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
+SOCIALACCOUNT_PROVIDERS: dict[str, dict[str, list[str]]] = {
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
         ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
     },
-    'github': {
-        'SCOPE': [
-            'user',
-            'repo',
-            'read:org',
+    "github": {
+        "SCOPE": [
+            "user",
+            "repo",
+            "read:org",
         ],
-    }
+    },
 }

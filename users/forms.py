@@ -1,15 +1,28 @@
+import os
+
 from django import forms
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile
+from django.contrib.auth.models import User
 from PIL import Image
 
+from users.models import Profile
+from users.validators import validate_email
+
+
 class UserRegisterForm(UserCreationForm):
-    email = forms.EmailField()
+    email = forms.EmailField(validators=[validate_email])
 
     class Meta:
         model = User
-        fields = ['first_name','last_name','username','email','password1','password2']
+        fields = [
+            "first_name",
+            "last_name",
+            "username",
+            "email",
+            "password1",
+            "password2",
+        ]
 
 
 class UserUpdateForm(forms.ModelForm):
@@ -17,7 +30,7 @@ class UserUpdateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['first_name','last_name','username','email']
+        fields = ["first_name", "last_name", "username", "email"]
 
 
 class ProfileUpdateForm(forms.ModelForm):
@@ -26,25 +39,42 @@ class ProfileUpdateForm(forms.ModelForm):
     width = forms.FloatField(widget=forms.HiddenInput(), required=False)
     height = forms.FloatField(widget=forms.HiddenInput(), required=False)
 
-    image = forms.ImageField(label=('Image'), error_messages = {'invalid':("Image files only")}, widget=forms.FileInput, required=False)
+    image = forms.ImageField(
+        label=("An image of you is a must for Verification. (Both of you if you are a couple)."),
+        error_messages={"invalid": ("Image files only")},
+        widget=forms.FileInput,
+        required=True,
+    )
+
     class Meta:
         model = Profile
-        fields = ['bio','date_of_birth','image',]
-
+        fields = [
+            "date_of_birth",
+            "bio",
+            "sls_username",
+            "how_did_you_hear_about_us",
+            "relationship_status",
+            "facebook_link",
+            "instagram_link",
+            "twitter_link",
+            "image",
+        ]
 
     """Saving Cropped Image"""
-    def save(self,*args,**kwargs):
+
+    def save(self, *args, **kwargs):
         img = super(ProfileUpdateForm, self).save(*args, **kwargs)
 
-        x = self.cleaned_data.get('x')
-        y = self.cleaned_data.get('y')
-        w = self.cleaned_data.get('width')
-        h = self.cleaned_data.get('height')
+        x = self.cleaned_data.get("x")
+        y = self.cleaned_data.get("y")
+        w = self.cleaned_data.get("width")
+        h = self.cleaned_data.get("height")
 
         if x and y and w and h:
             image = Image.open(img.image)
-            cropped_image = image.crop((x, y, w+x, h+y))
+            cropped_image = image.crop((x, y, w + x, h + y))
             resized_image = cropped_image.resize((300, 300), Image.ANTIALIAS)
-            resized_image.save(img.image.path)
+            if img.image.path != os.path.join(settings.MEDIA_ROOT, "default.jpg"):
+                resized_image.save(img.image.path)
 
         return img

@@ -18,16 +18,21 @@
         </div>
     </div>
     <div class="card-body">
-        <hr>
+        <hr color=#F800B1>
         <h4 class="card-title text-center">{{object.user.first_name}} {{object.user.last_name}} [{{object.user.username}}]</h4>
         <p class="card-text text-center text-muted">{{object.user.email}}</p>
         <p class="card-text text-center text-muted">{{object.user.profile.bio}}</p>
 
 		<ul class="social-links list-inline text-center m-4">
-			<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-primary" href="" data-original-title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-			<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-info" href="" data-original-title="Twitter"><i class="fab fa-twitter"></i></a></li>
-			<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-danger" href="" data-original-title="Skype"><i class="fab fa-instagram"></i></a></li>
-			<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-primary" href="" data-original-title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
+			{% if object.user.profile.facebook_link %}
+				<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-primary" href={{ object.user.profile.facebook_link }} data-original-title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+			{% endif %}
+			{% if object.user.profile.twitter_link %}
+				<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-info" href={{ object.user.profile.twitter_link }} data-original-title="Twitter"><i class="fab fa-twitter"></i></a></li>
+			{% endif %}
+			{% if object.user.profile.instagram_link %}
+				<li class="list-inline-item m-1"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips btn-danger" href={{ object.user.profile.instagram_link }} data-original-title="Instagram"><i class="fab fa-instagram"></i></a></li>
+			{% endif %}
 		</ul>
 
         <div class="text-center">
@@ -103,7 +108,7 @@
 			{% endif %}
 
         </div>
-        <hr>
+        <hr color=#F800B1>
 
 
         <div class="m-t-10 p-15 text-center">
@@ -234,7 +239,7 @@
 		{% endif %}
 
 		{% for post in object.profile_posts %}
-			<hr>
+			<hr color=#F800B1>
 			<div>
 				<a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a>
 			</div>

@@ -21,7 +21,7 @@
 }
 
 .line-separator {
-    background-color: #ccc;
+    background-color: #F800B1;
     flex-grow: 5;
     height: 1px
 }
@@ -39,7 +39,7 @@
         {% csrf_token %}
         <fieldset class="form-group">
             <legend class="border-bottom mb-4">Login</legend>
-            {{form|crispy}}
+            {{ form|crispy }}
         </fieldset>
         <div class="form-group">
             <button class="btn btn-outline-info" type="submit">Login</button>
@@ -50,9 +50,11 @@
     </form>
     <div class="or-container">
         <div class="line-separator"></div>
-        <div class="or-label">or</div>
+        <div class="or-label">ATTENTION</div>
         <div class="line-separator"></div>
+        <p>Username, Email, Date of birth, Bio, How did you hear about us, Relationship status and An image of you is a must for Verification. (Both of you if you are a couple) or your account will be deleted.</p>
     </div>
+    <!--
     <div class="row">
         <div class="col-md-12"> 
             <a class="btn btn-lg btn-google btn-block btn-outline" href="{% provider_login_url 'google' %}">
@@ -67,6 +69,7 @@
             </a> 
         </div>
     </div> <br>
+    -->
     <div class="border-top pt-3">
         <small class="text-muted">
             Need an Account? <a class="ml-2" href="{% url 'register' %}">Sign Up Now</a>
